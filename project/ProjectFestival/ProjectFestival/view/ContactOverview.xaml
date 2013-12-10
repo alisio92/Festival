@@ -3,10 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:converter="clr-namespace:ProjectFestival.converter"
              mc:Ignorable="d" 
              d:DesignHeight="740" d:DesignWidth="960">
-    
-        <Grid>
+
+    <UserControl.Resources>
+        <converter:NameToIDConverter x:Key="ID"/>
+    </UserControl.Resources>
+    <Grid>
         <DataGrid AutoGenerateColumns="False" Grid.Row="1" ItemsSource="{Binding ContactList}" SelectedItem="{Binding SelectedContact,UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="False">
             <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Width="25" Binding="{Binding ID}" IsReadOnly="True"/>
@@ -17,7 +21,7 @@
                             <DataTemplate>
                             <!--<ComboBox ItemsSource="{Binding JobRoleList}" DisplayMemberPath="Name" SelectedItem="{Binding Name}" SelectedValuePath="ID" SelectedValue="{Binding ID}"/>-->
                             <!--<ComboBox ItemsSource="{Binding JobRoleList}" DisplayMemberPath="Name" SelectedItem="{Binding JobRole.Name}" SelectedValuePath="ID" SelectedValue="{Binding JobRole.ID}"/>-->
-                            <ComboBox ItemsSource="{Binding JobRoleList}" SelectedIndex="{Binding JobRole.Name,Converter={StaticResource }}"/>
+                            <ComboBox ItemsSource="{Binding JobRoleList}" SelectedIndex="{Binding JobRole.Name,Converter={StaticResource ID}}"/>
                         </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

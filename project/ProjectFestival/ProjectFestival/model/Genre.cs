@@ -31,7 +31,7 @@ namespace ProjectFestival.model
         public static ObservableCollection<Genre> getGenres()
         {
             ObservableCollection<Genre> genres = new ObservableCollection<Genre>();
-            genres = DBConnection.GetDataOutDatabase<Genre>("genres");
+            genres = DBConnection.GetDataOutDatabase<Genre>("genre");
 
             foreach (Genre g in genres)
             {

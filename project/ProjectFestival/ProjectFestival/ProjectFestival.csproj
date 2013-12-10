@@ -75,7 +75,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="convertor\BytesToImageConverter.cs" />
+    <Compile Include="converter\BytesToImageConverter.cs" />
+    <Compile Include="converter\NameToIDConverter.cs" />
     <Compile Include="database\DBConnection.cs" />
     <Compile Include="model\Band.cs" />
     <Compile Include="model\ContactPerson.cs" />
