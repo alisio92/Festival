@@ -33,6 +33,13 @@ namespace ProjectFestival.viewmodel
             set { _selectedBand = value;}
         }
 
+        private Band _selectedBand2;
+        public Band SelectedBand2
+        {
+            get { return _selectedBand2; }
+            set { _selectedBand2 = value; }
+        }
+
         public ICommand AddImageCommand
         {
             get

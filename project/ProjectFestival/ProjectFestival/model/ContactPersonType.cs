@@ -53,7 +53,7 @@ namespace ProjectFestival.model
             {
                 trans = Database.BeginTransaction();
 
-                string sql = "UPDATE ContactpersoonType SET Name=@Name WHERE ID=@ID";
+                string sql = "UPDATE ContactpersonType SET Name=@Name WHERE ID=@ID";
                 DbParameter par1 = Database.AddParameter("@Name", contactPersoonType.Name);
                 DbParameter par2 = Database.AddParameter("@ID", contactPersoonType.ID);
 
@@ -78,7 +78,7 @@ namespace ProjectFestival.model
             {
                 trans = Database.BeginTransaction();
 
-                string sql = "INSERT INTO ContactpersoonType VALUES(@ID,@Name)";
+                string sql = "INSERT INTO ContactpersonType VALUES(@ID,@Name)";
                 DbParameter par1 = Database.AddParameter("@Name", contactPersoonType.Name);
                 DbParameter par2 = Database.AddParameter("@ID", aantal);
 

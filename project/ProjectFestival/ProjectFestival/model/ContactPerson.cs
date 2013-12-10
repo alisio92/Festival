@@ -102,7 +102,7 @@ namespace ProjectFestival.model
 
         public static ObservableCollection<ContactPerson> GetContactPerson()
         {
-            ApplicationVM.Infotxt("Inladen contact personen...", "");
+            ApplicationVM.Infotxt("Inladen contact personen", "");
             JobRoleList = ContactPersonType.getContactPersonType();
             JobTitleList = ContactPersonTitle.getContactPersonTitle();
 
@@ -116,7 +116,7 @@ namespace ProjectFestival.model
                     contactPersons.Add(Create(reader));
                     aantal++;
                 }
-                ApplicationVM.Infotxt("Inladen contact personen klaar", "Inladen contact personen...");
+                ApplicationVM.Infotxt("Contact personen ingeladen", "Inladen contact personen");
             }
             catch (SqlException)
             {
@@ -154,13 +154,14 @@ namespace ProjectFestival.model
 
         public static int EditContact(ContactPerson contactPersoon)
         {
+            ApplicationVM.Infotxt("Data aanpassen in contactPerson op lijn " + contactPersoon.ID, "");
             DbTransaction trans = null;
 
             try
             {
                 trans = Database.BeginTransaction();
 
-                string sql = "UPDATE Contactpersoon SET Name=@Name,Company=@Company,JobRole=@JobRole,Jobtitle=@JobTitle,City=@City,Email=@Email,Phone=@Phone,Cellphone=@Cellphone WHERE ID=@ID";
+                string sql = "UPDATE Contactperson SET Name=@Name,Company=@Company,JobRole=@JobRole,Jobtitle=@JobTitle,City=@City,Email=@Email,Phone=@Phone,Cellphone=@Cellphone WHERE ID=@ID";
                 DbParameter par1 = Database.AddParameter("@Name", contactPersoon.Name);
                 DbParameter par2 = Database.AddParameter("@ID", contactPersoon.ID);
                 DbParameter par3 = Database.AddParameter("@Company", contactPersoon.Company);
@@ -175,6 +176,7 @@ namespace ProjectFestival.model
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5, par6, par7, par8, par9);
 
                 trans.Commit();
+                ApplicationVM.Infotxt("Data aangepast in contactPerson op lijn " + contactPersoon.ID, "Data aanpassen in contactPerson op lijn " + contactPersoon.ID);
                 return rowsaffected;
             }
             catch (Exception)
@@ -186,13 +188,14 @@ namespace ProjectFestival.model
 
         public static int AddContact(ContactPerson contactPersoon)
         {
+            //ApplicationVM.Infotxt("Niewe lijn toevoegen aan ContactPerson", "");
             DbTransaction trans = null;
 
             try
             {
                 trans = Database.BeginTransaction();
 
-                string sql = "INSERT INTO Contactpersoon VALUES(@ID,@Name,@Company,@JobRole,@JobTitle,@City,@Email,@Phone,@Cellphone)";
+                string sql = "INSERT INTO Contactperson VALUES(@ID,@Name,@Company,@JobRole,@JobTitle,@City,@Email,@Phone,@Cellphone)";
                 DbParameter par1 = Database.AddParameter("@Name", contactPersoon.Name);
                 DbParameter par2 = Database.AddParameter("@Company", contactPersoon.Company);
                 DbParameter par3 = Database.AddParameter("@JobRole", contactPersoon.JobRole.Name);
@@ -207,6 +210,7 @@ namespace ProjectFestival.model
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5, par6, par7, par8, par9);
 
                 trans.Commit();
+                //ApplicationVM.Infotxt("Niewe lijn toegevoegd aan ContactPerson", "Niewe lijn toevoegen aan ContactPerson");
                 return rowsaffected;
             }
             catch (Exception)
@@ -218,7 +222,7 @@ namespace ProjectFestival.model
 
         public static int DeleteContact(ContactPerson contactPersoon)
         {
-            return DBConnection.DeleteItem("Contactpersoon", contactPersoon.ID);
+            return DBConnection.DeleteItem("Contactperson", contactPersoon.ID);
         }
 
         public override string ToString()
