@@ -36,7 +36,7 @@ namespace ProjectFestival.model
         public static ObservableCollection<ContactPersonTitle> getContactPersonTitle()
         {
             ObservableCollection<ContactPersonTitle> contactTitle = new ObservableCollection<ContactPersonTitle>();
-            contactTitle = DBConnection.GetDataOutDatabase<ContactPersonTitle>("ContactPersoonTitle");
+            contactTitle = DBConnection.GetDataOutDatabase<ContactPersonTitle>("ContactPersonTitle");
 
             foreach (ContactPersonTitle cp in contactTitle)
             {

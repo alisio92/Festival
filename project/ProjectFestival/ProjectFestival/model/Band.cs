@@ -69,13 +69,13 @@ namespace ProjectFestival.model
         }
 
         public static int aantal = 1;
+
+        public static ObservableCollection<Band> bands = new ObservableCollection<Band>();
         
         public static ObservableCollection<Band> getBands()
         {
             string sql = "SELECT * FROM Band";
             DbDataReader reader = Database.GetData(sql);
-
-            ObservableCollection<Band> bands = new ObservableCollection<Band>();
 
             GenreList = Genre.getGenres();
             

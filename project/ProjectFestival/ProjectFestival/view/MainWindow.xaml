@@ -3,6 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:ProjectFestival.viewmodel"
         xmlns:v="clr-namespace:ProjectFestival.view"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:cmd="http://www.galasoft.ch/mvvmlight"
         Title="Festival" Height="800" Width="960" MinWidth="770" MinHeight="490">
 
     <Window.DataContext>
@@ -78,7 +80,19 @@
                         <ImageBrush ImageSource="C:\Users\alisio\Desktop\howest\2NMCT\Business Applications\oefeningen\ProjectFestival\ProjectFestival\images\zwartevilt.png"/>
                     </TextBlock.Background>
                 </TextBlock>
-                <TextBox Name="txbZoeken" Style="{StaticResource Zoeken}" Grid.Row="1"/>
+                <TextBox Style="{StaticResource Zoeken}" Grid.Row="1" Text="{Binding Search}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="TextChanged">
+                            <cmd:EventToCommand Command="{Binding SearchCommand}" PassEventArgsToCommand="True"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="GotFocus">
+                            <cmd:EventToCommand Command="{Binding FocusCommand}" PassEventArgsToCommand="True"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="LostFocus">
+                            <cmd:EventToCommand Command="{Binding LostFocusCommand}" PassEventArgsToCommand="True"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
             </Grid>
         </Grid>
         <Grid Grid.Row="1">
@@ -111,7 +125,7 @@
             <Button x:Name="btnWissen" Content="Wissen" Grid.Row="2" Command="{Binding DeleteItemCommand}" CommandParameter="{Binding SelectedItem}"/>
         </Grid>
         <ScrollViewer Grid.ColumnSpan="3" Grid.Row="3">
-            <TextBlock Text="Geen extra informatie" Name="txbName" Style="{StaticResource Info}"/>
+            <TextBlock Text="{Binding Info}" Name="txbName" Style="{StaticResource Info}"/>
         </ScrollViewer>
     </Grid>
 </Window>

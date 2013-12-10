@@ -36,7 +36,7 @@ namespace ProjectFestival.model
         public static ObservableCollection<ContactPersonType> getContactPersonType()
         {
             ObservableCollection<ContactPersonType> contactType = new ObservableCollection<ContactPersonType>();
-            contactType = DBConnection.GetDataOutDatabase<ContactPersonType>("ContactPersoonType");
+            contactType = DBConnection.GetDataOutDatabase<ContactPersonType>("ContactPersonType");
 
             foreach (ContactPersonType cp in contactType)
             {

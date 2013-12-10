@@ -9,7 +9,7 @@
         <Setter Property="Background" Value="{DynamicResource ButtonBrush}"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="FontSize" Value="18"/>
-        <Setter Property="FontFamily" Value="Bodoni MT"/>
+        <Setter Property="FontFamily" Value="sans serif"/>
         <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}"/>
         <Setter Property="BorderThickness" Value="2"/>
         <Setter Property="Opacity" Value="0.8"/>
@@ -39,7 +39,6 @@
     <Style TargetType="TextBox" x:Key="Zoeken">
         <Setter Property="Margin" Value="10,0,10,10"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
-        <Setter Property="Text" Value="Zoeken"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Height" Value="25"/>
         <Setter Property="Padding" Value="-7"/>
@@ -89,6 +88,11 @@
     </Style>
     <Style TargetType="Grid" x:Key="Background">
         <!--<Setter Property="Grid.Background" Value="C:\Users\alisio\Desktop\howest\2NMCT\Business Applications\oefeningen\ProjectFestival\ProjectFestival\images\zwartevilt.png"/>-->
+    </Style>
+    <Style TargetType="DataGrid">
+        <Setter Property="FontFamily" Value="sans serif"/>
+        <Setter Property="Background" Value="#848482"/>
+        <Setter Property="Margin" Value="10"/>
     </Style>
     <!--<ImageBrush>
         <ImageBrush.ImageSource>

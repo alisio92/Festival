@@ -14,12 +14,44 @@ namespace ProjectFestival.viewmodel
     {
         public ApplicationVM()
         {
+            Infotxt("Applicatie starten...","");
             PagesMainNav.Add(new ContactOverviewVM());
             PagesMainNav.Add(new LineUpOverviewVM());
             PagesMainNav.Add(new TicketOverviewVM());
 
             CurrentPage = PagesMainNav[0];
             subNav();
+            Infotxt("Applicatie starten klaar", "Applicatie starten...");
+        }
+
+        public static void Infotxt(string infoNew, string infoOld)
+        {
+            if (infoOld=="")
+            {
+                Info += infoNew + "\n";
+            }
+            else
+            {
+                Info = Info.Replace(infoOld, infoNew);
+            }
+        }
+
+        private String _search = "Zoeken";
+        public String Search
+        {
+            get { return _search; }
+            set
+            {
+                _search = value;
+                OnPropertyChanged("Search");
+            }
+        }
+
+        private static String _info;
+        public static String Info
+        {
+            get { return _info; }
+            set { _info = value;}
         }
 
         private void subNav()
@@ -138,6 +170,42 @@ namespace ProjectFestival.viewmodel
             get { return new RelayCommand(AddItem); }
         }
 
+        public ICommand SearchCommand
+        {
+            get { return new RelayCommand(SearchItem); }
+        }
+
+        public ICommand FocusCommand
+        {
+            get { return new RelayCommand(Focus); }
+        }
+
+        public ICommand LostFocusCommand
+        {
+            get { return new RelayCommand(LostFocus); }
+        }
+
+        private void LostFocus()
+        {
+            if(Search=="")
+            {
+                Search = "Zoeken";
+            }
+        }
+
+        private void Focus()
+        {
+            if (Search == "Zoeken")
+            {
+                Search = "";
+            }
+        }
+
+        private void SearchItem()
+        {
+            
+        }
+        
         private void AddItem()
         {
             if (CurrentPage.Name == "Personeel")
@@ -190,6 +258,30 @@ namespace ProjectFestival.viewmodel
             else if (CurrentPage.Name == "Genre & Stage")
             {
                 GenreStageSaveItem();
+            }
+            else if (CurrentPage.Name == "Info Bands")
+            {
+                BandSaveItem();
+            }
+        }
+
+        private void BandSaveItem()
+        {
+            Band band = (Band)SelectedItem;
+            int id = Convert.ToInt32(band.ID);
+
+            if (id > 0)
+            {
+                Band.EditBand(band);
+                Band.bands[id - 1] = band;
+            }
+            else
+            {
+                Band.AddBand(band);
+                id = Band.aantal;
+                band.ID = id;
+                Band.bands[id - 1] = new Band();
+                Band.bands[id - 1] = band;
             }
         }
 
@@ -369,6 +461,18 @@ namespace ProjectFestival.viewmodel
             {
                 GenreStageDeleteItem();
             }
+            else if (CurrentPage.Name == "Info Bands")
+            {
+                BandDeleteItem();
+            }
+        }
+
+        private void BandDeleteItem()
+        {
+            Band band = (Band)SelectedItem;
+            int id = Convert.ToInt32(band.ID);
+            Band.DeleteBand(band);
+            Band.bands.Remove(band);
         }
 
         private void GenreStageDeleteItem()

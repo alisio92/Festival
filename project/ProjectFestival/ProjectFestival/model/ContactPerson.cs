@@ -1,14 +1,17 @@
 ﻿using ProjectFestival.database;
+using ProjectFestival.viewmodel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Markup;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -59,12 +62,12 @@ namespace ProjectFestival.model
         }
 
         private ContactPersonTitle _jobTitle;
-        public ContactPersonTitle JobTitle 
+        public ContactPersonTitle JobTitle
         {
             get { return _jobTitle; }
             set { _jobTitle = value; }
         }
-        
+
         private String _city;
         public String City
         {
@@ -94,20 +97,34 @@ namespace ProjectFestival.model
         }
 
         public static ObservableCollection<ContactPerson> contactPersons = new ObservableCollection<ContactPerson>();
-        
+
         public static int aantal = 1;
-        
+
         public static ObservableCollection<ContactPerson> GetContactPerson()
         {
+            ApplicationVM.Infotxt("Inladen contact personen...", "");
             JobRoleList = ContactPersonType.getContactPersonType();
             JobTitleList = ContactPersonTitle.getContactPersonTitle();
-            string sql = "SELECT * FROM ContactPersoon";
-            DbDataReader reader = Database.GetData(sql);
 
-            while (reader.Read())
+            try
             {
-                contactPersons.Add(Create(reader));
-                aantal++;
+                string sql = "SELECT * FROM ContactPerson";
+                DbDataReader reader = Database.GetData(sql);
+
+                while (reader.Read())
+                {
+                    contactPersons.Add(Create(reader));
+                    aantal++;
+                }
+                ApplicationVM.Infotxt("Inladen contact personen klaar", "Inladen contact personen...");
+            }
+            catch (SqlException)
+            {
+                ApplicationVM.Infotxt("Kan database ContactPersoon niet vinden", "");
+            }
+            catch (IndexOutOfRangeException)
+            {
+                ApplicationVM.Infotxt("Kolommen database hebben niet de juiste naam", "");
             }
             return contactPersons;
         }
@@ -115,6 +132,7 @@ namespace ProjectFestival.model
         private static ContactPerson Create(IDataRecord record)
         {
             ContactPerson contactPerson = new ContactPerson();
+
             contactPerson.ID = Convert.ToInt32(record["ID"]);
             contactPerson.Name = record["Name"].ToString();
             contactPerson.JobRole = new ContactPersonType()
@@ -154,7 +172,7 @@ namespace ProjectFestival.model
                 DbParameter par9 = Database.AddParameter("@Cellphone", contactPersoon.Cellphone);
 
                 int rowsaffected = 0;
-                rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5, par6, par7, par8,par9);
+                rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5, par6, par7, par8, par9);
 
                 trans.Commit();
                 return rowsaffected;
@@ -186,7 +204,7 @@ namespace ProjectFestival.model
                 DbParameter par9 = Database.AddParameter("@ID", aantal);
 
                 int rowsaffected = 0;
-                rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5, par6, par7, par8,par9);
+                rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5, par6, par7, par8, par9);
 
                 trans.Commit();
                 return rowsaffected;
@@ -200,7 +218,7 @@ namespace ProjectFestival.model
 
         public static int DeleteContact(ContactPerson contactPersoon)
         {
-            return DBConnection.DeleteItem("Contactpersoon",contactPersoon.ID);
+            return DBConnection.DeleteItem("Contactpersoon", contactPersoon.ID);
         }
 
         public override string ToString()
