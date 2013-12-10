@@ -1,0 +1,26 @@
+﻿<UserControl x:Class="ProjectFestival.view.TicketOverview"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="740" d:DesignWidth="960">
+
+    <Grid>
+        <DataGrid AutoGenerateColumns="False" Grid.Row="1" ItemsSource="{Binding TicketList}" SelectedItem="{Binding SelectedTicket}" CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Width="25" Binding="{Binding ID}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Naam" Width="1*" Binding="{Binding TicketHolder}"/>
+                <DataGridTextColumn Header="Email" Width="1*" Binding="{Binding TicketHolderEmail}"/>
+                <DataGridTemplateColumn Width="1*" Header="Type">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding TicketTypeList}" SelectedItem="{Binding TicketType,UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Aantal" Width="1*" Binding="{Binding Amount}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

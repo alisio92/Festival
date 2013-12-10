@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="ProjectFestival.view.LineUpBands"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="740" d:DesignWidth="960">
+    <Grid>
+        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding BandList}" SelectedItem="{Binding SelectedBand,UpdateSourceTrigger=PropertyChanged}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Width="25" Binding="{Binding ID}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Naam" Width="1*" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="Facebook" Width="1*" Binding="{Binding Facebook}"/>
+                <DataGridTextColumn Header="Twitter" Width="1*" Binding="{Binding Twitter}"/>
+                <DataGridTemplateColumn Width="1*" Header="Genres">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding GenreList}" SelectedItem="{Binding Genre,UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

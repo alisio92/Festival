@@ -1,0 +1,117 @@
+﻿<Window x:Class="ProjectFestival.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:ProjectFestival.viewmodel"
+        xmlns:v="clr-namespace:ProjectFestival.view"
+        Title="Festival" Height="800" Width="960" MinWidth="770" MinHeight="490">
+
+    <Window.DataContext>
+        <vm:ApplicationVM/>
+    </Window.DataContext>
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type vm:ContactOverviewVM}">
+            <v:ContactOverview/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ContactPersoneelVM}">
+            <v:ContactPersoneel/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:TicketOverviewVM}">
+            <v:TicketOverview/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:TicketVerkoopVM}">
+            <v:TicketVerkoop/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:LineUpOverviewVM}">
+            <v:LineUpOverview/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:LineUpBandsVM}">
+            <v:LineUpBands/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:LineUpGenreVM}">
+            <v:LineUpGenre/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:LineUpInfoVM}">
+            <v:LineUpInfo/>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid Style="{StaticResource Background}">
+        <Grid.Background>
+            <ImageBrush ImageSource="C:\Users\alisio\Desktop\howest\2NMCT\Business Applications\oefeningen\ProjectFestival\ProjectFestival\images\zwartevilt.png"/>
+        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="210"/>
+            <RowDefinition Height="100"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="600"/>
+            </Grid.ColumnDefinitions>
+            <ItemsControl ItemsSource="{Binding PagesMainNav}" Grid.Column="1">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Style="{StaticResource Horizontal}"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Style="{StaticResource StackPanel}">
+                            <Button Content="{Binding Name}" Command="{Binding DataContext.ChangePageCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" CommandParameter="{Binding}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Style="{StaticResource Title}">
+                    <TextBlock.Background>
+                        <ImageBrush ImageSource="C:\Users\alisio\Desktop\howest\2NMCT\Business Applications\oefeningen\ProjectFestival\ProjectFestival\images\zwartevilt.png"/>
+                    </TextBlock.Background>
+                </TextBlock>
+                <TextBox Name="txbZoeken" Style="{StaticResource Zoeken}" Grid.Row="1"/>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1">
+            <ItemsControl ItemsSource="{Binding PagesSubNav}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Style="{StaticResource Vertical}"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Style="{StaticResource StackPanel}">
+                            <Button Content="{Binding Name}" Command="{Binding DataContext.ChangePageCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" CommandParameter="{Binding}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+        <Grid Row="1" ColumnSpan="2" RowSpan="2"  Grid.Column="1">
+            <ContentControl Content="{Binding CurrentPage}"/>
+        </Grid>
+        <Grid Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <Button x:Name="btnAdd" Content="Toevoegen" Command="{Binding AddItemCommand,UpdateSourceTrigger=PropertyChanged}"/>
+            <Button x:Name="btnAanpassen" Content="Aanpassen" Grid.Row="1" Command="{Binding SaveItemCommand}" CommandParameter="{Binding SelectedItem}"/>
+            <Button x:Name="btnWissen" Content="Wissen" Grid.Row="2" Command="{Binding DeleteItemCommand}" CommandParameter="{Binding SelectedItem}"/>
+        </Grid>
+        <ScrollViewer Grid.ColumnSpan="3" Grid.Row="3">
+            <TextBlock Text="Geen extra informatie" Name="txbName" Style="{StaticResource Info}"/>
+        </ScrollViewer>
+    </Grid>
+</Window>
