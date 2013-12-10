@@ -8,7 +8,8 @@
              d:DesignHeight="740" d:DesignWidth="960">
 
     <UserControl.Resources>
-        <converter:NameToIDConverter x:Key="ID"/>
+        <converter:JobRoleToIDConverter x:Key="IDJobRole"/>
+        <converter:JobTitleToIDConverter x:Key="IDJobTitle"/>
     </UserControl.Resources>
     <Grid>
         <DataGrid AutoGenerateColumns="False" Grid.Row="1" ItemsSource="{Binding ContactList}" SelectedItem="{Binding SelectedContact,UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="False">
@@ -21,15 +22,16 @@
                             <DataTemplate>
                             <!--<ComboBox ItemsSource="{Binding JobRoleList}" DisplayMemberPath="Name" SelectedItem="{Binding Name}" SelectedValuePath="ID" SelectedValue="{Binding ID}"/>-->
                             <!--<ComboBox ItemsSource="{Binding JobRoleList}" DisplayMemberPath="Name" SelectedItem="{Binding JobRole.Name}" SelectedValuePath="ID" SelectedValue="{Binding JobRole.ID}"/>-->
-                            <ComboBox ItemsSource="{Binding JobRoleList}" SelectedIndex="{Binding JobRole.Name,Converter={StaticResource ID}}"/>
+                            <ComboBox ItemsSource="{Binding JobRoleList}" SelectedIndex="{Binding JobRole.Name,Converter={StaticResource IDJobRole}}"/>
                         </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTemplateColumn Width="1*" Header="Title">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                            <ComboBox ItemsSource="{Binding JobTitleList}" DisplayMemberPath="Name" SelectedItem="{Binding Name}" SelectedValuePath="ID" SelectedValue="{Binding ID}"/>
-                            </DataTemplate>
+                            <!--<ComboBox ItemsSource="{Binding JobTitleList}" DisplayMemberPath="Name" SelectedItem="{Binding Name}" SelectedValuePath="ID" SelectedValue="{Binding ID}"/>-->
+                            <ComboBox ItemsSource="{Binding JobTitleList}" SelectedIndex="{Binding JobTitle.Name,Converter={StaticResource IDJobTitle},UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Stad" Width="1*" Binding="{Binding City}"/>

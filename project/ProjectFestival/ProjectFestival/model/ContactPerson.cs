@@ -101,14 +101,37 @@ namespace ProjectFestival.model
         {
             JobRoleList = ContactPersonType.getContactPersonType();
             JobTitleList = ContactPersonTitle.getContactPersonTitle();
-            contactPersons = DBConnection.GetDataOutDatabase<ContactPerson>("Contactpersoon");
+            string sql = "SELECT * FROM ContactPersoon";
+            DbDataReader reader = Database.GetData(sql);
 
-            foreach(ContactPerson cp in contactPersons)
+            while (reader.Read())
             {
+                contactPersons.Add(Create(reader));
                 aantal++;
             }
-
             return contactPersons;
+        }
+
+        private static ContactPerson Create(IDataRecord record)
+        {
+            ContactPerson contactPerson = new ContactPerson();
+            contactPerson.ID = Convert.ToInt32(record["ID"]);
+            contactPerson.Name = record["Name"].ToString();
+            contactPerson.JobRole = new ContactPersonType()
+            {
+                Name = record["JobRole"].ToString()
+            };
+            contactPerson.JobTitle = new ContactPersonTitle()
+            {
+                Name = record["JobTitle"].ToString()
+            };
+            contactPerson.City = record["City"].ToString();
+            contactPerson.Email = record["Email"].ToString();
+            contactPerson.Cellphone = record["Cellphone"].ToString();
+            contactPerson.Company = record["Company"].ToString();
+            contactPerson.Phone = record["Phone"].ToString();
+
+            return contactPerson;
         }
 
         public static int EditContact(ContactPerson contactPersoon)

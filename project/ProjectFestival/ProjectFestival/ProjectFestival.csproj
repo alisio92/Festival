@@ -76,7 +76,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="converter\BytesToImageConverter.cs" />
-    <Compile Include="converter\NameToIDConverter.cs" />
+    <Compile Include="converter\JobRoleToIDConverter.cs" />
+    <Compile Include="converter\JobTitleToIDConverter.cs" />
     <Compile Include="database\DBConnection.cs" />
     <Compile Include="model\Band.cs" />
     <Compile Include="model\ContactPerson.cs" />
