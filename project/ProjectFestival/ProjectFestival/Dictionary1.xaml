@@ -18,7 +18,8 @@
                 <Trigger.EnterActions>
                     <BeginStoryboard>
                         <Storyboard>
-                            <!--<ColorAnimation Storyboard.TargetProperty="Background" From="Blue" To="Red" Duration="0:0:1.5"/>-->
+                            <!--<ColorAnimation Storyboard.TargetProperty="Background" To="{DynamicResource ButtonBrush}" Duration="0:0:1.5"/>-->
+                            <!--<ColorAnimation Storyboard.TargetProperty="Background" To="Red" Duration="0:0:1.5"/>-->
                             <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:1.5" />
                         </Storyboard>
                     </BeginStoryboard>

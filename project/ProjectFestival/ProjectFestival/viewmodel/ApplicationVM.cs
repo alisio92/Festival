@@ -220,6 +220,8 @@ namespace ProjectFestival.viewmodel
             if (CurrentPage.Name == "Contact")
             {
                 ContactPerson cp = new ContactPerson();
+                cp.JobRole = new ContactPersonType();
+                cp.JobTitle = new ContactPersonTitle();
                 cp.ID = ContactPerson.aantal;
                 ContactPerson.contactPersons.Add(cp);
             }
@@ -424,7 +426,7 @@ namespace ProjectFestival.viewmodel
             ContactPerson contactPersoon = (ContactPerson)SelectedItem;
             int id = Convert.ToInt32(contactPersoon.ID);
 
-            if (id > 0)
+            if (id != ContactPerson.aantal)
             {
                 ContactPerson.EditContact(contactPersoon);
                 ContactPerson.contactPersons[id - 1] = contactPersoon;

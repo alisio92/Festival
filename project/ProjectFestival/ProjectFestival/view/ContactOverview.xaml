@@ -14,31 +14,31 @@
     <Grid>
         <DataGrid AutoGenerateColumns="False" Grid.Row="1" ItemsSource="{Binding ContactList}" SelectedItem="{Binding SelectedContact,UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="False">
             <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID" Width="25" Binding="{Binding ID}" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Naam" Width="1*" Binding="{Binding Name}"/>
-                    <DataGridTextColumn Header="Bedrijf" Width="1*" Binding="{Binding Company}"/>
-                    <DataGridTemplateColumn Width="1*" Header="Functie">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
+                <DataGridTextColumn Header="ID" Width="25" Binding="{Binding ID}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Naam" Width="1*" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="Bedrijf" Width="1*" Binding="{Binding Company}"/>
+                <DataGridTemplateColumn Width="1*" Header="Functie">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
                             <!--<ComboBox ItemsSource="{Binding JobRoleList}" DisplayMemberPath="Name" SelectedItem="{Binding Name}" SelectedValuePath="ID" SelectedValue="{Binding ID}"/>-->
                             <!--<ComboBox ItemsSource="{Binding JobRoleList}" DisplayMemberPath="Name" SelectedItem="{Binding JobRole.Name}" SelectedValuePath="ID" SelectedValue="{Binding JobRole.ID}"/>-->
-                            <ComboBox ItemsSource="{Binding JobRoleList}" SelectedIndex="{Binding JobRole.Name,Converter={StaticResource IDJobRole}}"/>
+                            <ComboBox ItemsSource="{Binding JobRoleList}"  DisplayMemberPath="Name" SelectedItem="{Binding JobRole.Name,UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="ID" SelectedValue="{Binding JobRole.ID,UpdateSourceTrigger=PropertyChanged}"/>
                         </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Width="1*" Header="Title">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                            <!--<ComboBox ItemsSource="{Binding JobTitleList}" DisplayMemberPath="Name" SelectedItem="{Binding Name}" SelectedValuePath="ID" SelectedValue="{Binding ID}"/>-->
-                            <ComboBox ItemsSource="{Binding JobTitleList}" SelectedIndex="{Binding JobTitle.Name,Converter={StaticResource IDJobTitle},UpdateSourceTrigger=PropertyChanged}"/>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="1*" Header="Title">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding JobTitleList}" DisplayMemberPath="Name" SelectedItem="{Binding JobTitle.Name,UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="ID" SelectedValue="{Binding JobTitle.ID,UpdateSourceTrigger=PropertyChanged}"/>
+                            <!--<ComboBox ItemsSource="{Binding JobTitleList}" SelectedIndex="{Binding JobTitle.ID,UpdateSourceTrigger=PropertyChanged}"/>-->
                         </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Stad" Width="1*" Binding="{Binding City}"/>
-                    <DataGridTextColumn Header="Email" Width="200" Binding="{Binding Email}"/>
-                    <DataGridTextColumn Header="Telefoon" Width="1*" Binding="{Binding Phone}"/>
-                    <DataGridTextColumn Header="GSM" Width="1*" Binding="{Binding Cellphone}"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        </Grid>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Stad" Width="1*" Binding="{Binding City}"/>
+                <DataGridTextColumn Header="Email" Width="200" Binding="{Binding Email}"/>
+                <DataGridTextColumn Header="Telefoon" Width="1*" Binding="{Binding Phone}"/>
+                <DataGridTextColumn Header="GSM" Width="1*" Binding="{Binding Cellphone}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
 </UserControl>

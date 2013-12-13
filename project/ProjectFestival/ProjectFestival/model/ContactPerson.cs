@@ -137,11 +137,13 @@ namespace ProjectFestival.model
             contactPerson.Name = record["Name"].ToString();
             contactPerson.JobRole = new ContactPersonType()
             {
-                Name = record["JobRole"].ToString()
+                ID = (int)record["JobRole"],
+                Name = ContactPerson.JobRoleList[(int)record["JobRole"]-1].Name
             };
             contactPerson.JobTitle = new ContactPersonTitle()
             {
-                Name = record["JobTitle"].ToString()
+                ID = (int)record["JobTitle"],
+                Name = ContactPerson.JobTitleList[(int)record["JobTitle"]-1].Name
             };
             contactPerson.City = record["City"].ToString();
             contactPerson.Email = record["Email"].ToString();
@@ -165,8 +167,8 @@ namespace ProjectFestival.model
                 DbParameter par1 = Database.AddParameter("@Name", contactPersoon.Name);
                 DbParameter par2 = Database.AddParameter("@ID", contactPersoon.ID);
                 DbParameter par3 = Database.AddParameter("@Company", contactPersoon.Company);
-                DbParameter par4 = Database.AddParameter("@JobRole", contactPersoon.JobRole.Name);
-                DbParameter par5 = Database.AddParameter("@JobTitle", contactPersoon.JobTitle.Name);
+                DbParameter par4 = Database.AddParameter("@JobRole", contactPersoon.JobRole.ID);
+                DbParameter par5 = Database.AddParameter("@JobTitle", contactPersoon.JobTitle.ID);
                 DbParameter par6 = Database.AddParameter("@City", contactPersoon.City);
                 DbParameter par7 = Database.AddParameter("@Email", contactPersoon.Email);
                 DbParameter par8 = Database.AddParameter("@Phone", contactPersoon.Phone);
@@ -198,8 +200,8 @@ namespace ProjectFestival.model
                 string sql = "INSERT INTO Contactperson VALUES(@ID,@Name,@Company,@JobRole,@JobTitle,@City,@Email,@Phone,@Cellphone)";
                 DbParameter par1 = Database.AddParameter("@Name", contactPersoon.Name);
                 DbParameter par2 = Database.AddParameter("@Company", contactPersoon.Company);
-                DbParameter par3 = Database.AddParameter("@JobRole", contactPersoon.JobRole.Name);
-                DbParameter par4 = Database.AddParameter("@JobTitle", contactPersoon.JobTitle.Name);
+                DbParameter par3 = Database.AddParameter("@JobRole", contactPersoon.JobRole.ID);
+                DbParameter par4 = Database.AddParameter("@JobTitle", contactPersoon.JobTitle.ID);
                 DbParameter par5 = Database.AddParameter("@City", contactPersoon.City);
                 DbParameter par6 = Database.AddParameter("@Email", contactPersoon.Email);
                 DbParameter par7 = Database.AddParameter("@Phone", contactPersoon.Phone);
