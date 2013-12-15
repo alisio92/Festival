@@ -3,6 +3,8 @@ using ProjectFestival.viewmodel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
@@ -17,7 +19,7 @@ using System.Xml.Serialization;
 
 namespace ProjectFestival.model
 {
-    public class ContactPerson
+    public class ContactPerson : IDataErrorInfo
     {
         private int _ID;
         public int ID
@@ -26,6 +28,8 @@ namespace ProjectFestival.model
             set { _ID = value; }
         }
 
+        [Required(ErrorMessage = "Naam mag niet leeg zijn")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "De lengte moet tussen 2 en 50 karakters liggen")]
         private String _name;
         public String Name
         {
@@ -54,6 +58,7 @@ namespace ProjectFestival.model
             set { _jobTitleList = value; }
         }
 
+        [Required(ErrorMessage = "Type mag niet leeg zijn")]
         private ContactPersonType _jobRole;
         public ContactPersonType JobRole
         {
@@ -61,6 +66,7 @@ namespace ProjectFestival.model
             set { _jobRole = value; }
         }
 
+        [Required(ErrorMessage = "Titel mag niet leeg zijn")]
         private ContactPersonTitle _jobTitle;
         public ContactPersonTitle JobTitle
         {
@@ -82,6 +88,7 @@ namespace ProjectFestival.model
             set { _email = value; }
         }
 
+        [Phone(ErrorMessage = "Geef een correcte telefoon nummer in")]
         private String _phone;
         public String Phone
         {
@@ -89,6 +96,7 @@ namespace ProjectFestival.model
             set { _phone = value; }
         }
 
+        [Phone(ErrorMessage = "Geef een correcte telefoon nummer in")]
         private String _cellphone;
         public String Cellphone
         {
@@ -103,8 +111,8 @@ namespace ProjectFestival.model
         public static ObservableCollection<ContactPerson> GetContactPerson()
         {
             ApplicationVM.Infotxt("Inladen contact personen", "");
-            JobRoleList = ContactPersonType.getContactPersonType();
-            JobTitleList = ContactPersonTitle.getContactPersonTitle();
+            JobRoleList = ContactPersonType.GetContactPersonType();
+            JobTitleList = ContactPersonTitle.GetContactPersonTitle();
 
             try
             {
@@ -120,11 +128,15 @@ namespace ProjectFestival.model
             }
             catch (SqlException)
             {
-                ApplicationVM.Infotxt("Kan database ContactPersoon niet vinden", "");
+                ApplicationVM.Infotxt("Kan database ContactPerson niet vinden", "");
             }
             catch (IndexOutOfRangeException)
             {
                 ApplicationVM.Infotxt("Kolommen database hebben niet de juiste naam", "");
+            }
+            catch (Exception)
+            {
+                ApplicationVM.Infotxt("Kan ContactPerson tabel niet inlezen", "");
             }
             return contactPersons;
         }
@@ -135,6 +147,7 @@ namespace ProjectFestival.model
 
             contactPerson.ID = Convert.ToInt32(record["ID"]);
             contactPerson.Name = record["Name"].ToString();
+            contactPerson.Company = record["Company"].ToString();
             contactPerson.JobRole = new ContactPersonType()
             {
                 ID = (int)record["JobRole"],
@@ -147,9 +160,22 @@ namespace ProjectFestival.model
             };
             contactPerson.City = record["City"].ToString();
             contactPerson.Email = record["Email"].ToString();
-            contactPerson.Cellphone = record["Cellphone"].ToString();
-            contactPerson.Company = record["Company"].ToString();
-            contactPerson.Phone = record["Phone"].ToString();
+            if (record["Cellphone"].ToString() != "")
+            {
+                contactPerson.Cellphone = record["Cellphone"].ToString();
+            }
+            else
+            {
+                contactPerson.Cellphone = "N/A";
+            }
+            if (record["Phone"].ToString() != "")
+            {
+                contactPerson.Phone = record["Phone"].ToString();
+            }
+            else
+            {
+                contactPerson.Phone = "N/A";
+            }
 
             return contactPerson;
         }
@@ -183,6 +209,7 @@ namespace ProjectFestival.model
             }
             catch (Exception)
             {
+                ApplicationVM.Infotxt("Kan ContactPerson tabel niet updaten", "");
                 trans.Rollback();
                 return 0;
             }
@@ -190,7 +217,7 @@ namespace ProjectFestival.model
 
         public static int AddContact(ContactPerson contactPersoon)
         {
-            //ApplicationVM.Infotxt("Niewe lijn toevoegen aan ContactPerson", "");
+            ApplicationVM.Infotxt("Niewe lijn toevoegen aan ContactPerson", "");
             DbTransaction trans = null;
 
             try
@@ -212,11 +239,12 @@ namespace ProjectFestival.model
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5, par6, par7, par8, par9);
 
                 trans.Commit();
-                //ApplicationVM.Infotxt("Niewe lijn toegevoegd aan ContactPerson", "Niewe lijn toevoegen aan ContactPerson");
+                ApplicationVM.Infotxt("Niewe lijn toegevoegd aan ContactPerson", "Niewe lijn toevoegen aan ContactPerson");
                 return rowsaffected;
             }
             catch (Exception)
             {
+                ApplicationVM.Infotxt("Kan geen nieuwe lijn toevoegen aan ContactPerson", "");
                 trans.Rollback();
                 return 0;
             }
@@ -224,12 +252,59 @@ namespace ProjectFestival.model
 
         public static int DeleteContact(ContactPerson contactPersoon)
         {
-            return DBConnection.DeleteItem("Contactperson", contactPersoon.ID);
+            ApplicationVM.Infotxt("Data verwijderen in contactPerson op lijn " + contactPersoon.ID, "");
+            DbTransaction trans = null;
+
+            try
+            {
+                trans = Database.BeginTransaction();
+
+                string sql = "DELETE FROM ContactPerson WHERE ID = @ID";
+                DbParameter par1 = Database.AddParameter("@ID", contactPersoon.ID);
+
+                int rowsaffected = 0;
+                rowsaffected += Database.ModifyData(trans, sql, par1);
+
+                trans.Commit();
+                ApplicationVM.Infotxt("Data verwijderen in contactPerson op lijn " + contactPersoon.ID, "Data verwijderen in contactPerson op lijn " + contactPersoon.ID);
+                return rowsaffected;
+            }
+            catch (Exception)
+            {
+                ApplicationVM.Infotxt("Kan geen rij verwijderen in ContactPerson", "");
+                trans.Rollback();
+                return 0;
+            }
         }
 
         public override string ToString()
         {
             return ID + " " + Name + " " + Company + " " + JobRole + " " + JobTitle + " " + City + " " + Email + " " + Phone + " " + Cellphone;
+        }
+
+        public string Error
+        {
+            get { return "Het object is niet valid"; }
+        }
+
+        public string this[string columnName]
+        {
+            get
+            {
+                try
+                {
+                    object value = this.GetType().GetProperty(columnName).GetValue(this);
+                    Validator.ValidateProperty(value, new ValidationContext(this, null, null)
+                    {
+                        MemberName = columnName
+                    });
+                }
+                catch (ValidationException ex)
+                {
+                    return ex.Message;
+                }
+                return String.Empty;
+            }
         }
     }
 }

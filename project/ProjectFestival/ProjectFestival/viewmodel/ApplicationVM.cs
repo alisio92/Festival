@@ -3,6 +3,7 @@ using ProjectFestival.model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -88,6 +89,17 @@ namespace ProjectFestival.viewmodel
             }
         }
 
+        private Boolean _enable;
+        public Boolean Enable
+        {
+            get { return _enable; }
+            set
+            {
+                _enable = true;
+                OnPropertyChanged("Enable");
+            }
+        }
+
         private ObservableCollection<IPage> _pagesMainNav;
         public ObservableCollection<IPage> PagesMainNav
         {
@@ -152,12 +164,28 @@ namespace ProjectFestival.viewmodel
         public static object SelectedItem
         {
             get { return _selectedItem; }
-            set { _selectedItem = value; }
+            set 
+            {
+                if (SelectedItem != null)
+                {
+                    
+                }
+                else
+                {
+                }
+                _selectedItem = value; 
+            }
+        }
+
+        public bool IsValid()
+        {
+            return Validator.TryValidateObject(this, new ValidationContext(this, null, null),
+            null, true);
         }
 
         public ICommand SaveItemCommand
         {
-            get { return new RelayCommand(SaveItem); }
+            get { return new RelayCommand(SaveItem,IsValid); }
         }
 
         public ICommand DeleteItemCommand

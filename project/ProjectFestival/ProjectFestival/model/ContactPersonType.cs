@@ -1,9 +1,11 @@
 ﻿using ProjectFestival.database;
+using ProjectFestival.viewmodel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,41 +35,45 @@ namespace ProjectFestival.model
             return Name;
         }
 
-        public static ObservableCollection<ContactPersonType> getContactPersonType()
+        public static ObservableCollection<ContactPersonType> GetContactPersonType()
         {
+            ApplicationVM.Infotxt("Inladen contact types", "");
             ObservableCollection<ContactPersonType> contactType = new ObservableCollection<ContactPersonType>();
-            contactType = DBConnection.GetDataOutDatabase<ContactPersonType>("ContactPersonType");
-
-            foreach (ContactPersonType cp in contactType)
+            try
             {
-                aantal++;
+                string sql = "SELECT * FROM ContactPersonType";
+                DbDataReader reader = Database.GetData(sql);
+
+                while (reader.Read())
+                {
+                    contactType.Add(Create(reader));
+                    aantal++;
+                }
+                ApplicationVM.Infotxt("Contact types ingeladen", "Inladen contact types");
+            }
+            catch (SqlException)
+            {
+                ApplicationVM.Infotxt("Kan database ContactPersonType niet vinden", "");
+            }
+            catch (IndexOutOfRangeException)
+            {
+                ApplicationVM.Infotxt("Kolommen database hebben niet de juiste naam", "");
+            }
+            catch (Exception)
+            {
+                ApplicationVM.Infotxt("Kan ContactPersonType tabel niet inlezen", "");
             }
             return contactType;
         }
 
-        public static int EditType(ContactPersonType contactPersoonType)
+        private static ContactPersonType Create(IDataRecord record)
         {
-            DbTransaction trans = null;
+            ContactPersonType contactPersonType = new ContactPersonType();
 
-            try
-            {
-                trans = Database.BeginTransaction();
+            contactPersonType.ID = Convert.ToInt32(record["ID"]);
+            contactPersonType.Name = record["Name"].ToString();
 
-                string sql = "UPDATE ContactpersonType SET Name=@Name WHERE ID=@ID";
-                DbParameter par1 = Database.AddParameter("@Name", contactPersoonType.Name);
-                DbParameter par2 = Database.AddParameter("@ID", contactPersoonType.ID);
-
-                int rowsaffected = 0;
-                rowsaffected += Database.ModifyData(trans, sql, par1, par2);
-
-                trans.Commit();
-                return rowsaffected;
-            }
-            catch (Exception)
-            {
-                trans.Rollback();
-                return 0;
-            }
+            return contactPersonType;
         }
 
         public static int AddType(ContactPersonType contactPersoonType)
@@ -95,6 +101,31 @@ namespace ProjectFestival.model
             }
         }
 
+        public static int EditType(ContactPersonType contactPersoonType)
+        {
+            DbTransaction trans = null;
+
+            try
+            {
+                trans = Database.BeginTransaction();
+
+                string sql = "UPDATE ContactpersonType SET Name=@Name WHERE ID=@ID";
+                DbParameter par1 = Database.AddParameter("@Name", contactPersoonType.Name);
+                DbParameter par2 = Database.AddParameter("@ID", contactPersoonType.ID);
+
+                int rowsaffected = 0;
+                rowsaffected += Database.ModifyData(trans, sql, par1, par2);
+
+                trans.Commit();
+                return rowsaffected;
+            }
+            catch (Exception)
+            {
+                trans.Rollback();
+                return 0;
+            }
+        }
+        
         public static int DeleteType(ContactPersonType contactPersoonType)
         {
             return DBConnection.DeleteItem("ContactPersonType", contactPersoonType.ID);

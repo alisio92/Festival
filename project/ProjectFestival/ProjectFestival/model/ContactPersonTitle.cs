@@ -1,9 +1,11 @@
 ﻿using ProjectFestival.database;
+using ProjectFestival.viewmodel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,19 +35,48 @@ namespace ProjectFestival.model
             return Name;
         }
 
-        public static ObservableCollection<ContactPersonTitle> getContactPersonTitle()
+        public static ObservableCollection<ContactPersonTitle> GetContactPersonTitle()
         {
-            ObservableCollection<ContactPersonTitle> contactTitle = new ObservableCollection<ContactPersonTitle>();
-            contactTitle = DBConnection.GetDataOutDatabase<ContactPersonTitle>("ContactPersonTitle");
-
-            foreach (ContactPersonTitle cp in contactTitle)
+            ApplicationVM.Infotxt("Inladen contact titels", "");
+            ObservableCollection<ContactPersonTitle> contactType = new ObservableCollection<ContactPersonTitle>();
+            try
             {
-                aantal++;
+                string sql = "SELECT * FROM ContactPersonTitle";
+                DbDataReader reader = Database.GetData(sql);
+
+                while (reader.Read())
+                {
+                    contactType.Add(Create(reader));
+                    aantal++;
+                }
+                ApplicationVM.Infotxt("Contact titels ingeladen", "Inladen contact titels");
             }
-            return contactTitle;
+            catch (SqlException)
+            {
+                ApplicationVM.Infotxt("Kan database ContactPersonTitle niet vinden", "");
+            }
+            catch (IndexOutOfRangeException)
+            {
+                ApplicationVM.Infotxt("Kolommen database hebben niet de juiste naam", "");
+            }
+            catch (Exception)
+            {
+                ApplicationVM.Infotxt("Kan ContactPersonTitle tabel niet inlezen", "");
+            }
+            return contactType;
         }
 
-        public static int EditTitle(ContactPersonTitle contactPersoonTitle)
+        private static ContactPersonTitle Create(IDataRecord record)
+        {
+            ContactPersonTitle contactPersonTitle = new ContactPersonTitle();
+
+            contactPersonTitle.ID = Convert.ToInt32(record["ID"]);
+            contactPersonTitle.Name = record["Name"].ToString();
+
+            return contactPersonTitle;
+        }
+
+        public static int AddTitle(ContactPersonTitle contactPersoonTitle)
         {
             DbTransaction trans = null;
 
@@ -53,9 +84,9 @@ namespace ProjectFestival.model
             {
                 trans = Database.BeginTransaction();
 
-                string sql = "UPDATE ContactpersonTitle SET Name=@Name WHERE ID=@ID";
+                string sql = "INSERT INTO ContactpersonTitle VALUES(@ID,@Name)";
                 DbParameter par1 = Database.AddParameter("@Name", contactPersoonTitle.Name);
-                DbParameter par2 = Database.AddParameter("@ID", contactPersoonTitle.ID);
+                DbParameter par2 = Database.AddParameter("@ID", aantal);
 
                 int rowsaffected = 0;
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2);
@@ -70,7 +101,7 @@ namespace ProjectFestival.model
             }
         }
 
-        public static int AddTitle(ContactPersonTitle contactPersoonTitle)
+        public static int EditTitle(ContactPersonTitle contactPersoonTitle)
         {
             DbTransaction trans = null;
 
@@ -78,9 +109,9 @@ namespace ProjectFestival.model
             {
                 trans = Database.BeginTransaction();
 
-                string sql = "INSERT INTO ContactpersonTitle VALUES(@ID,@Name)";
+                string sql = "UPDATE ContactpersonTitle SET Name=@Name WHERE ID=@ID";
                 DbParameter par1 = Database.AddParameter("@Name", contactPersoonTitle.Name);
-                DbParameter par2 = Database.AddParameter("@ID", aantal);
+                DbParameter par2 = Database.AddParameter("@ID", contactPersoonTitle.ID);
 
                 int rowsaffected = 0;
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2);

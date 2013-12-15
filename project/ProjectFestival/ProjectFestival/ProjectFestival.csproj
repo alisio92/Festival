@@ -46,6 +46,7 @@
       <HintPath>..\..\..\CodeProjectTimelineDemo\TimeLineTool\bin\Debug\GongSolutions.Wpf.DragDrop.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -76,8 +77,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="converter\BytesToImageConverter.cs" />
-    <Compile Include="converter\JobRoleToIDConverter.cs" />
-    <Compile Include="converter\JobTitleToIDConverter.cs" />
     <Compile Include="database\DBConnection.cs" />
     <Compile Include="model\Band.cs" />
     <Compile Include="model\ContactPerson.cs" />
