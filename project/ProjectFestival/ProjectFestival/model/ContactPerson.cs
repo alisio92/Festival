@@ -151,12 +151,12 @@ namespace ProjectFestival.model
             contactPerson.JobRole = new ContactPersonType()
             {
                 ID = (int)record["JobRole"],
-                Name = ContactPerson.JobRoleList[(int)record["JobRole"]-1].Name
+                Name = JobRoleList[(int)record["JobRole"]-1].Name
             };
             contactPerson.JobTitle = new ContactPersonTitle()
             {
                 ID = (int)record["JobTitle"],
-                Name = ContactPerson.JobTitleList[(int)record["JobTitle"]-1].Name
+                Name = JobTitleList[(int)record["JobTitle"]-1].Name
             };
             contactPerson.City = record["City"].ToString();
             contactPerson.Email = record["Email"].ToString();

@@ -89,7 +89,7 @@ namespace ProjectFestival.viewmodel
             }
         }
 
-        private Boolean _enable;
+        private Boolean _enable = true;
         public Boolean Enable
         {
             get { return _enable; }
@@ -273,26 +273,35 @@ namespace ProjectFestival.viewmodel
             {
                 ContactSaveItem();
             }
-            else if (CurrentPage.Name == "Personeel")
+            if (CurrentPage.Name == "Personeel")
             {
                 PersoneelSaveItem();
             }
-            else if (CurrentPage.Name == "Tickets")
+            if (CurrentPage.Name == "Tickets")
             {
                 TicketsSaveItem();
             }
-            else if (CurrentPage.Name == "Verkoop")
+            if (CurrentPage.Name == "Verkoop")
             {
                 VerkoopSaveItem();
             }
-            else if (CurrentPage.Name == "Genre & Stage")
+            if (CurrentPage.Name == "Genre & Stage")
             {
                 GenreStageSaveItem();
             }
-            else if (CurrentPage.Name == "Info Bands")
+            if (CurrentPage.Name == "Info Bands")
             {
                 BandSaveItem();
             }
+            if (CurrentPage.Name == "Line-Up")
+            {
+                LineUpSaveItem();
+            }
+        }
+
+        private void LineUpSaveItem()
+        {
+            LineUp.JsonWegschrijven();
         }
 
         private void BandSaveItem()

@@ -1,9 +1,11 @@
-﻿using ProjectFestival.database;
+﻿using Newtonsoft.Json;
+using ProjectFestival.database;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Common;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -61,10 +63,10 @@ namespace ProjectFestival.model
             set { _stageList = value; }
         }
 
+        public static ObservableCollection<LineUp> lineUp = new ObservableCollection<LineUp>();
+
         public static ObservableCollection<LineUp> GetLineUp()
         {
-            ObservableCollection<LineUp> lineUp = new ObservableCollection<LineUp>();
-
             string sql = "SELECT * FROM LineUp";
             DbDataReader reader = Database.GetData(sql);
 
@@ -100,6 +102,33 @@ namespace ProjectFestival.model
         public static int DeleteLineUp(LineUp lineUp)
         {
             return DBConnection.DeleteItem("LineUp", lineUp.ID);
+        }
+
+        public static void JsonWegschrijven()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                LineUp l = new LineUp();
+                l.ID = i;
+                l.From = "17/12/2013-18:00";
+                l.Until = "17/12/2013-18:00";
+                l.Band = Band.bands[0];
+                l.Stage = new Stage()
+                {
+                    ID = i,
+                    Name = "bob"+i,
+                };
+            }
+
+            //string json = JsonConvert.SerializeObject(lineUp);
+            //System.IO.File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "test.txt", json);
+
+            foreach (LineUp ssc in lineUp)
+            {
+                string filename = AppDomain.CurrentDomain.BaseDirectory + "test2.txt";
+               // WordprocessingDocument newdoc = WordprocessingDocument.Open(filename, true);
+                //newdoc.Close();
+            }
         }
     }
 }

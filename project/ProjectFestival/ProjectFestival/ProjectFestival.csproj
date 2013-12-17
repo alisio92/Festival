@@ -45,6 +45,9 @@
     <Reference Include="GongSolutions.Wpf.DragDrop">
       <HintPath>..\..\..\CodeProjectTimelineDemo\TimeLineTool\bin\Debug\GongSolutions.Wpf.DragDrop.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\..\..\..\Desktop\Bin\Net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
