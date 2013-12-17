@@ -1,9 +1,11 @@
 ﻿using ProjectFestival.database;
+using ProjectFestival.viewmodel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -62,14 +64,51 @@ namespace ProjectFestival.model
         
         public static ObservableCollection<Ticket> getTickets()
         {
+            ApplicationVM.Infotxt("Inladen klanten", "");
             TicketTypeList = TicketType.getTicketTypes();
-            tickets = DBConnection.GetDataOutDatabase<Ticket>("Ticket");
 
-            foreach (Ticket t in tickets)
+            try
             {
-                aantal++;
+                string sql = "SELECT * FROM Ticket";
+                DbDataReader reader = Database.GetData(sql);
+
+                while (reader.Read())
+                {
+                    tickets.Add(Create(reader));
+                    aantal++;
+                }
+                ApplicationVM.Infotxt("Klanten ingeladen", "Inladen klanten");
+            }
+            catch (SqlException)
+            {
+                ApplicationVM.Infotxt("Kan database Ticket niet vinden", "");
+            }
+            catch (IndexOutOfRangeException)
+            {
+                ApplicationVM.Infotxt("Kolommen database hebben niet de juiste naam", "");
+            }
+            catch (Exception)
+            {
+                ApplicationVM.Infotxt("Kan Ticket tabel niet inlezen", "");
             }
             return tickets;
+        }
+
+        private static Ticket Create(IDataRecord record)
+        {
+            Ticket ticket = new Ticket();
+
+            ticket.ID = Convert.ToInt32(record["ID"]);
+            ticket.TicketHolder = record["TicketHolder"].ToString();
+            ticket.TicketHolderEmail = record["TicketHolderEmail"].ToString();
+            ticket.Amount = (int)record["Amount"];
+            ticket.TicketType = new TicketType()
+            {
+                ID = (int)record["TicketType"],
+                Name = TicketTypeList[(int)record["TicketType"] - 1].Name
+            };
+
+            return ticket;
         }
 
         public static int EditTicket(Ticket ticket)
@@ -84,7 +123,7 @@ namespace ProjectFestival.model
                 DbParameter par1 = Database.AddParameter("@TicketHolder", ticket.TicketHolder);
                 DbParameter par2 = Database.AddParameter("@ID", ticket.ID);
                 DbParameter par3 = Database.AddParameter("@TicketHolderEmail", ticket.TicketHolderEmail);
-                DbParameter par4 = Database.AddParameter("@TicketType", ticket.TicketType.Name);
+                DbParameter par4 = Database.AddParameter("@TicketType", ticket.TicketType.ID);
                 DbParameter par5 = Database.AddParameter("@Amount", ticket.Amount);
 
                 int rowsaffected = 0;
@@ -112,7 +151,7 @@ namespace ProjectFestival.model
                 DbParameter par1 = Database.AddParameter("@TicketHolder", ticket.TicketHolder);
                 DbParameter par2 = Database.AddParameter("@ID", aantal);
                 DbParameter par3 = Database.AddParameter("@TicketHolderEmail", ticket.TicketHolderEmail);
-                DbParameter par4 = Database.AddParameter("@TicketType", ticket.TicketType.Name);
+                DbParameter par4 = Database.AddParameter("@TicketType", ticket.TicketType.ID);
                 DbParameter par5 = Database.AddParameter("@Amount", ticket.Amount);
 
                 int rowsaffected = 0;

@@ -256,6 +256,7 @@ namespace ProjectFestival.viewmodel
             if (CurrentPage.Name == "Tickets")
             {
                 Ticket t = new Ticket();
+                t.TicketType = new TicketType();
                 t.ID = Ticket.aantal;
                 Ticket.tickets.Add(t);
             }
@@ -396,7 +397,7 @@ namespace ProjectFestival.viewmodel
             Ticket ticket = (Ticket)SelectedItem;
             int id = Convert.ToInt32(ticket.ID);
 
-            if (id > 0)
+            if (id != Ticket.aantal)
             {
                 Ticket.EditTicket(ticket);
                 Ticket.tickets[id - 1] = ticket;

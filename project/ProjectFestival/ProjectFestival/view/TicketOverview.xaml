@@ -15,7 +15,7 @@
                 <DataGridTemplateColumn Width="1*" Header="Type">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ComboBox ItemsSource="{Binding TicketTypeList}" SelectedItem="{Binding TicketType,UpdateSourceTrigger=PropertyChanged}"/>
+                            <ComboBox ItemsSource="{Binding TicketTypeList}" DisplayMemberPath="Name" SelectedItem="{Binding TicketType.Name,UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="ID" SelectedValue="{Binding TicketType.ID,UpdateSourceTrigger=PropertyChanged}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
