@@ -86,6 +86,7 @@
     <Compile Include="model\ContactPersonTitle.cs" />
     <Compile Include="model\ContactPersonType.cs" />
     <Compile Include="database\Database.cs" />
+    <Compile Include="model\EnableDisable.cs" />
     <Compile Include="model\Festival.cs" />
     <Compile Include="model\Genre.cs" />
     <Compile Include="model\LineUp.cs" />

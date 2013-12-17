@@ -7,7 +7,7 @@ using System.Linq;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+//using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
@@ -18,7 +18,7 @@ using System.Text;
 using Windows.Storage.Streams;
 using Windows.Media.Capture;
 using Windows.Storage;
-//using Callisto.Controls;
+using Callisto.Controls;
 using Windows.UI.StartScreen;
 
 // The Item Detail Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234232
@@ -81,26 +81,26 @@ namespace Festival
             await tile.RequestCreateAsync();
         }
 
-        //private void OnBragButtonClicked(object sender, RoutedEventArgs e)
-        //{
-        //    // Create a menu containing two items
-        //    var menu = new Menu();
-        //    var item1 = new MenuItem { Text = "Photo" };
-        //    item1.Tapped += OnCapturePhoto;
-        //    menu.Items.Add(item1);
-        //    var item2 = new MenuItem { Text = "Video" };
-        //    item2.Tapped += OnCaptureVideo;
-        //    menu.Items.Add(item2);
+        private void OnBragButtonClicked(object sender, RoutedEventArgs e)
+        {
+            // Create a menu containing two items
+            var menu = new Menu();
+            var item1 = new MenuItem { Text = "Photo" };
+            item1.Tapped += OnCapturePhoto;
+            menu.Items.Add(item1);
+            var item2 = new MenuItem { Text = "Video" };
+            item2.Tapped += OnCaptureVideo;
+            menu.Items.Add(item2);
 
-        //    // Show the menu in a Flyout anchored to the Brag button
-        //    var flyout = new Flyout();
-        //    flyout.Placement = PlacementMode.Top;
-        //    flyout.HorizontalAlignment = HorizontalAlignment.Left;
-        //    flyout.HorizontalContentAlignment = HorizontalAlignment.Left;
-        //    flyout.PlacementTarget = BragButton;
-        //    flyout.Content = menu;
-        //    flyout.IsOpen = true;
-        //}
+            // Show the menu in a Flyout anchored to the Brag button
+            var flyout = new Flyout();
+            flyout.Placement = PlacementMode.Top;
+            flyout.HorizontalAlignment = HorizontalAlignment.Left;
+            flyout.HorizontalContentAlignment = HorizontalAlignment.Left;
+            flyout.PlacementTarget = BragButton;
+            flyout.Content = menu;
+            flyout.IsOpen = true;
+        }
 
         private async void OnCapturePhoto(object sender, TappedRoutedEventArgs e)
         {

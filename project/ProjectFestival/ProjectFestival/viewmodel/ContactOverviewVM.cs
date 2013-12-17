@@ -32,6 +32,15 @@ namespace ProjectFestival.viewmodel
             get { return _selectedContact; }
             set
             {
+                if (SelectedContact != null)
+                {
+                    EnableDisable e = new EnableDisable(true);
+                }
+                else
+                {
+                    EnableDisable e = new EnableDisable(false);
+                }
+                
                 _selectedContact = value;
                 OnPropertyChanged("SelectedContact");
                 ApplicationVM.SelectedItem = SelectedContact;

@@ -80,7 +80,7 @@
                         <ImageBrush ImageSource="C:\Users\alisio\Desktop\howest\2NMCT\Business Applications\oefeningen\ProjectFestival\ProjectFestival\images\zwartevilt.png"/>
                     </TextBlock.Background>
                 </TextBlock>
-                <TextBox Style="{StaticResource Zoeken}" Grid.Row="1" Text="{Binding Search}">
+                <TextBox Style="{StaticResource Zoeken}" Grid.Row="1" Text="{Binding Search,UpdateSourceTrigger=PropertyChanged}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="TextChanged">
                             <cmd:EventToCommand Command="{Binding SearchCommand}" PassEventArgsToCommand="True"/>

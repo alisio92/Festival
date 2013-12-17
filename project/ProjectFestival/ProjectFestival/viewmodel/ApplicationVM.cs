@@ -89,13 +89,13 @@ namespace ProjectFestival.viewmodel
             }
         }
 
-        private Boolean _enable = true;
+        private Boolean _enable = false;
         public Boolean Enable
         {
             get { return _enable; }
             set
             {
-                _enable = true;
+                _enable = EnableDisable.IsEnable;
                 OnPropertyChanged("Enable");
             }
         }
@@ -185,7 +185,7 @@ namespace ProjectFestival.viewmodel
 
         public ICommand SaveItemCommand
         {
-            get { return new RelayCommand(SaveItem,IsValid); }
+            get { return new RelayCommand(SaveItem); }
         }
 
         public ICommand DeleteItemCommand
@@ -231,7 +231,28 @@ namespace ProjectFestival.viewmodel
 
         private void SearchItem()
         {
-            
+            Zoeken();
+        }
+
+        private void Zoeken()
+        {
+           
+            if (CurrentPage.Name == "Contact")
+            {
+                if (Search != "")
+                {
+                    ContactPerson.Zoeken(Search);
+                }
+                //IPage test = CurrentPage as ContactOverviewVM;
+                //if (SelectedItem != null)
+                //{
+                //    test.IsEnabledContacten = true;
+                //}
+                //else
+                //{
+                //    test.IsEnabledContacten = false;
+                //}
+            }
         }
         
         private void AddItem()

@@ -105,6 +105,7 @@ namespace ProjectFestival.model
         }
 
         public static ObservableCollection<ContactPerson> contactPersons = new ObservableCollection<ContactPerson>();
+        public static ObservableCollection<ContactPerson> oContactPersons = new ObservableCollection<ContactPerson>();
 
         public static int aantal = 1;
 
@@ -138,6 +139,7 @@ namespace ProjectFestival.model
             {
                 ApplicationVM.Infotxt("Kan ContactPerson tabel niet inlezen", "");
             }
+            oContactPersons = contactPersons;
             return contactPersons;
         }
 
@@ -304,6 +306,19 @@ namespace ProjectFestival.model
                     return ex.Message;
                 }
                 return String.Empty;
+            }
+        }
+
+        public static void Zoeken(string parameter)
+        {
+            contactPersons = new ObservableCollection<ContactPerson>();
+            foreach(ContactPerson c in oContactPersons)
+            {
+                if (c.Name.Contains(parameter))
+                {
+                    contactPersons.Add(c);
+                    continue;
+                }
             }
         }
     }
