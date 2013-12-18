@@ -54,7 +54,6 @@ namespace ProjectFestival.viewmodel
             get { return _info; }
             set { _info = value;}
         }
-
         private void subNav()
         {
             PagesSubNav.Clear();
@@ -86,17 +85,6 @@ namespace ProjectFestival.viewmodel
             {
                 _currentpage = value;
                 OnPropertyChanged("CurrentPage");
-            }
-        }
-
-        private Boolean _enable = false;
-        public Boolean Enable
-        {
-            get { return _enable; }
-            set
-            {
-                _enable = EnableDisable.IsEnable;
-                OnPropertyChanged("Enable");
             }
         }
 
@@ -164,17 +152,7 @@ namespace ProjectFestival.viewmodel
         public static object SelectedItem
         {
             get { return _selectedItem; }
-            set 
-            {
-                if (SelectedItem != null)
-                {
-                    
-                }
-                else
-                {
-                }
-                _selectedItem = value; 
-            }
+            set { _selectedItem = value; }
         }
 
         public bool IsValid()
@@ -241,17 +219,8 @@ namespace ProjectFestival.viewmodel
             {
                 if (Search != "")
                 {
-                    ContactPerson.Zoeken(Search);
+
                 }
-                //IPage test = CurrentPage as ContactOverviewVM;
-                //if (SelectedItem != null)
-                //{
-                //    test.IsEnabledContacten = true;
-                //}
-                //else
-                //{
-                //    test.IsEnabledContacten = false;
-                //}
             }
         }
         

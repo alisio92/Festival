@@ -288,7 +288,6 @@ namespace ProjectFestival.model
         {
             get { return "Het object is niet valid"; }
         }
-
         public string this[string columnName]
         {
             get
@@ -306,19 +305,6 @@ namespace ProjectFestival.model
                     return ex.Message;
                 }
                 return String.Empty;
-            }
-        }
-
-        public static void Zoeken(string parameter)
-        {
-            contactPersons = new ObservableCollection<ContactPerson>();
-            foreach(ContactPerson c in oContactPersons)
-            {
-                if (c.Name.Contains(parameter))
-                {
-                    contactPersons.Add(c);
-                    continue;
-                }
             }
         }
     }

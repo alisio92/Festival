@@ -9,6 +9,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Newtonsoft.Json.Converters;
 
 namespace ProjectFestival.model
 {
@@ -116,19 +120,40 @@ namespace ProjectFestival.model
                 l.Stage = new Stage()
                 {
                     ID = i,
-                    Name = "bob"+i,
+                    Name = "bob" + i,
                 };
+                lineUp.Add(l);
             }
 
-            //string json = JsonConvert.SerializeObject(lineUp);
-            //System.IO.File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "test.txt", json);
+            //JsonSerializer serializer = new JsonSerializer();
+            //serializer.Converters.Add(new JavaScriptDateTimeConverter());
+            //serializer.NullValueHandling = NullValueHandling.Ignore;
 
-            foreach (LineUp ssc in lineUp)
+            //StreamWriter sw = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + "test.txt");
+            //JsonWriter writer = new JsonTextWriter(sw);
+            //foreach (LineUp l in lineUp)
+            //{
+            //    serializer.Serialize(writer, lineUp);
+            //}
+            //writer.Close();
+
+            StreamWriter sw = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + "test.txt");
+            sw.WriteLine("this \"word\" test");
+            sw.Close();
+
+            WordprocessingDocument wordDocument = WordprocessingDocument.Create(AppDomain.CurrentDomain.BaseDirectory + "test2.doc", WordprocessingDocumentType.Document);
+            MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
+
+            mainPart.Document = new Document();
+
+            foreach (LineUp l in lineUp)
             {
-                string filename = AppDomain.CurrentDomain.BaseDirectory + "test2.txt";
-               // WordprocessingDocument newdoc = WordprocessingDocument.Open(filename, true);
-                //newdoc.Close();
+                Body body = mainPart.Document.AppendChild(new Body());
+                Paragraph para = body.AppendChild(new Paragraph());
+                Run run = para.AppendChild(new Run());
+                run.AppendChild(new Text(l.ID + " " + l.Band.Name + " " + l.Stage.Name + " " + l.Date + " " + l.From + " " + l.Until));
             }
+            wordDocument.Close();
         }
     }
 }

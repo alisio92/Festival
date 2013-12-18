@@ -121,7 +121,7 @@
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
             <Button x:Name="btnAdd" Content="Toevoegen" Command="{Binding AddItemCommand,UpdateSourceTrigger=PropertyChanged}"/>
-            <Button x:Name="btnAanpassen" Content="Aanpassen" Grid.Row="1" Command="{Binding SaveItemCommand}" CommandParameter="{Binding SelectedItem}" IsEnabled="{Binding Enable}"/>
+            <Button x:Name="btnAanpassen" Content="Aanpassen" Grid.Row="1" Command="{Binding SaveItemCommand}" CommandParameter="{Binding SelectedItem}"/>
             <Button x:Name="btnWissen" Content="Wissen" Grid.Row="2" Command="{Binding DeleteItemCommand}" CommandParameter="{Binding SelectedItem}"/>
         </Grid>
         <ScrollViewer Grid.ColumnSpan="3" Grid.Row="3">
