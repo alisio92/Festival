@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Windows.Input;
 
 namespace ProjectFestival.viewmodel
@@ -87,7 +88,7 @@ namespace ProjectFestival.viewmodel
                 OnPropertyChanged("CurrentPage");
             }
         }
-
+        
         private ObservableCollection<IPage> _pagesMainNav;
         public ObservableCollection<IPage> PagesMainNav
         {
@@ -147,7 +148,7 @@ namespace ProjectFestival.viewmodel
             {
             }
         }
-
+        
         private static object _selectedItem;
         public static object SelectedItem
         {
@@ -219,10 +220,11 @@ namespace ProjectFestival.viewmodel
             {
                 if (Search != "")
                 {
-
+                    ContactPerson.Zoeken(Search);
+                    ContactOverviewVM m = new ContactOverviewVM();
                 }
             }
-        }
+        }        
         
         private void AddItem()
         {

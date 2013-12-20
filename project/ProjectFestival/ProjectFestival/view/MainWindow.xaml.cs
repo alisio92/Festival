@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProjectFestival.viewmodel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,17 +21,9 @@ namespace ProjectFestival
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Boolean isEnable = false;
-
         public MainWindow()
         {
             InitializeComponent();
-            Loaded += MainWindow_Loaded;
-        }
-
-        void MainWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            btn
         }
     }
 }

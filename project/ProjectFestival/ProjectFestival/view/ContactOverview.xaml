@@ -11,7 +11,7 @@
         <DataGrid AutoGenerateColumns="False" Grid.Row="1" ItemsSource="{Binding ContactList}" SelectedItem="{Binding SelectedContact,UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Width="25" Binding="{Binding ID}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Naam" Width="1*" Binding="{Binding Name}" Validation.ErrorTemplate="{StaticResource ErrorTemplate }"/>
+                <DataGridTextColumn Header="Naam" Width="1*" Binding="{Binding Name}"/>
                 <DataGridTextColumn Header="Bedrijf" Width="1*" Binding="{Binding Company}"/>
                 <DataGridTemplateColumn Width="1*" Header="Functie">
                     <DataGridTemplateColumn.CellTemplate>

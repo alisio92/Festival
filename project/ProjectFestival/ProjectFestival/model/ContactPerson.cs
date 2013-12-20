@@ -307,5 +307,17 @@ namespace ProjectFestival.model
                 return String.Empty;
             }
         }
+
+        public static void Zoeken(string parameter)
+        {
+            contactPersons = new ObservableCollection<ContactPerson>();
+            foreach (ContactPerson c in oContactPersons)
+            {
+                if (c.Name.Contains(parameter))
+                {
+                    contactPersons.Add(c);
+                }
+            }
+        }
     }
 }

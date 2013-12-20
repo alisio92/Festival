@@ -45,6 +45,7 @@ namespace ProjectFestival.viewmodel
                 isRunning = true;
                 ContactPerson.GetContactPerson();
             }
+            _contactList = new ObservableCollection<ContactPerson>();
             _contactList = ContactPerson.contactPersons;
         }
     }
