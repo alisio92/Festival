@@ -294,7 +294,8 @@ namespace ProjectFestival.viewmodel
 
         private void LineUpSaveItem()
         {
-            LineUp.JsonWegschrijven();
+            LineUp.AddLineUp((LineUp)SelectedItem);
+            //LineUp.JsonWegschrijven();
         }
 
         private void BandSaveItem()

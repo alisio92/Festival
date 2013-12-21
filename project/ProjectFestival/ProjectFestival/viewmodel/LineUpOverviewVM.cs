@@ -21,8 +21,15 @@ namespace ProjectFestival.viewmodel
         public ObservableCollection<LineUp> LineUpList
         {
             get { return _lineUpList; }
-            set { _lineUpList = value; OnPropertyChanged("BandList"); }
+            set { _lineUpList = value; OnPropertyChanged("LineUpList"); }
         }
+
+        private ObservableCollection<clock> _urenList;
+        public ObservableCollection<clock> UrenList
+        {
+            get { return _urenList; }
+            set { _urenList = value; OnPropertyChanged("UrenList"); }
+        }   
 
         public LineUpOverviewVM()
         {
@@ -30,7 +37,9 @@ namespace ProjectFestival.viewmodel
             {
                 isRunning = true;
                 LineUpList = LineUp.GetLineUp();
+                UrenList = clock.GetUren();
             }
+            UrenList = clock.uren;
         }
     }
 }

@@ -28,7 +28,7 @@ namespace ProjectFestival.model
 
         public static int aantal = 1;
 
-        public static ObservableCollection<Stage> getStages()
+        public static ObservableCollection<Stage> GetStages()
         {
             ObservableCollection<Stage> stages = new ObservableCollection<Stage>();
             stages = DBConnection.GetDataOutDatabase<Stage>("Stage");

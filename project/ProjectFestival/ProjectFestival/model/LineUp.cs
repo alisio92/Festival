@@ -67,6 +67,13 @@ namespace ProjectFestival.model
             set { _stageList = value; }
         }
 
+        private static ObservableCollection<Band> _bandList;
+        public static ObservableCollection<Band> BandList
+        {
+            get { return _bandList; }
+            set { _bandList = value; }
+        }
+
         public static ObservableCollection<LineUp> lineUp = new ObservableCollection<LineUp>();
 
         public static ObservableCollection<LineUp> GetLineUp()
@@ -74,7 +81,8 @@ namespace ProjectFestival.model
             string sql = "SELECT * FROM LineUp";
             DbDataReader reader = Database.GetData(sql);
 
-            StageList = Stage.getStages();
+            StageList = Stage.GetStages();
+            BandList = Band.GetBands();
 
             while (reader.Read())
             {
@@ -91,18 +99,50 @@ namespace ProjectFestival.model
             cp.Date = Convert.ToDateTime(record["Date"]);
             cp.From = record["StartTime"].ToString();
             cp.Until = record["EndTime"].ToString();
+            int i = (int)record["Band"];
             cp.Band = new Band()
             {
-                Name = record["JobTitle"].ToString(),
+                ID = (int)record["Band"],
+                Name = BandList[(int)record["Band"] - 1].Name
             };
             cp.Stage = new Stage()
             {
-                Name = record["Stage"].ToString(),
+                ID = (int)record["Stage"],
+                Name = StageList[(int)record["Stage"] - 1].Name
             };
 
             return cp;
         }
 
+        public static int AddLineUp(LineUp lineUp)
+        {
+            DbTransaction trans = null;
+
+            try
+            {
+                trans = Database.BeginTransaction();
+
+                string sql = "INSERT INTO LineUp VALUES(@ID,@Date,@StartTime,@EndTime,@Stage,@Band)";
+                DbParameter par1 = Database.AddParameter("@ID", 1);
+                DbParameter par2 = Database.AddParameter("@Date", DateTime.Now);
+                DbParameter par3 = Database.AddParameter("@StartTime", "8:00");
+                DbParameter par4 = Database.AddParameter("@EndTime", "8:30");
+                DbParameter par5 = Database.AddParameter("@Stage", 1);
+                DbParameter par6 = Database.AddParameter("@Band", 1);
+
+                int rowsaffected = 0;
+                rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5,par6);
+
+                trans.Commit();
+                return rowsaffected;
+            }
+            catch (Exception)
+            {
+                trans.Rollback();
+                return 0;
+            }
+        }
+        
         public static int DeleteLineUp(LineUp lineUp)
         {
             return DBConnection.DeleteItem("LineUp", lineUp.ID);
@@ -124,18 +164,6 @@ namespace ProjectFestival.model
                 };
                 lineUp.Add(l);
             }
-
-            //JsonSerializer serializer = new JsonSerializer();
-            //serializer.Converters.Add(new JavaScriptDateTimeConverter());
-            //serializer.NullValueHandling = NullValueHandling.Ignore;
-
-            //StreamWriter sw = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + "test.txt");
-            //JsonWriter writer = new JsonTextWriter(sw);
-            //foreach (LineUp l in lineUp)
-            //{
-            //    serializer.Serialize(writer, lineUp);
-            //}
-            //writer.Close();
 
             StreamWriter sw = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + "test.txt");
             sw.WriteLine("this \"word\" test");

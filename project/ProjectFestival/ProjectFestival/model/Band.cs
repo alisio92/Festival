@@ -72,7 +72,7 @@ namespace ProjectFestival.model
 
         public static ObservableCollection<Band> bands = new ObservableCollection<Band>();
         
-        public static ObservableCollection<Band> getBands()
+        public static ObservableCollection<Band> GetBands()
         {
             string sql = "SELECT * FROM Band";
             DbDataReader reader = Database.GetData(sql);

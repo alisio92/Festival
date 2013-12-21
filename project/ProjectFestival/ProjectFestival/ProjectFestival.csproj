@@ -93,6 +93,7 @@
     <Compile Include="model\Stage.cs" />
     <Compile Include="model\Ticket.cs" />
     <Compile Include="model\TicketType.cs" />
+    <Compile Include="model\Uur.cs" />
     <Compile Include="viewmodel\ContactPersoneelVM.cs" />
     <Compile Include="viewmodel\LineUpBandsVM.cs" />
     <Compile Include="viewmodel\LineUpGenreVM.cs" />

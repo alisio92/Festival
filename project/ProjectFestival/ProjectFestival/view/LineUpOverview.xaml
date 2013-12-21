@@ -9,69 +9,30 @@
              d:DesignHeight="740" d:DesignWidth="960">
 
     <UserControl.Resources>
-        <Color R="255" G="255" B="255" A="180" x:Key="BgColor" />
-        <SolidColorBrush x:Key="BgBrush" />
-        <Style TargetType="{x:Type tt:TimeLineItemControl}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type tt:TimeLineItemControl}">
-                        <Grid>
-                            <Border Background="Blue" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="0" />
-                            <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="PART_ContentHostPART_ContentHost" />
-                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Stretch" x:Name="PART_LeftIndicator">
-                                <ContentPresenter.Content>
-                                    <Button />
-                                </ContentPresenter.Content>
-                            </ContentPresenter>
-                            <ContentPresenter HorizontalAlignment="Right" VerticalAlignment="Stretch" x:Name="PART_RightIndicator">
-                                <ContentPresenter.Content>
-                                    <Button />
-                                </ContentPresenter.Content>
-                            </ContentPresenter>
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <DataTemplate  DataType="{x:Type tt:TempDataType}">
-            <Border BorderThickness="1" BorderBrush="Blue" CornerRadius="3" Height="30">
-                <TextBlock Text="{Binding Path=Name}" />
-            </Border>
+        <ItemsPanelTemplate x:Key="ItemsPanel">
+            <WrapPanel/>
+        </ItemsPanelTemplate>
+
+        <DataTemplate x:Key="scTemplateUren">
+            <StackPanel>
+                <TextBlock Text="{Binding Uur}" Width="100" Foreground="White"/>
+            </StackPanel>
         </DataTemplate>
-        <DataTemplate  DataType="{x:Type tt:TempDataType}" x:Key="UsedTemplateProperty">
-            <Border BorderThickness="1" BorderBrush="Green" CornerRadius="3" Margin="0,10,0,10" Height="60" Background="{StaticResource BgBrush}">
-                <StackPanel Orientation="Vertical">
-                    <TextBlock Text="{Binding Path=Name}" />
-                    <TextBlock Text="{Binding Path=StartTime}" />
-                    <TextBlock Text="{Binding Path=EndTime}" />
-                    <TextBlock Text="{Binding Path=Duration}" />
-                </StackPanel>
-            </Border>
+        <DataTemplate x:Key="scTemplateLineUp">
+            <StackPanel>
+                <TextBox Text="{Binding Stage.Name}" Width="100"/>
+            </StackPanel>
         </DataTemplate>
     </UserControl.Resources>
-    <Grid Grid.Row="1" Grid.Column="1" x:Name="View">
-        <StackPanel VerticalAlignment="Stretch" Orientation="Vertical">
-            <GroupBox Header="Timelines">
-                <StackPanel Orientation="Vertical">
-                    <GroupBox Header="Single Time Line Thread">
-                        <StackPanel Orientation="Vertical">
-                            <ScrollViewer HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" VerticalAlignment="Stretch" x:Name="FoundMe">
-                                <StackPanel Orientation="Vertical">
-                                    <ItemsControl>
-                                        <tt:TimeLineControl ItemTemplate="{StaticResource UsedTemplateProperty}" x:Name="TimeLine2" Background="AntiqueWhite" SynchedWithSiblings="True" />
-                                        <tt:TimeLineControl ItemTemplate="{StaticResource UsedTemplateProperty}" x:Name="TimeLine3" Background="Azure" SynchedWithSiblings="True" />
-                                    </ItemsControl>
-                                </StackPanel>
-                            </ScrollViewer>
-                        </StackPanel>
-                    </GroupBox>
-                    <TextBlock Text="Zoom Slider:" />
-                    <Slider x:Name="Slider_Scale" Minimum="16" Maximum="100" ValueChanged="Slider_Scale_ValueChanged" />
-                    <TextBlock Text="Additional items you can drag in:" />
-                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap"/>
-                    <ListBox x:Name="ListSrc" dd:DragDrop.IsDragSource="True" />
-                </StackPanel>
-            </GroupBox>
-        </StackPanel>
-    </Grid>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Visible">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <ItemsControl ItemsSource="{Binding UrenList}" ItemsPanel="{StaticResource ItemsPanel}" ItemTemplate="{StaticResource scTemplateUren}" Grid.Row="0"/>
+            <ItemsControl ItemsSource="{Binding LineUpList}" ItemsPanel="{StaticResource ItemsPanel}" ItemTemplate="{StaticResource scTemplateLineUp}" Grid.Row="1"/>
+        </Grid>
+    </ScrollViewer>
 </UserControl>
