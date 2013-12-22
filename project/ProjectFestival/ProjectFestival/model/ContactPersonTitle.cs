@@ -76,8 +76,9 @@ namespace ProjectFestival.model
             return contactPersonTitle;
         }
 
-        public static int AddTitle(ContactPersonTitle contactPersoonTitle)
+        public static int AddTitle(ContactPersonTitle contactPersonTitle)
         {
+            ApplicationVM.Infotxt("ContactPersonTitle toevoegen", "");
             DbTransaction trans = null;
 
             try
@@ -85,24 +86,27 @@ namespace ProjectFestival.model
                 trans = Database.BeginTransaction();
 
                 string sql = "INSERT INTO ContactpersonTitle VALUES(@ID,@Name)";
-                DbParameter par1 = Database.AddParameter("@Name", contactPersoonTitle.Name);
+                DbParameter par1 = Database.AddParameter("@Name", contactPersonTitle.Name);
                 DbParameter par2 = Database.AddParameter("@ID", aantal);
 
                 int rowsaffected = 0;
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2);
 
                 trans.Commit();
+                ApplicationVM.Infotxt("ContactPersonTitle toegevoegd", "ContactPersonTitle aanpassen");
                 return rowsaffected;
             }
             catch (Exception)
             {
+                ApplicationVM.Infotxt("Kan ContactPersonTitle niet toevoegen", "");
                 trans.Rollback();
                 return 0;
             }
         }
 
-        public static int EditTitle(ContactPersonTitle contactPersoonTitle)
+        public static int EditTitle(ContactPersonTitle contactPersonTitle)
         {
+            ApplicationVM.Infotxt("ContactPersonTitle aanpassen", "");
             DbTransaction trans = null;
 
             try
@@ -110,25 +114,49 @@ namespace ProjectFestival.model
                 trans = Database.BeginTransaction();
 
                 string sql = "UPDATE ContactpersonTitle SET Name=@Name WHERE ID=@ID";
-                DbParameter par1 = Database.AddParameter("@Name", contactPersoonTitle.Name);
-                DbParameter par2 = Database.AddParameter("@ID", contactPersoonTitle.ID);
+                DbParameter par1 = Database.AddParameter("@Name", contactPersonTitle.Name);
+                DbParameter par2 = Database.AddParameter("@ID", contactPersonTitle.ID);
 
                 int rowsaffected = 0;
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2);
 
                 trans.Commit();
+                ApplicationVM.Infotxt("ContactPersonTitle aangepast", "ContactPersonTitle aanpassen");
                 return rowsaffected;
             }
             catch (Exception)
             {
+                ApplicationVM.Infotxt("Kan ContactPersonTitle niet aanpassen", "");
                 trans.Rollback();
                 return 0;
             }
         }
 
-        public static int DeleteTitle(ContactPersonTitle contactPersoonTitle)
+        public static int DeleteTitle(ContactPersonTitle contactPersonTitle)
         {
-            return DBConnection.DeleteItem("ContactPersonTitle", contactPersoonTitle.ID);
+            ApplicationVM.Infotxt("ContactPersonTitle wissen", "");
+            DbTransaction trans = null;
+
+            try
+            {
+                trans = Database.BeginTransaction();
+
+                string sql = "DELETE FROM ContactPersonTitle WHERE ID = @ID";
+                DbParameter par1 = Database.AddParameter("@ID", contactPersonTitle.ID);
+
+                int rowsaffected = 0;
+                rowsaffected += Database.ModifyData(trans, sql, par1);
+
+                trans.Commit();
+                ApplicationVM.Infotxt("ContactPersonTitle gewist", "ContactPersonTitle wissen");
+                return rowsaffected;
+            }
+            catch (Exception)
+            {
+                ApplicationVM.Infotxt("Kan ContactPersonTitle niet wissen", "");
+                trans.Rollback();
+                return 0;
+            }
         }
     }
 }

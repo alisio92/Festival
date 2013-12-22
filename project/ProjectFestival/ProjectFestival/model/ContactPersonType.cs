@@ -76,8 +76,9 @@ namespace ProjectFestival.model
             return contactPersonType;
         }
 
-        public static int AddType(ContactPersonType contactPersoonType)
+        public static int AddType(ContactPersonType contactPersonType)
         {
+            ApplicationVM.Infotxt("ContactPersonType toevoegen", "");
             DbTransaction trans = null;
 
             try
@@ -85,24 +86,27 @@ namespace ProjectFestival.model
                 trans = Database.BeginTransaction();
 
                 string sql = "INSERT INTO ContactpersonType VALUES(@ID,@Name)";
-                DbParameter par1 = Database.AddParameter("@Name", contactPersoonType.Name);
+                DbParameter par1 = Database.AddParameter("@Name", contactPersonType.Name);
                 DbParameter par2 = Database.AddParameter("@ID", aantal);
 
                 int rowsaffected = 0;
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2);
 
                 trans.Commit();
+                ApplicationVM.Infotxt("ContactPersonType toegevoegd", "ContactPersonType aanpassen");
                 return rowsaffected;
             }
             catch (Exception)
             {
+                ApplicationVM.Infotxt("Kan ContactPersonType niet toevoegen", "");
                 trans.Rollback();
                 return 0;
             }
         }
 
-        public static int EditType(ContactPersonType contactPersoonType)
+        public static int EditType(ContactPersonType contactPersonType)
         {
+            ApplicationVM.Infotxt("ContactPersonType aanpassen", "");
             DbTransaction trans = null;
 
             try
@@ -110,25 +114,49 @@ namespace ProjectFestival.model
                 trans = Database.BeginTransaction();
 
                 string sql = "UPDATE ContactpersonType SET Name=@Name WHERE ID=@ID";
-                DbParameter par1 = Database.AddParameter("@Name", contactPersoonType.Name);
-                DbParameter par2 = Database.AddParameter("@ID", contactPersoonType.ID);
+                DbParameter par1 = Database.AddParameter("@Name", contactPersonType.Name);
+                DbParameter par2 = Database.AddParameter("@ID", contactPersonType.ID);
 
                 int rowsaffected = 0;
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2);
 
                 trans.Commit();
+                ApplicationVM.Infotxt("ContactPersonType aangepast", "ContactPersonType aanpassen");
                 return rowsaffected;
             }
             catch (Exception)
             {
+                ApplicationVM.Infotxt("Kan ContactPersonType niet aanpassen", "");
                 trans.Rollback();
                 return 0;
             }
         }
         
-        public static int DeleteType(ContactPersonType contactPersoonType)
+        public static int DeleteType(ContactPersonType contactPersonType)
         {
-            return DBConnection.DeleteItem("ContactPersonType", contactPersoonType.ID);
+            ApplicationVM.Infotxt("ContactPersonType wissen", "");
+            DbTransaction trans = null;
+
+            try
+            {
+                trans = Database.BeginTransaction();
+
+                string sql = "DELETE FROM ContactPersonType WHERE ID = @ID";
+                DbParameter par1 = Database.AddParameter("@ID", contactPersonType.ID);
+
+                int rowsaffected = 0;
+                rowsaffected += Database.ModifyData(trans, sql, par1);
+
+                trans.Commit();
+                ApplicationVM.Infotxt("ContactPersonType gewist", "ContactPersonType wissen");
+                return rowsaffected;
+            }
+            catch (Exception)
+            {
+                ApplicationVM.Infotxt("Kan ContactPersonType niet wissen", "");
+                trans.Rollback();
+                return 0;
+            }
         }
     }
 }

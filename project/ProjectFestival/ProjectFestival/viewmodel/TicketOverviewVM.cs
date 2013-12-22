@@ -38,7 +38,7 @@ namespace ProjectFestival.viewmodel
             if (!isRunning)
             {
                 isRunning = true;
-                Ticket.getTickets();
+                Ticket.GetTickets();
             }
             _ticketList = Ticket.tickets;
         }

@@ -62,10 +62,10 @@ namespace ProjectFestival.model
 
         public static int aantal = 1;
         
-        public static ObservableCollection<Ticket> getTickets()
+        public static ObservableCollection<Ticket> GetTickets()
         {
             ApplicationVM.Infotxt("Inladen klanten", "");
-            TicketTypeList = TicketType.getTicketTypes();
+            TicketTypeList = TicketType.GetTicketTypes();
 
             try
             {
@@ -113,6 +113,7 @@ namespace ProjectFestival.model
 
         public static int EditTicket(Ticket ticket)
         {
+            ApplicationVM.Infotxt("Ticket aanpassen", "");
             DbTransaction trans = null;
 
             try
@@ -130,10 +131,12 @@ namespace ProjectFestival.model
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5);
 
                 trans.Commit();
+                ApplicationVM.Infotxt("Ticket aangepast", "Ticket aanpassen");
                 return rowsaffected;
             }
             catch (Exception)
             {
+                ApplicationVM.Infotxt("Kan Ticket niet aanpassen", "");
                 trans.Rollback();
                 return 0;
             }
@@ -141,6 +144,7 @@ namespace ProjectFestival.model
 
         public static int AddTicket(Ticket ticket)
         {
+            ApplicationVM.Infotxt("Ticket toevoegen", "");
             DbTransaction trans = null;
 
             try
@@ -158,10 +162,12 @@ namespace ProjectFestival.model
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5);
 
                 trans.Commit();
+                ApplicationVM.Infotxt("Ticket toegevoegd", "Ticket aanpassen");
                 return rowsaffected;
             }
             catch (Exception)
             {
+                ApplicationVM.Infotxt("Kan ticket niet toevoegen", "");
                 trans.Rollback();
                 return 0;
             }
@@ -169,7 +175,29 @@ namespace ProjectFestival.model
 
         public static int DeleteTicket(Ticket ticket)
         {
-            return DBConnection.DeleteItem("Ticket", ticket.ID);
+            ApplicationVM.Infotxt("Ticket wissen", "");
+            DbTransaction trans = null;
+
+            try
+            {
+                trans = Database.BeginTransaction();
+
+                string sql = "DELETE FROM Ticket WHERE ID = @ID";
+                DbParameter par1 = Database.AddParameter("@ID", ticket.ID);
+
+                int rowsaffected = 0;
+                rowsaffected += Database.ModifyData(trans, sql, par1);
+
+                trans.Commit();
+                ApplicationVM.Infotxt("Ticket gewist", "Ticket wissen");
+                return rowsaffected;
+            }
+            catch (Exception)
+            {
+                ApplicationVM.Infotxt("Kan ticket niet wissen", "");
+                trans.Rollback();
+                return 0;
+            }
         }
         
         public override string ToString()

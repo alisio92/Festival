@@ -13,6 +13,8 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Newtonsoft.Json.Converters;
+using ProjectFestival.viewmodel;
+using System.Data.SqlClient;
 
 namespace ProjectFestival.model
 {
@@ -94,15 +96,32 @@ namespace ProjectFestival.model
 
         public static ObservableCollection<LineUp> GetLineUp()
         {
-            string sql = "SELECT * FROM LineUp";
-            DbDataReader reader = Database.GetData(sql);
-
+            ApplicationVM.Infotxt("Inladen LineUp", "");
             StageList = Stage.GetStages();
             BandList = Band.GetBands();
 
-            while (reader.Read())
+            try
             {
-                lineUp.Add(Create(reader));
+                string sql = "SELECT * FROM LineUp";
+                DbDataReader reader = Database.GetData(sql);
+
+                while (reader.Read())
+                {
+                    lineUp.Add(Create(reader));
+                }
+                ApplicationVM.Infotxt("LineUp ingeladen", "Inladen LineUp");
+            }
+            catch (SqlException)
+            {
+                ApplicationVM.Infotxt("Kan database LineUp niet vinden", "");
+            }
+            catch (IndexOutOfRangeException)
+            {
+                ApplicationVM.Infotxt("Kolommen database hebben niet de juiste naam", "");
+            }
+            catch (Exception)
+            {
+                ApplicationVM.Infotxt("Kan LineUp tabel niet inlezen", "");
             }
 
             return lineUp;
@@ -173,6 +192,7 @@ namespace ProjectFestival.model
         
         public static int AddLineUp(LineUp lineUp)
         {
+            ApplicationVM.Infotxt("LineUp toevoegen", "");
             DbTransaction trans = null;
 
             try
@@ -180,21 +200,55 @@ namespace ProjectFestival.model
                 trans = Database.BeginTransaction();
 
                 string sql = "INSERT INTO LineUp VALUES(@ID,@Date,@StartTime,@EndTime,@Stage,@Band)";
-                DbParameter par1 = Database.AddParameter("@ID", 2);
-                DbParameter par2 = Database.AddParameter("@Date", DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day);
-                DbParameter par3 = Database.AddParameter("@StartTime", "9:00");
-                DbParameter par4 = Database.AddParameter("@EndTime", "9:30");
-                DbParameter par5 = Database.AddParameter("@Stage", 2);
-                DbParameter par6 = Database.AddParameter("@Band", 1);
+                DbParameter par1 = Database.AddParameter("@ID", lineUp.ID);
+                DbParameter par2 = Database.AddParameter("@Date", lineUp.Date);
+                DbParameter par3 = Database.AddParameter("@StartTime", lineUp.From);
+                DbParameter par4 = Database.AddParameter("@EndTime", lineUp.Until);
+                DbParameter par5 = Database.AddParameter("@Stage", lineUp.Stage.ID);
+                DbParameter par6 = Database.AddParameter("@Band", lineUp.Band.ID);
 
                 int rowsaffected = 0;
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5, par6);
 
                 trans.Commit();
+                ApplicationVM.Infotxt("LineUp toegevoegd", "LineUp aanpassen");
                 return rowsaffected;
             }
             catch (Exception)
             {
+                ApplicationVM.Infotxt("Kan LineUp niet toevoegen", "");
+                trans.Rollback();
+                return 0;
+            }
+        }
+
+        public static int EditLineUp(LineUp lineUp)
+        {
+            ApplicationVM.Infotxt("LineUp aanpassen", "");
+            DbTransaction trans = null;
+
+            try
+            {
+                trans = Database.BeginTransaction();
+
+                string sql = "UPDATE LineUp SET Date=@Date,StartTime=@StartTime,EndTime=@EndTime,Stage=@Stage,Band=@Band WHERE ID=@ID";
+                DbParameter par1 = Database.AddParameter("@ID", lineUp.ID);
+                DbParameter par2 = Database.AddParameter("@Date", lineUp.Date);
+                DbParameter par3 = Database.AddParameter("@StartTime", lineUp.From);
+                DbParameter par4 = Database.AddParameter("@EndTime", lineUp.Until);
+                DbParameter par5 = Database.AddParameter("@Stage", lineUp.Stage.ID);
+                DbParameter par6 = Database.AddParameter("@Band", lineUp.Band.ID);
+
+                int rowsaffected = 0;
+                rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5,par6);
+
+                trans.Commit();
+                ApplicationVM.Infotxt("LineUp aangepast", "LineUp aanpassen");
+                return rowsaffected;
+            }
+            catch (Exception)
+            {
+                ApplicationVM.Infotxt("Kan LineUp niet aanpassen", "");
                 trans.Rollback();
                 return 0;
             }
@@ -202,7 +256,29 @@ namespace ProjectFestival.model
 
         public static int DeleteLineUp(LineUp lineUp)
         {
-            return DBConnection.DeleteItem("LineUp", lineUp.ID);
+            ApplicationVM.Infotxt("LineUp wissen", "");
+            DbTransaction trans = null;
+
+            try
+            {
+                trans = Database.BeginTransaction();
+
+                string sql = "DELETE FROM LineUp WHERE ID = @ID";
+                DbParameter par1 = Database.AddParameter("@ID", lineUp.ID);
+
+                int rowsaffected = 0;
+                rowsaffected += Database.ModifyData(trans, sql, par1);
+
+                trans.Commit();
+                ApplicationVM.Infotxt("LineUp gewist", "LineUp wissen");
+                return rowsaffected;
+            }
+            catch (Exception)
+            {
+                ApplicationVM.Infotxt("Kan LineUp niet wissen", "");
+                trans.Rollback();
+                return 0;
+            }
         }
 
         public static void JsonWegschrijven()

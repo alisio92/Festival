@@ -182,9 +182,9 @@ namespace ProjectFestival.model
             return contactPerson;
         }
 
-        public static int EditContact(ContactPerson contactPersoon)
+        public static int EditContact(ContactPerson contactPerson)
         {
-            ApplicationVM.Infotxt("Data aanpassen in contactPerson op lijn " + contactPersoon.ID, "");
+            ApplicationVM.Infotxt("ContactPerson aanpassen", "");
             DbTransaction trans = null;
 
             try
@@ -192,34 +192,34 @@ namespace ProjectFestival.model
                 trans = Database.BeginTransaction();
 
                 string sql = "UPDATE Contactperson SET Name=@Name,Company=@Company,JobRole=@JobRole,Jobtitle=@JobTitle,City=@City,Email=@Email,Phone=@Phone,Cellphone=@Cellphone WHERE ID=@ID";
-                DbParameter par1 = Database.AddParameter("@Name", contactPersoon.Name);
-                DbParameter par2 = Database.AddParameter("@ID", contactPersoon.ID);
-                DbParameter par3 = Database.AddParameter("@Company", contactPersoon.Company);
-                DbParameter par4 = Database.AddParameter("@JobRole", contactPersoon.JobRole.ID);
-                DbParameter par5 = Database.AddParameter("@JobTitle", contactPersoon.JobTitle.ID);
-                DbParameter par6 = Database.AddParameter("@City", contactPersoon.City);
-                DbParameter par7 = Database.AddParameter("@Email", contactPersoon.Email);
-                DbParameter par8 = Database.AddParameter("@Phone", contactPersoon.Phone);
-                DbParameter par9 = Database.AddParameter("@Cellphone", contactPersoon.Cellphone);
+                DbParameter par1 = Database.AddParameter("@Name", contactPerson.Name);
+                DbParameter par2 = Database.AddParameter("@ID", contactPerson.ID);
+                DbParameter par3 = Database.AddParameter("@Company", contactPerson.Company);
+                DbParameter par4 = Database.AddParameter("@JobRole", contactPerson.JobRole.ID);
+                DbParameter par5 = Database.AddParameter("@JobTitle", contactPerson.JobTitle.ID);
+                DbParameter par6 = Database.AddParameter("@City", contactPerson.City);
+                DbParameter par7 = Database.AddParameter("@Email", contactPerson.Email);
+                DbParameter par8 = Database.AddParameter("@Phone", contactPerson.Phone);
+                DbParameter par9 = Database.AddParameter("@Cellphone", contactPerson.Cellphone);
 
                 int rowsaffected = 0;
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5, par6, par7, par8, par9);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("Data aangepast in contactPerson op lijn " + contactPersoon.ID, "Data aanpassen in contactPerson op lijn " + contactPersoon.ID);
+                ApplicationVM.Infotxt("ContactPerson aangepast", "ContactPerson aanpassen");
                 return rowsaffected;
             }
             catch (Exception)
             {
-                ApplicationVM.Infotxt("Kan ContactPerson tabel niet updaten", "");
+                ApplicationVM.Infotxt("Kan ContactPerson niet aanpassen", "");
                 trans.Rollback();
                 return 0;
             }
         }
 
-        public static int AddContact(ContactPerson contactPersoon)
+        public static int AddContact(ContactPerson contactPerson)
         {
-            ApplicationVM.Infotxt("Niewe lijn toevoegen aan ContactPerson", "");
+            ApplicationVM.Infotxt("ContactPerson toevoegen", "");
             DbTransaction trans = null;
 
             try
@@ -227,34 +227,34 @@ namespace ProjectFestival.model
                 trans = Database.BeginTransaction();
 
                 string sql = "INSERT INTO Contactperson VALUES(@ID,@Name,@Company,@JobRole,@JobTitle,@City,@Email,@Phone,@Cellphone)";
-                DbParameter par1 = Database.AddParameter("@Name", contactPersoon.Name);
-                DbParameter par2 = Database.AddParameter("@Company", contactPersoon.Company);
-                DbParameter par3 = Database.AddParameter("@JobRole", contactPersoon.JobRole.ID);
-                DbParameter par4 = Database.AddParameter("@JobTitle", contactPersoon.JobTitle.ID);
-                DbParameter par5 = Database.AddParameter("@City", contactPersoon.City);
-                DbParameter par6 = Database.AddParameter("@Email", contactPersoon.Email);
-                DbParameter par7 = Database.AddParameter("@Phone", contactPersoon.Phone);
-                DbParameter par8 = Database.AddParameter("@Cellphone", contactPersoon.Cellphone);
+                DbParameter par1 = Database.AddParameter("@Name", contactPerson.Name);
+                DbParameter par2 = Database.AddParameter("@Company", contactPerson.Company);
+                DbParameter par3 = Database.AddParameter("@JobRole", contactPerson.JobRole.ID);
+                DbParameter par4 = Database.AddParameter("@JobTitle", contactPerson.JobTitle.ID);
+                DbParameter par5 = Database.AddParameter("@City", contactPerson.City);
+                DbParameter par6 = Database.AddParameter("@Email", contactPerson.Email);
+                DbParameter par7 = Database.AddParameter("@Phone", contactPerson.Phone);
+                DbParameter par8 = Database.AddParameter("@Cellphone", contactPerson.Cellphone);
                 DbParameter par9 = Database.AddParameter("@ID", aantal);
 
                 int rowsaffected = 0;
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5, par6, par7, par8, par9);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("Niewe lijn toegevoegd aan ContactPerson", "Niewe lijn toevoegen aan ContactPerson");
+                ApplicationVM.Infotxt("ContactPerson toegevoegd", "ContactPerson aanpassen");
                 return rowsaffected;
             }
             catch (Exception)
             {
-                ApplicationVM.Infotxt("Kan geen nieuwe lijn toevoegen aan ContactPerson", "");
+                ApplicationVM.Infotxt("Kan ContactPerson niet toevoegen", "");
                 trans.Rollback();
                 return 0;
             }
         }
 
-        public static int DeleteContact(ContactPerson contactPersoon)
+        public static int DeleteContact(ContactPerson contactPerson)
         {
-            ApplicationVM.Infotxt("Data verwijderen in contactPerson op lijn " + contactPersoon.ID, "");
+            ApplicationVM.Infotxt("ContactPerson wissen", "");
             DbTransaction trans = null;
 
             try
@@ -262,18 +262,18 @@ namespace ProjectFestival.model
                 trans = Database.BeginTransaction();
 
                 string sql = "DELETE FROM ContactPerson WHERE ID = @ID";
-                DbParameter par1 = Database.AddParameter("@ID", contactPersoon.ID);
+                DbParameter par1 = Database.AddParameter("@ID", contactPerson.ID);
 
                 int rowsaffected = 0;
                 rowsaffected += Database.ModifyData(trans, sql, par1);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("Data verwijderen in contactPerson op lijn " + contactPersoon.ID, "Data verwijderen in contactPerson op lijn " + contactPersoon.ID);
+                ApplicationVM.Infotxt("ContactPerson gewist", "ContactPerson wissen");
                 return rowsaffected;
             }
             catch (Exception)
             {
-                ApplicationVM.Infotxt("Kan geen rij verwijderen in ContactPerson", "");
+                ApplicationVM.Infotxt("Kan ContactPerson niet wissen", "");
                 trans.Rollback();
                 return 0;
             }

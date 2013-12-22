@@ -1,9 +1,11 @@
 ﻿using ProjectFestival.database;
+using ProjectFestival.viewmodel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -74,15 +76,32 @@ namespace ProjectFestival.model
         
         public static ObservableCollection<Band> GetBands()
         {
-            string sql = "SELECT * FROM Band";
-            DbDataReader reader = Database.GetData(sql);
+            ApplicationVM.Infotxt("Inladen Band", "");
+            GenreList = Genre.GetGenres();
 
-            GenreList = Genre.getGenres();
-            
-            while (reader.Read())
+            try
             {
-                bands.Add(Create(reader));
-                aantal++;
+                string sql = "SELECT * FROM Band";
+                DbDataReader reader = Database.GetData(sql);
+
+                while (reader.Read())
+                {
+                    bands.Add(Create(reader));
+                    aantal++;
+                }
+                ApplicationVM.Infotxt("Bands ingeladen", "Inladen Bands");
+            }
+            catch (SqlException)
+            {
+                ApplicationVM.Infotxt("Kan database Band niet vinden", "");
+            }
+            catch (IndexOutOfRangeException)
+            {
+                ApplicationVM.Infotxt("Kolommen database hebben niet de juiste naam", "");
+            }
+            catch (Exception)
+            {
+                ApplicationVM.Infotxt("Kan Band tabel niet inlezen", "");
             }
             return bands;
         }
@@ -108,7 +127,8 @@ namespace ProjectFestival.model
             band.Facebook = record["Facebook"].ToString();
             band.Genre = new Genre()
             {
-                Name = record["Genre"].ToString(),
+                ID = (int)record["Genre"],
+                Name = GenreList[(int)record["Genre"] - 1].Name
             };
 
             return band;
@@ -116,6 +136,7 @@ namespace ProjectFestival.model
 
         public static int EditBand(Band band)
         {
+            ApplicationVM.Infotxt("Band aanpassen", "");
             DbTransaction trans = null;
 
             try
@@ -135,10 +156,12 @@ namespace ProjectFestival.model
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5, par6, par7);
 
                 trans.Commit();
+                ApplicationVM.Infotxt("Band aangepast", "Band aanpassen");
                 return rowsaffected;
             }
             catch (Exception)
             {
+                ApplicationVM.Infotxt("Kan Band niet aanpassen", "");
                 trans.Rollback();
                 return 0;
             }
@@ -146,6 +169,7 @@ namespace ProjectFestival.model
 
         public static int AddBand(Band band)
         {
+            ApplicationVM.Infotxt("Band toevoegen", "");
             DbTransaction trans = null;
 
             try
@@ -165,10 +189,12 @@ namespace ProjectFestival.model
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5, par6, par7);
 
                 trans.Commit();
+                ApplicationVM.Infotxt("Band toegevoegd", "Band aanpassen");
                 return rowsaffected;
             }
             catch (Exception)
             {
+                ApplicationVM.Infotxt("Kan Band niet toevoegen", "");
                 trans.Rollback();
                 return 0;
             }
@@ -181,7 +207,29 @@ namespace ProjectFestival.model
 
         public static int DeleteBand(Band band)
         {
-            return DBConnection.DeleteItem("Band", band.ID);
+            ApplicationVM.Infotxt("Band wissen", "");
+            DbTransaction trans = null;
+
+            try
+            {
+                trans = Database.BeginTransaction();
+
+                string sql = "DELETE FROM Band WHERE ID = @ID";
+                DbParameter par1 = Database.AddParameter("@ID", band.ID);
+
+                int rowsaffected = 0;
+                rowsaffected += Database.ModifyData(trans, sql, par1);
+
+                trans.Commit();
+                ApplicationVM.Infotxt("Band gewist", "Band wissen");
+                return rowsaffected;
+            }
+            catch (Exception)
+            {
+                ApplicationVM.Infotxt("Kan Band niet wissen", "");
+                trans.Rollback();
+                return 0;
+            }
         }
     }
 }

@@ -32,10 +32,5 @@ namespace ProjectFestival.model
             get { return _endDate; }
             set { _endDate = value; }
         }
-
-        public static int DeleteLineUp(Festival festival)
-        {
-            return DBConnection.DeleteItem("Festival", festival.ID);
-        }
     }
 }

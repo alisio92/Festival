@@ -74,6 +74,7 @@ namespace ProjectFestival.model
 
         public static int EditStage(Stage stage)
         {
+            ApplicationVM.Infotxt("Stage aanpassen", "");
             DbTransaction trans = null;
 
             try
@@ -88,10 +89,12 @@ namespace ProjectFestival.model
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2);
 
                 trans.Commit();
+                ApplicationVM.Infotxt("Stage aangepast", "Stage aanpassen");
                 return rowsaffected;
             }
             catch (Exception)
             {
+                ApplicationVM.Infotxt("Kan Stage niet aanpassen", "");
                 trans.Rollback();
                 return 0;
             }
@@ -99,6 +102,7 @@ namespace ProjectFestival.model
 
         public static int AddStage(Stage stage)
         {
+            ApplicationVM.Infotxt("Stage toevoegen", "");
             DbTransaction trans = null;
 
             try
@@ -113,10 +117,12 @@ namespace ProjectFestival.model
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2);
 
                 trans.Commit();
+                ApplicationVM.Infotxt("Stage toegevoegd", "Stage aanpassen");
                 return rowsaffected;
             }
             catch (Exception)
             {
+                ApplicationVM.Infotxt("Kan Stage niet toevoegen", "");
                 trans.Rollback();
                 return 0;
             }
@@ -124,7 +130,29 @@ namespace ProjectFestival.model
 
         public static int DeleteStage(Stage stage)
         {
-            return DBConnection.DeleteItem("Stage", stage.ID);
+            ApplicationVM.Infotxt("Stage wissen", "");
+            DbTransaction trans = null;
+
+            try
+            {
+                trans = Database.BeginTransaction();
+
+                string sql = "DELETE FROM Stage WHERE ID = @ID";
+                DbParameter par1 = Database.AddParameter("@ID", stage.ID);
+
+                int rowsaffected = 0;
+                rowsaffected += Database.ModifyData(trans, sql, par1);
+
+                trans.Commit();
+                ApplicationVM.Infotxt("Stage gewist", "Stage wissen");
+                return rowsaffected;
+            }
+            catch (Exception)
+            {
+                ApplicationVM.Infotxt("Kan Stage niet wissen", "");
+                trans.Rollback();
+                return 0;
+            }
         }
 
         public override string ToString()

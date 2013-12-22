@@ -14,47 +14,50 @@
         <ItemsPanelTemplate x:Key="ItemsPanel">
             <WrapPanel/>
         </ItemsPanelTemplate>
-
         <DataTemplate x:Key="scTemplateUren">
             <StackPanel>
-                <TextBlock Text="{Binding Uur}" Width="100" Background="White"/>
+                <TextBlock Text="{Binding Uur}" Width="100" Foreground="White"/>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="scTemplateLineUp">
             <StackPanel Width="{Binding Width}" Margin="{Binding Margin}">
-                <TextBlock Text="{Binding Date,Converter={StaticResource Date}}" Background="White" TextAlignment="Center"/>
-                <TextBlock Text="{Binding Band.Name}" Background="White" TextAlignment="Center"/>
+                <TextBlock Text="{Binding Date,Converter={StaticResource Date}}" TextAlignment="Center" Background="Gray"/>
+                <TextBlock Text="{Binding Band.Name}" TextAlignment="Center" Background="Gray"/>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="{Binding From}" Background="White"/>
-                    <TextBlock Text="{Binding Until}" Grid.Column="1" Background="White"/>
-                    </Grid>
+                    <TextBlock Text="{Binding From}" Background="Gray" Padding="5,0,0,0"/>
+                    <TextBlock Text="{Binding Until}" Grid.Column="1" Background="Gray" Padding="5,0,0,0"/>
+                </Grid>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="scTemplateStages">
             <StackPanel>
-                <TextBlock Text="{Binding Name}" Width="100" Margin="20,10,10,0" Background="White" Padding="0,16,0,16"/>
+                <TextBlock Text="{Binding Name}" Width="100" Margin="20,10,10,0" Padding="0,16,0,16"/>
             </StackPanel>
         </DataTemplate>
     </UserControl.Resources>
+
     <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="C:\Users\alisio\Desktop\howest\2NMCT\Business Applications\oefeningen\ProjectFestival\ProjectFestival\images\zwartevilt.png"/>
+        </Grid.Background>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="100"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
-        <ItemsControl ItemsSource="{Binding StagesList}" ItemsPanel="{StaticResource ItemsPanel}" ItemTemplate="{StaticResource scTemplateStages}" Grid.Row="1" Margin="0,30"/>
-        <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Auto" Grid.Column="1">
+        <ItemsControl ItemsSource="{Binding StagesList}" ItemsPanel="{StaticResource ItemsPanel}" ItemTemplate="{StaticResource scTemplateStages}" Grid.Row="1" Margin="0,30" Foreground="White"/>
+        <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Auto" Grid.Column="1" Background="white">
             <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="20"/>
-                <RowDefinition Height="1*"/>
-            </Grid.RowDefinitions>
-                <ItemsControl ItemsSource="{Binding UrenList}" ItemsPanel="{StaticResource ItemsPanel}" ItemTemplate="{StaticResource scTemplateUren}" Grid.Row="0"/>
-            <ItemsControl ItemsSource="{Binding LineUpList}" ItemsPanel="{StaticResource ItemsPanel}" ItemTemplate="{StaticResource scTemplateLineUp}" Grid.Row="1"/>
-        </Grid>
-    </ScrollViewer>
-        </Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <ItemsControl ItemsSource="{Binding UrenList}" ItemsPanel="{StaticResource ItemsPanel}" ItemTemplate="{StaticResource scTemplateUren}" Grid.Row="0" Background="black" Padding="10,0,0,0"/>
+                <ItemsControl ItemsSource="{Binding LineUpList}" ItemsPanel="{StaticResource ItemsPanel}" ItemTemplate="{StaticResource scTemplateLineUp}" Grid.Row="1" Padding="10,0,0,0"/>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
 </UserControl>
