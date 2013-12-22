@@ -6,7 +6,7 @@
         <Setter Property="Width" Value="180"/>
         <Setter Property="Height" Value="50"/>
         <Setter Property="Margin" Value="10"/>
-        <Setter Property="Background" Value="{DynamicResource ButtonBrush}"/>
+        <!--<Setter Property="Background" Value="{DynamicResource ButtonBrush}"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="FontSize" Value="18"/>
         <Setter Property="FontFamily" Value="sans serif"/>
@@ -30,7 +30,7 @@
                     </BeginStoryboard>
                 </Trigger.ExitActions>
             </Trigger>
-        </Style.Triggers>
+        </Style.Triggers>-->
     </Style>
     <Style TargetType="StackPanel" x:Key="StackPanel">
         <Setter Property="Height" Value="70"/>
@@ -41,8 +41,8 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Height" Value="25"/>
         <Setter Property="Padding" Value="-7"/>
-        <Setter Property="Background" Value="#848482"/>
-        <Setter Property="Foreground" Value="White"/>
+        <!--<Setter Property="Background" Value="#848482"/>
+        <Setter Property="Foreground" Value="White"/>-->
     </Style>
     <Style TargetType="StackPanel" x:Key="Horizontal">
         <Setter Property="Orientation" Value="Horizontal"/>
@@ -53,21 +53,12 @@
     <Style TargetType="TextBlock" x:Key="Info">
         <Setter Property="Width" Value="Auto"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
-        <Setter Property="Background" Value="#848482"/>
-        <Setter Property="Foreground" Value="White"/>
+        <!--<Setter Property="Background" Value="#848482"/>
+        <Setter Property="Foreground" Value="White"/>-->
         <Setter Property="Padding" Value="5,0,0,0"/>
     </Style>
     <Style TargetType="ScrollViewer">
         <Setter Property="Margin" Value="10"/>
-    </Style>
-    <Style TargetType="tt:TimeLineControl">
-        <Setter Property="Height" Value="80"/>
-        <Setter Property="HorizontalAlignment" Value="Left"/>
-        <Setter Property="MinWidth" Value="50"/>
-        <Setter Property="DrawTimeGrid" Value="True"/>
-        <Setter Property="UnitSize" Value="20"/>
-        <Setter Property="MinimumUnitWidth" Value="10"/>
-        <Setter Property="DrawTimeGrid" Value="True"/>
     </Style>
     <Style TargetType="TextBlock" x:Key="Title">
         <Setter Property="FontFamily" Value="Lucida Handwriting"/>
@@ -79,20 +70,20 @@
         <Setter Property="Margin" Value="10,0,10,0"/>
     </Style>
     <Style TargetType="TextBlock" x:Key="Header">
-        <Setter Property="Foreground" Value="White"/>
+        <!--<Setter Property="Foreground" Value="White"/>-->
         <Setter Property="Margin" Value="10,0"/>
     </Style>
     <Style TargetType="GroupBox">
-        <Setter Property="Foreground" Value="White"/>
+        <!--<Setter Property="Foreground" Value="White"/>-->
     </Style>
     <Style TargetType="Grid" x:Key="Background">
     </Style>
     <Style TargetType="DataGrid">
-        <Setter Property="FontFamily" Value="sans serif"/>
-        <Setter Property="Background" Value="#848482"/>
+        <!--<Setter Property="FontFamily" Value="sans serif"/>
+        <Setter Property="Background" Value="#848482"/>-->
         <Setter Property="Margin" Value="10"/>
     </Style>
-    <LinearGradientBrush x:Key="ButtonBrush" StartPoint="0,0" EndPoint="1,0">
+    <!--<LinearGradientBrush x:Key="ButtonBrush" StartPoint="0,0" EndPoint="1,0">
         <GradientStop Color="#252525" Offset="0.0"/>
         <GradientStop Color="#252525" Offset="0.5"/>
         <GradientStop Color="#9a9a9a" Offset="0.5"/>
@@ -108,20 +99,20 @@
         <LinearGradientBrush.Transform>
             <RotateTransform CenterX="90" CenterY="25" Angle="90" />
         </LinearGradientBrush.Transform>
-    </LinearGradientBrush>
+    </LinearGradientBrush>-->
     <ControlTemplate x:Key="ErrorTemplate">
-        <StackPanel>
+        <!--<StackPanel>
             <Border BorderBrush="Red" BorderThickness="2">
                 <AdornedElementPlaceholder/>
             </Border>
             <TextBlock Foreground="Red" Text="{Binding [0].ErrorContent}"/>
-        </StackPanel>
+        </StackPanel>-->
     </ControlTemplate>
     <Style x:Key="TextboxError" TargetType="{x:Type TextBox}">
-        <Style.Triggers>
+        <!--<Style.Triggers>
             <Trigger Property="Validation.HasError" Value="true">
                 <Setter Property="Foreground" Value="Red"/>
             </Trigger>
-        </Style.Triggers>
+        </Style.Triggers>-->
     </Style>
 </ResourceDictionary>

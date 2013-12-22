@@ -36,7 +36,7 @@
             <v:LineUpInfo/>
         </DataTemplate>
     </Window.Resources>
-    <Grid Style="{StaticResource Background}">
+    <Grid> <!--Style="{StaticResource Background}">-->
         <Grid.Background>
             <ImageBrush ImageSource="C:\Users\alisio\Desktop\howest\2NMCT\Business Applications\oefeningen\ProjectFestival\ProjectFestival\images\zwartevilt.png"/>
         </Grid.Background>
@@ -76,9 +76,9 @@
                     <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
                 <TextBlock Style="{StaticResource Title}">
-                    <TextBlock.Background>
+                    <!--<TextBlock.Background>
                         <ImageBrush ImageSource="C:\Users\alisio\Desktop\howest\2NMCT\Business Applications\oefeningen\ProjectFestival\ProjectFestival\images\zwartevilt.png"/>
-                    </TextBlock.Background>
+                    </TextBlock.Background>-->
                 </TextBlock>
                 <TextBox Style="{StaticResource Zoeken}" Grid.Row="1" Text="{Binding Search,UpdateSourceTrigger=PropertyChanged}">
                     <i:Interaction.Triggers>
