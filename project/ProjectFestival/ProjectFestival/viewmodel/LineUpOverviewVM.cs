@@ -24,6 +24,13 @@ namespace ProjectFestival.viewmodel
             set { _lineUpList = value; OnPropertyChanged("LineUpList"); }
         }
 
+        private ObservableCollection<Stage> _stagesList;
+        public ObservableCollection<Stage> StagesList
+        {
+            get { return _stagesList; }
+            set { _stagesList = value; OnPropertyChanged("StagesList"); }
+        }
+
         private ObservableCollection<clock> _urenList;
         public ObservableCollection<clock> UrenList
         {
@@ -40,6 +47,7 @@ namespace ProjectFestival.viewmodel
                 UrenList = clock.GetUren();
             }
             UrenList = clock.uren;
+            StagesList = Stage.stages;
         }
     }
 }

@@ -174,6 +174,11 @@ namespace ProjectFestival.model
             }
         }
 
+        public override string ToString()
+        {
+            return Name;
+        }
+
         public static int DeleteBand(Band band)
         {
             return DBConnection.DeleteItem("Band", band.ID);

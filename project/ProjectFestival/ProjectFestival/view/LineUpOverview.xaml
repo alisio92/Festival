@@ -5,10 +5,12 @@
              xmlns:tt="clr-namespace:TimeLineTool;assembly=TimeLineTool"
              xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:converter="clr-namespace:ProjectFestival.converter"
              mc:Ignorable="d" 
              d:DesignHeight="740" d:DesignWidth="960">
 
     <UserControl.Resources>
+        <converter:DateToYearMonthDayConverter x:Key="Date"/>
         <ItemsPanelTemplate x:Key="ItemsPanel">
             <WrapPanel/>
         </ItemsPanelTemplate>
@@ -19,13 +21,32 @@
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="scTemplateLineUp">
+            <StackPanel Width="{Binding Width}" Margin="{Binding Margin}">
+                <TextBox Text="{Binding Date,Converter={StaticResource Date}}" Padding="-10" TextAlignment="Center"/>
+                <TextBox Text="{Binding Band.Name}" Padding="-10" TextAlignment="Center"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                <TextBox Text="{Binding From}" Padding="-10"/>
+                <TextBox Text="{Binding Until}" Padding="-10" Grid.Column="1"/>
+                    </Grid>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="scTemplateStages">
             <StackPanel>
-                <TextBox Text="{Binding Stage.Name}" Width="100"/>
+                <TextBlock Text="{Binding Name}" Width="100" Margin="20,35,10,20" Foreground="White" Background="Brown"/>
             </StackPanel>
         </DataTemplate>
     </UserControl.Resources>
-
-    <ScrollViewer HorizontalScrollBarVisibility="Visible">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <ItemsControl ItemsSource="{Binding StagesList}" ItemsPanel="{StaticResource ItemsPanel}" ItemTemplate="{StaticResource scTemplateStages}" Grid.Row="1" Margin="0,30"/>
+    <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Auto" Grid.Column="1">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="20"/>
@@ -35,4 +56,5 @@
             <ItemsControl ItemsSource="{Binding LineUpList}" ItemsPanel="{StaticResource ItemsPanel}" ItemTemplate="{StaticResource scTemplateLineUp}" Grid.Row="1"/>
         </Grid>
     </ScrollViewer>
+        </Grid>
 </UserControl>

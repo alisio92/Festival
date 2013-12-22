@@ -60,6 +60,20 @@ namespace ProjectFestival.model
             set { _band = value; }
         }
 
+        private string _width;
+        public string Width
+        {
+            get { return _width; }
+            set { _width = value; }
+        }
+
+        private string _margin;
+        public string Margin
+        {
+            get { return _margin; }
+            set { _margin = value; }
+        }
+
         private static ObservableCollection<Stage> _stageList;
         public static ObservableCollection<Stage> StageList
         {
@@ -74,6 +88,8 @@ namespace ProjectFestival.model
             set { _bandList = value; }
         }
 
+        public static int vorigeWidth;
+        
         public static ObservableCollection<LineUp> lineUp = new ObservableCollection<LineUp>();
 
         public static ObservableCollection<LineUp> GetLineUp()
@@ -94,26 +110,67 @@ namespace ProjectFestival.model
 
         private static LineUp Create(IDataRecord record)
         {
-            LineUp cp = new LineUp();
-            cp.ID = Convert.ToInt32(record["ID"]);
-            cp.Date = Convert.ToDateTime(record["Date"]);
-            cp.From = record["StartTime"].ToString();
-            cp.Until = record["EndTime"].ToString();
-            int i = (int)record["Band"];
-            cp.Band = new Band()
+            LineUp lineUp = new LineUp();
+            lineUp.ID = Convert.ToInt32(record["ID"]);
+            lineUp.Date = Convert.ToDateTime(record["Date"]);
+            lineUp.From = record["StartTime"].ToString();
+            lineUp.Until = record["EndTime"].ToString();
+            lineUp.Band = new Band()
             {
                 ID = (int)record["Band"],
                 Name = BandList[(int)record["Band"] - 1].Name
             };
-            cp.Stage = new Stage()
+            lineUp.Stage = new Stage()
             {
                 ID = (int)record["Stage"],
                 Name = StageList[(int)record["Stage"] - 1].Name
             };
+            lineUp.Width = GetWidth(lineUp, GetFrom(lineUp), GetUntil(lineUp));
+            lineUp.Margin = GetMargin(lineUp, GetFrom(lineUp), GetUntil(lineUp));
 
-            return cp;
+            return lineUp;
         }
 
+        public static string[] GetUntil(LineUp lineUp)
+        {
+            String[] until = lineUp.Until.Split(new Char[] { ':' });
+            return until;
+        }
+
+        public static string[] GetFrom(LineUp lineUp)
+        {
+            String[] from = lineUp.From.Split(new Char[] { ':' });
+            return from;
+        }
+
+        public static string GetWidth(LineUp lineUp,string[] from,string[] until)
+        {
+            int uurUntil = Convert.ToInt32(until[0]);
+            int uurFrom = Convert.ToInt32(from[0]);
+            double minutenUntil = Convert.ToDouble(until[1]);
+            double minutenFrom = Convert.ToDouble(from[1]);
+
+            double uur = (uurUntil + minutenUntil/60) - (uurFrom + minutenFrom/60);
+
+            int width = (int)(100 * uur*2);
+
+            return width.ToString();
+        }
+
+        public static string GetMargin(LineUp lineUp, string[] from, string[] until)
+        {
+            double multiply = (double)(Convert.ToInt32(from[1]) / 3 * 10);
+            double multiply2 = (double)(Convert.ToInt32(until[1]) / 3 * 10);
+            int start = (int)(100 * (Convert.ToInt32(from[0])*2 + multiply/100));
+            int left = (int)(100 * (Convert.ToInt32(from[0])*2 + multiply/100))-vorigeWidth;
+
+            int top = (Convert.ToInt32(lineUp.Stage.ID)-1)*70+10;
+
+            vorigeWidth = Convert.ToInt32(lineUp.Width)+start;
+            
+            return left+","+top+",0,0";
+        }
+        
         public static int AddLineUp(LineUp lineUp)
         {
             DbTransaction trans = null;
@@ -123,15 +180,15 @@ namespace ProjectFestival.model
                 trans = Database.BeginTransaction();
 
                 string sql = "INSERT INTO LineUp VALUES(@ID,@Date,@StartTime,@EndTime,@Stage,@Band)";
-                DbParameter par1 = Database.AddParameter("@ID", 1);
-                DbParameter par2 = Database.AddParameter("@Date", DateTime.Now);
-                DbParameter par3 = Database.AddParameter("@StartTime", "8:00");
-                DbParameter par4 = Database.AddParameter("@EndTime", "8:30");
-                DbParameter par5 = Database.AddParameter("@Stage", 1);
+                DbParameter par1 = Database.AddParameter("@ID", 2);
+                DbParameter par2 = Database.AddParameter("@Date", DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day);
+                DbParameter par3 = Database.AddParameter("@StartTime", "9:00");
+                DbParameter par4 = Database.AddParameter("@EndTime", "9:30");
+                DbParameter par5 = Database.AddParameter("@Stage", 2);
                 DbParameter par6 = Database.AddParameter("@Band", 1);
 
                 int rowsaffected = 0;
-                rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5,par6);
+                rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5, par6);
 
                 trans.Commit();
                 return rowsaffected;
@@ -142,7 +199,7 @@ namespace ProjectFestival.model
                 return 0;
             }
         }
-        
+
         public static int DeleteLineUp(LineUp lineUp)
         {
             return DBConnection.DeleteItem("LineUp", lineUp.ID);

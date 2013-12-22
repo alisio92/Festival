@@ -1,9 +1,11 @@
 ﻿using ProjectFestival.database;
+using ProjectFestival.viewmodel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,16 +30,46 @@ namespace ProjectFestival.model
 
         public static int aantal = 1;
 
+        public static ObservableCollection<Stage> stages = new ObservableCollection<Stage>();
+
         public static ObservableCollection<Stage> GetStages()
         {
-            ObservableCollection<Stage> stages = new ObservableCollection<Stage>();
-            stages = DBConnection.GetDataOutDatabase<Stage>("Stage");
-
-            foreach (Stage s in stages)
+            ApplicationVM.Infotxt("Inladen Stages", "");
+            try
             {
-                aantal++;
+                string sql = "SELECT * FROM Stage";
+                DbDataReader reader = Database.GetData(sql);
+
+                while (reader.Read())
+                {
+                    stages.Add(Create(reader));
+                    aantal++;
+                }
+                ApplicationVM.Infotxt("Stages ingeladen", "Inladen Stages");
+            }
+            catch (SqlException)
+            {
+                ApplicationVM.Infotxt("Kan database Stage niet vinden", "");
+            }
+            catch (IndexOutOfRangeException)
+            {
+                ApplicationVM.Infotxt("Kolommen database hebben niet de juiste naam", "");
+            }
+            catch (Exception)
+            {
+                ApplicationVM.Infotxt("Kan Stage tabel niet inlezen", "");
             }
             return stages;
+        }
+
+        private static Stage Create(IDataRecord record)
+        {
+            Stage stage = new Stage();
+
+            stage.ID = Convert.ToInt32(record["ID"]);
+            stage.Name = record["Name"].ToString();
+
+            return stage;
         }
 
         public static int EditStage(Stage stage)
