@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Command;
+using Microsoft.Win32;
 using ProjectFestival.model;
 using System;
 using System.Collections.Generic;
@@ -33,19 +34,57 @@ namespace ProjectFestival.viewmodel
             set { _selectedBand = value;}
         }
 
-        private Band _selectedBand2;
-        public Band SelectedBand2
-        {
-            get { return _selectedBand2; }
-            set { _selectedBand2 = value; }
-        }
-
         public ICommand AddImageCommand
         {
             get
             {
                 return new RelayCommand<DragEventArgs>(AddImage);
             }
+        }
+
+        public ICommand AddPlusImageCommand
+        {
+            get
+            {
+                return new RelayCommand<DragEventArgs>(AddPlusImage);
+            }
+        }
+
+        private void AddPlusImage(DragEventArgs obj)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            ofd.Filter = "jpg Files (.jpg)|*.jpg|jpeg Files (.jpeg)|jpeg|png Files (.png)|*.png";
+
+            if (ofd.ShowDialog() == true)
+            {
+                SelectedBand.Picture = GetPhoto(ofd.FileName);
+                OnPropertyChanged("SelectedBand");
+            }
+        }
+
+        private void AddPlusImage(DataObject e)
+        {
+            var data = e as DataObject;
+            if (data.ContainsFileDropList())
+            {
+                var files = data.GetFileDropList();
+                SelectedBand.Picture = GetPhoto(files[0]);
+                OnPropertyChanged("SelectedBand");
+            }
+        }
+
+        public ICommand DeleteImageCommand
+        {
+            get
+            {
+                return new RelayCommand<DragEventArgs>(DeleteImage);
+            }
+        }
+
+        private void DeleteImage(DragEventArgs obj)
+        {
+            SelectedBand.Picture = null;
         }
 
         private Genre _selectedGenre;

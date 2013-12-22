@@ -24,7 +24,7 @@ namespace ProjectFestival.viewmodel
             CurrentPage = PagesMainNav[0];
             subNav();
             Infotxt("Applicatie starten klaar", "Applicatie starten...");
-        }
+        }        
 
         public static void Infotxt(string infoNew, string infoOld)
         {
@@ -72,8 +72,7 @@ namespace ProjectFestival.viewmodel
             else if (CurrentPage.Name == "Line-Up")
             {
                 PagesSubNav.Add(new LineUpOverviewVM());
-                PagesSubNav.Add(new LineUpBandsVM());
-                PagesSubNav.Add(new LineUpInfoVM());
+                PagesSubNav.Add(new LineUpBandsVM());   
                 PagesSubNav.Add(new LineUpGenreVM());
             }
         }
@@ -236,6 +235,8 @@ namespace ProjectFestival.viewmodel
                 ContactPersonTitle cpt = new ContactPersonTitle();
                 cpt.ID = ContactPersonTitle.aantal;
                 ContactPerson.JobTitleList.Add(cpt);
+                //ContactPersonTitle.aantal++;
+                //ContactPersonType.aantal++;
             }
             if (CurrentPage.Name == "Contact")
             {
@@ -244,6 +245,7 @@ namespace ProjectFestival.viewmodel
                 cp.JobTitle = new ContactPersonTitle();
                 cp.ID = ContactPerson.aantal;
                 ContactPerson.contactPersons.Add(cp);
+                //ContactPerson.aantal++;
             }
             if (CurrentPage.Name == "Tickets")
             {
@@ -251,12 +253,14 @@ namespace ProjectFestival.viewmodel
                 t.TicketType = new TicketType();
                 t.ID = Ticket.aantal;
                 Ticket.tickets.Add(t);
+                //Ticket.aantal++;
             }
             if (CurrentPage.Name == "Verkoop")
             {
                 TicketType t = new TicketType();
                 t.ID = TicketType.aantal;
                 Ticket.TicketTypeList.Add(t);
+                //TicketType.aantal++;
             }
         }
 
@@ -290,6 +294,15 @@ namespace ProjectFestival.viewmodel
             {
                 LineUpSaveItem();
             }
+            if (CurrentPage.Name == "Bands")
+            {
+                BandsSaveItem();
+            }
+        }
+
+        private void BandsSaveItem()
+        {
+            CurrentPage = new LineUpInfoVM();
         }
 
         private void LineUpSaveItem()
@@ -330,7 +343,7 @@ namespace ProjectFestival.viewmodel
                 stage = (Stage)SelectedItem;
                 id = Convert.ToInt32(stage.ID);
 
-                if (id > 0)
+                if (id != Genre.aantal)
                 {
                     Stage.EditStage(stage);
                     LineUp.StageList[id - 1] = stage;
@@ -370,7 +383,7 @@ namespace ProjectFestival.viewmodel
             TicketType ticketType = (TicketType)SelectedItem;
             int id = Convert.ToInt32(ticketType.ID);
 
-            if (id > 0)
+            if (id != TicketType.aantal)
             {
                 TicketType.EditType(ticketType);
                 Ticket.TicketTypeList[id - 1] = ticketType;

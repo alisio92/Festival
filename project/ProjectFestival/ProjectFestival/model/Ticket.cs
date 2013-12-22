@@ -57,11 +57,11 @@ namespace ProjectFestival.model
             get { return _ticketTypeList; }
             set { _ticketTypeList = value; }
         }
-        
+
         public static ObservableCollection<Ticket> tickets = new ObservableCollection<Ticket>();
 
         public static int aantal = 1;
-        
+
         public static ObservableCollection<Ticket> GetTickets()
         {
             ApplicationVM.Infotxt("Inladen klanten", "");
@@ -116,6 +116,60 @@ namespace ProjectFestival.model
             ApplicationVM.Infotxt("Ticket aanpassen", "");
             DbTransaction trans = null;
 
+            ObservableCollection<TicketType> ticketType = new ObservableCollection<TicketType>();
+            ticketType = TicketType.GetTicketTypes();
+            int aantaltickets = ticketType[ticket.TicketType.ID - 1].AvailableTickets;
+            int aantalVorig = TicketType.ticketType[ticket.TicketType.ID - 1].AvailableTickets;
+
+            if (aantaltickets > aantalVorig)
+            {
+                if (aantal - ticket.Amount >= 0)
+                {
+                    return EditTicket(trans, ticket);
+                }
+                else
+                {
+                    ApplicationVM.Infotxt("Er zijn niet genoeg tickets beschikbaar", "");
+                    return 0;
+                }
+            }
+            else if (aantaltickets < aantalVorig)
+            {
+                if (ticket.Amount >= 0)
+                {
+                    return EditTicket(trans, ticket);
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            else
+            {
+                ApplicationVM.Infotxt("Kan Ticket niet aanpassen", "");
+                return 0;
+            }
+        }
+
+        public static int EditTicket(DbTransaction trans, Ticket ticket)
+        {
+            ObservableCollection<TicketType> types = new ObservableCollection<TicketType>();
+            types = TicketType.GetTicketTypes();
+            int vorig = tickets[ticket.ID].Amount;
+
+            if (vorig > ticket.Amount)
+            {
+                EditTicketType(ticket.TicketType.ID, ticket.Amount, vorig);
+            }
+            else if (vorig < ticket.Amount)
+            {
+                EditTicketType(ticket.TicketType.ID, -ticket.Amount, vorig);
+            }
+            else
+            {
+
+            }
+
             try
             {
                 trans = Database.BeginTransaction();
@@ -147,27 +201,70 @@ namespace ProjectFestival.model
             ApplicationVM.Infotxt("Ticket toevoegen", "");
             DbTransaction trans = null;
 
+            int aantaltickets = TicketType.ticketType[ticket.TicketType.ID - 1].AvailableTickets;
+            ObservableCollection<TicketType> types = new ObservableCollection<TicketType>();
+            types = TicketType.GetTicketTypes();
+            int vorig = types[ticket.TicketType.ID - 1].AvailableTickets;
+
+            if (aantaltickets - ticket.Amount >= 0)
+            {
+                EditTicketType(ticket.TicketType.ID, ticket.Amount, vorig);
+
+                try
+                {
+                    trans = Database.BeginTransaction();
+
+                    string sql = "INSERT INTO Ticket VALUES(@ID,@TicketHolder,@TicketHolderEmail,@TicketType,@Amount)";
+                    DbParameter par1 = Database.AddParameter("@TicketHolder", ticket.TicketHolder);
+                    DbParameter par2 = Database.AddParameter("@ID", aantal);
+                    DbParameter par3 = Database.AddParameter("@TicketHolderEmail", ticket.TicketHolderEmail);
+                    DbParameter par4 = Database.AddParameter("@TicketType", ticket.TicketType.ID);
+                    DbParameter par5 = Database.AddParameter("@Amount", ticket.Amount);
+
+                    int rowsaffected = 0;
+                    rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5);
+
+                    trans.Commit();
+                    ApplicationVM.Infotxt("Ticket toegevoegd", "Ticket aanpassen");
+                    return rowsaffected;
+                }
+                catch (Exception)
+                {
+                    ApplicationVM.Infotxt("Kan ticket niet toevoegen", "");
+                    trans.Rollback();
+                    return 0;
+                }
+            }
+            else
+            {
+                ApplicationVM.Infotxt("Er zijn niet genoeg tickets beschikbaar", "");
+                return 0;
+            }
+        }
+
+        public static int EditTicketType(int id, int tickets, int vorig)
+        {
+            ApplicationVM.Infotxt("TicketType aanpassen", "");
+            DbTransaction trans = null;
+
             try
             {
                 trans = Database.BeginTransaction();
 
-                string sql = "INSERT INTO Ticket VALUES(@ID,@TicketHolder,@TicketHolderEmail,@TicketType,@Amount)";
-                DbParameter par1 = Database.AddParameter("@TicketHolder", ticket.TicketHolder);
-                DbParameter par2 = Database.AddParameter("@ID", aantal);
-                DbParameter par3 = Database.AddParameter("@TicketHolderEmail", ticket.TicketHolderEmail);
-                DbParameter par4 = Database.AddParameter("@TicketType", ticket.TicketType.ID);
-                DbParameter par5 = Database.AddParameter("@Amount", ticket.Amount);
+                string sql = "UPDATE TicketType SET AvailableTickets=@AvailableTickets WHERE ID=@ID";
+                DbParameter par1 = Database.AddParameter("@ID", id);
+                DbParameter par2 = Database.AddParameter("@AvailableTickets", vorig - tickets);
 
                 int rowsaffected = 0;
-                rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5);
+                rowsaffected += Database.ModifyData(trans, sql, par1, par2);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("Ticket toegevoegd", "Ticket aanpassen");
+                ApplicationVM.Infotxt("TicketType aangepast", "TicketType aanpassen");
                 return rowsaffected;
             }
             catch (Exception)
             {
-                ApplicationVM.Infotxt("Kan ticket niet toevoegen", "");
+                ApplicationVM.Infotxt("Kan TicketType niet aanpassen", "");
                 trans.Rollback();
                 return 0;
             }
@@ -199,7 +296,7 @@ namespace ProjectFestival.model
                 return 0;
             }
         }
-        
+
         public override string ToString()
         {
             return ID + " " + TicketHolder + " " + TicketType + " " + TicketHolderEmail + " " + Amount;

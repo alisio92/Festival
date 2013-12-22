@@ -46,10 +46,12 @@ namespace ProjectFestival.model
 
         public static int aantal = 1;
 
+        public static ObservableCollection<TicketType> ticketType = new ObservableCollection<TicketType>();
+
         public static ObservableCollection<TicketType> GetTicketTypes()
         {
+            ticketType = new ObservableCollection<TicketType>();
             ApplicationVM.Infotxt("Inladen ticket types", "");
-            ObservableCollection<TicketType> ticketType = new ObservableCollection<TicketType>();
             try
             {
                 string sql = "SELECT * FROM TicketType";

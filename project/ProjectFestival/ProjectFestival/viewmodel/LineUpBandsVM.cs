@@ -37,7 +37,7 @@ namespace ProjectFestival.viewmodel
 
         public LineUpBandsVM()
         {
-            BandList = Band.GetBands();
+            BandList = Band.bands;
         }
     }
 }

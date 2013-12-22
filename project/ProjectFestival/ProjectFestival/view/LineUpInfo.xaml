@@ -69,8 +69,8 @@
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="3*"/>
                     </Grid.RowDefinitions>
-                    <Button Content="+" Margin="-100" Width="50" FontSize="24"/>
-                    <Button Content="-" Margin="-100" Width="50" Grid.Row="1" FontSize="24"/>
+                    <Button Content="+" Margin="-100" Width="50" FontSize="24" Command="{Binding AddPlusImageCommand}"/>
+                    <Button Content="-" Margin="-100" Width="50" Grid.Row="1" FontSize="24" Command="{Binding DeleteImageCommand}"/>
                 </Grid>
             </Grid>
         </Grid>
