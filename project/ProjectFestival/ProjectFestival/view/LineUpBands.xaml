@@ -12,13 +12,6 @@
                 <DataGridTextColumn Header="Naam" Width="1*" Binding="{Binding Name}"/>
                 <DataGridTextColumn Header="Facebook" Width="1*" Binding="{Binding Facebook}"/>
                 <DataGridTextColumn Header="Twitter" Width="1*" Binding="{Binding Twitter}"/>
-                <DataGridTemplateColumn Width="1*" Header="Genres">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <ComboBox ItemsSource="{Binding GenreList}"  DisplayMemberPath="Name" SelectedItem="{Binding Genre.Name,UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="ID" SelectedValue="{Binding Genre.ID,UpdateSourceTrigger=PropertyChanged}"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

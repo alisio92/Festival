@@ -31,7 +31,14 @@ namespace ProjectFestival.viewmodel
         public static Band SelectedBand
         {
             get { return _selectedBand; }
-            set { _selectedBand = value;}
+            set { _selectedBand = value; }
+        }
+
+        private ObservableCollection<BandGenre> _bandList;
+        public ObservableCollection<BandGenre> BandList
+        {
+            get { return _bandList; }
+            set { _bandList = value; OnPropertyChanged("BandList"); }
         }
 
         public ICommand AddImageCommand
@@ -87,15 +94,18 @@ namespace ProjectFestival.viewmodel
             SelectedBand.Picture = null;
         }
 
-        private Genre _selectedGenre;
-        public Genre SelectedGenre
+        private BandGenre _selectedGenre;
+        public BandGenre SelectedGenre
         {
             get { return _selectedGenre; }
             set
             {
                 _selectedGenre = value;
                 OnPropertyChanged("SelectedGenre");
-                ApplicationVM.SelectedItem = SelectedGenre;
+                Genre g = new Genre();
+                g = SelectedGenre.GenreBand;
+                SelectedBand.GenreListBand.Add(g);
+                ApplicationVM.SelectedItem = SelectedBand;
             }
         }
 
@@ -121,7 +131,8 @@ namespace ProjectFestival.viewmodel
 
         public LineUpInfoVM()
         {
-            _genreList = Band.GenreList;
+            BandList = BandGenre.GetBandGenres(SelectedBand.GenreListBand);
+            _genreList = BandGenre.GenreList;
         }
     }
 }

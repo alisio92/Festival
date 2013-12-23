@@ -279,6 +279,13 @@ namespace ProjectFestival.viewmodel
                 b.ID = Band.aantal;
                 Band.bands.Add(b);
             }
+            if (CurrentPage.Name == "Info Bands")
+            {
+                BandGenre g2 = new BandGenre();
+                g2.GenreBand = new Genre();
+                g2.ID = BandGenre.aantal;
+                BandGenre.bandGenre.Add(g2);
+            }
         }
 
         public void SaveItem()
@@ -524,10 +531,20 @@ namespace ProjectFestival.viewmodel
             {
                 GenreStageDeleteItem();
             }
-            if (CurrentPage.Name == "Info Bands" || CurrentPage.Name == "Bands")
+            if (CurrentPage.Name == "Bands")
             {
                 BandDeleteItem();
             }
+            if (CurrentPage.Name == "Info Bands")
+            {
+                GenreDeleteItem();
+            }
+        }
+
+        private void GenreDeleteItem()
+        {
+            BandGenre bandGenre = (BandGenre)SelectedItem;
+            BandGenre.bandGenre.Remove(bandGenre);
         }
 
         private void BandDeleteItem()

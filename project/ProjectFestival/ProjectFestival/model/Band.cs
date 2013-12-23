@@ -63,21 +63,23 @@ namespace ProjectFestival.model
             set { _genreList = value; }
         }
 
-        private Genre _genre;
-        public Genre Genre
+        private ObservableCollection<Genre> _genreListBand = new ObservableCollection<Genre>();
+        public ObservableCollection<Genre> GenreListBand
         {
-            get { return _genre; }
-            set { _genre = value; }
+            get { return _genreListBand; }
+            set { _genreListBand = value; }
         }
-
+        
         public static int aantal = 1;
+        public static int aantalGenres = 1;
 
         public static ObservableCollection<Band> bands = new ObservableCollection<Band>();
-        
+
         public static ObservableCollection<Band> GetBands()
         {
             ApplicationVM.Infotxt("Inladen Band", "");
             GenreList = Genre.GetGenres();
+            BandGenre.GenreList = GenreList;
 
             try
             {
@@ -125,11 +127,17 @@ namespace ProjectFestival.model
             band.Description = record["Description"].ToString();
             band.Twitter = record["Twitter"].ToString();
             band.Facebook = record["Facebook"].ToString();
-            band.Genre = new Genre()
+
+            string[] split = record["Genre"].ToString().Split(new Char[] { ';' });
+
+            for (int i = 0; i < split.Count()-1; i++)
             {
-                ID = (int)record["Genre"],
-                Name = GenreList[(int)record["Genre"] - 1].Name
-            };
+                Genre genre = new Genre();
+                genre.ID = Convert.ToInt32(split[i]);
+                genre.Name = GenreList[Convert.ToInt32(split[i]) - 1].Name;
+                band.GenreListBand.Add(genre);
+                aantalGenres++;
+            }
 
             return band;
         }
@@ -138,6 +146,13 @@ namespace ProjectFestival.model
         {
             ApplicationVM.Infotxt("Band aanpassen", "");
             DbTransaction trans = null;
+
+            string genres="";
+
+            foreach(Genre g in band.GenreListBand)
+            {
+                genres += g.ID+";";
+            }
 
             try
             {
@@ -150,7 +165,7 @@ namespace ProjectFestival.model
                 DbParameter par4 = Database.AddParameter("@Description", band.Description);
                 DbParameter par5 = Database.AddParameter("@Twitter", band.Twitter);
                 DbParameter par6 = Database.AddParameter("@Facebook", band.Facebook);
-                DbParameter par7 = Database.AddParameter("@Genre", band.Genre.ID);
+                DbParameter par7 = Database.AddParameter("@Genre", genres);
 
                 int rowsaffected = 0;
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5, par6, par7);
@@ -172,6 +187,13 @@ namespace ProjectFestival.model
             ApplicationVM.Infotxt("Band toevoegen", "");
             DbTransaction trans = null;
 
+            string genres = "";
+
+            foreach (Genre g in band.GenreListBand)
+            {
+                genres += g.ID + ";";
+            }
+
             try
             {
                 trans = Database.BeginTransaction();
@@ -182,7 +204,7 @@ namespace ProjectFestival.model
                 DbParameter par4 = Database.AddParameter("@Description", band.Description);
                 DbParameter par5 = Database.AddParameter("@Twitter", band.Twitter);
                 DbParameter par6 = Database.AddParameter("@Facebook", band.Facebook);
-                DbParameter par7 = Database.AddParameter("@Genre", 1);
+                DbParameter par7 = Database.AddParameter("@Genre", genres);
                 DbParameter par2 = Database.AddParameter("@ID", aantal);
 
                 int rowsaffected = 0;
