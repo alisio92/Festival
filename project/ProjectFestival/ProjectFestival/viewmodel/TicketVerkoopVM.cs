@@ -33,7 +33,7 @@ namespace ProjectFestival.viewmodel
 
         public TicketVerkoopVM()
         {
-            _tickeTypetList = Ticket.TicketTypeList;
+            _tickeTypetList = TicketType.GetTicketTypes();
         }
     }
 }

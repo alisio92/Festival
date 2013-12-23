@@ -64,6 +64,7 @@ namespace ProjectFestival.model
 
         public static ObservableCollection<Ticket> GetTickets()
         {
+            tickets = new ObservableCollection<Ticket>();
             ApplicationVM.Infotxt("Inladen klanten", "");
             TicketTypeList = TicketType.GetTicketTypes();
 
@@ -116,16 +117,17 @@ namespace ProjectFestival.model
             ApplicationVM.Infotxt("Ticket aanpassen", "");
             DbTransaction trans = null;
 
-            ObservableCollection<TicketType> ticketType = new ObservableCollection<TicketType>();
-            ticketType = TicketType.GetTicketTypes();
+            ObservableCollection<TicketType> ticketType = TicketType.GetTicketTypes();
+            ObservableCollection<Ticket> ticketVorig = Ticket.GetTickets();
             int aantaltickets = ticketType[ticket.TicketType.ID - 1].AvailableTickets;
-            int aantalVorig = TicketType.ticketType[ticket.TicketType.ID - 1].AvailableTickets;
+            int aantalNu = ticket.Amount;
+            int aantalVorig = ticketVorig[ticket.ID - 1].Amount;
 
-            if (aantaltickets > aantalVorig)
+            if (aantalNu > aantalVorig)
             {
-                if (aantal - ticket.Amount >= 0)
+                if (aantaltickets - (aantalNu - aantalVorig) >= 0)
                 {
-                    return EditTicket(trans, ticket);
+                    return EditTicket(trans, ticket, aantaltickets);
                 }
                 else
                 {
@@ -133,11 +135,11 @@ namespace ProjectFestival.model
                     return 0;
                 }
             }
-            else if (aantaltickets < aantalVorig)
+            else if (aantalNu < aantalVorig)
             {
-                if (ticket.Amount >= 0)
+                if (aantalNu >= 0)
                 {
-                    return EditTicket(trans, ticket);
+                    return EditTicket(trans, ticket, aantaltickets);
                 }
                 else
                 {
@@ -146,29 +148,59 @@ namespace ProjectFestival.model
             }
             else
             {
-                ApplicationVM.Infotxt("Kan Ticket niet aanpassen", "");
-                return 0;
+                int idVorig = ticketVorig[ticket.ID - 1].TicketType.ID;
+                if (idVorig != ticket.TicketType.ID)
+                {
+                    if (aantaltickets >= aantalNu)
+                    {
+                        int rowsaffected = 0;
+                        rowsaffected += EditTicketType(idVorig, -aantalVorig, ticketType[idVorig - 1].AvailableTickets);
+                        rowsaffected += EditTicketType(ticket.TicketType.ID, aantalVorig, aantaltickets);
+                        try
+                        {
+                            trans = Database.BeginTransaction();
+
+                            string sql = "UPDATE Ticket SET TicketHolder=@TicketHolder,TicketHolderEmail=@TicketHolderEmail,TicketType=@TicketType,Amount=@Amount WHERE ID=@ID";
+                            DbParameter par1 = Database.AddParameter("@TicketHolder", ticket.TicketHolder);
+                            DbParameter par2 = Database.AddParameter("@ID", ticket.ID);
+                            DbParameter par3 = Database.AddParameter("@TicketHolderEmail", ticket.TicketHolderEmail);
+                            DbParameter par4 = Database.AddParameter("@TicketType", ticket.TicketType.ID);
+                            DbParameter par5 = Database.AddParameter("@Amount", ticket.Amount);
+
+                            rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5);
+
+                            trans.Commit();
+                            ApplicationVM.Infotxt("Ticket aangepast", "Ticket aanpassen");
+                            return rowsaffected;
+                        }
+                        catch (Exception)
+                        {
+                            ApplicationVM.Infotxt("Kan Ticket niet aanpassen", "");
+                            trans.Rollback();
+                            return 0;
+                        }
+                    }
+                    else
+                    {
+                        ApplicationVM.Infotxt("Kan Ticket niet aanpassen", "");
+                        return 0;
+                    }
+                }
+                else
+                {
+                    ApplicationVM.Infotxt("Kan Ticket niet aanpassen", "");
+                    return 0;
+                }
             }
         }
 
-        public static int EditTicket(DbTransaction trans, Ticket ticket)
+        public static int EditTicket(DbTransaction trans, Ticket ticket, int aantaltickets)
         {
             ObservableCollection<TicketType> types = new ObservableCollection<TicketType>();
             types = TicketType.GetTicketTypes();
-            int vorig = tickets[ticket.ID].Amount;
+            int vorig = tickets[ticket.ID - 1].Amount;
 
-            if (vorig > ticket.Amount)
-            {
-                EditTicketType(ticket.TicketType.ID, ticket.Amount, vorig);
-            }
-            else if (vorig < ticket.Amount)
-            {
-                EditTicketType(ticket.TicketType.ID, -ticket.Amount, vorig);
-            }
-            else
-            {
-
-            }
+            EditTicketType(ticket.TicketType.ID, ticket.Amount - vorig, aantaltickets);
 
             try
             {
@@ -202,11 +234,10 @@ namespace ProjectFestival.model
             DbTransaction trans = null;
 
             int aantaltickets = TicketType.ticketType[ticket.TicketType.ID - 1].AvailableTickets;
-            ObservableCollection<TicketType> types = new ObservableCollection<TicketType>();
-            types = TicketType.GetTicketTypes();
+            ObservableCollection<TicketType> types = TicketType.GetTicketTypes();
             int vorig = types[ticket.TicketType.ID - 1].AvailableTickets;
 
-            if (aantaltickets - ticket.Amount >= 0)
+            if (vorig - ticket.Amount >= 0)
             {
                 EditTicketType(ticket.TicketType.ID, ticket.Amount, vorig);
 
