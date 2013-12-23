@@ -150,7 +150,7 @@ namespace ProjectFestival.model
                 DbParameter par4 = Database.AddParameter("@Description", band.Description);
                 DbParameter par5 = Database.AddParameter("@Twitter", band.Twitter);
                 DbParameter par6 = Database.AddParameter("@Facebook", band.Facebook);
-                DbParameter par7 = Database.AddParameter("@Genre", band.Genre.Name);
+                DbParameter par7 = Database.AddParameter("@Genre", band.Genre.ID);
 
                 int rowsaffected = 0;
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5, par6, par7);
@@ -182,7 +182,7 @@ namespace ProjectFestival.model
                 DbParameter par4 = Database.AddParameter("@Description", band.Description);
                 DbParameter par5 = Database.AddParameter("@Twitter", band.Twitter);
                 DbParameter par6 = Database.AddParameter("@Facebook", band.Facebook);
-                DbParameter par7 = Database.AddParameter("@Genre", band.Genre.Name);
+                DbParameter par7 = Database.AddParameter("@Genre", 1);
                 DbParameter par2 = Database.AddParameter("@ID", aantal);
 
                 int rowsaffected = 0;

@@ -262,6 +262,23 @@ namespace ProjectFestival.viewmodel
                 Ticket.TicketTypeList.Add(t);
                 //TicketType.aantal++;
             }
+
+            if (CurrentPage.Name == "Genre & Stage")
+            {
+                Genre g = new Genre();
+                g.ID = Genre.aantal;
+                Band.GenreList.Add(g);
+                Stage s = new Stage();
+                s.ID = Stage.aantal;
+                LineUp.StageList.Add(s);
+                //TicketType.aantal++;
+            }
+            if (CurrentPage.Name == "Bands")
+            {
+                Band b = new Band();
+                b.ID = Band.aantal;
+                Band.bands.Add(b);
+            }
         }
 
         public void SaveItem()
@@ -288,7 +305,7 @@ namespace ProjectFestival.viewmodel
             }
             if (CurrentPage.Name == "Info Bands")
             {
-                BandSaveItem();
+                InfoBandSaveItem();
             }
             if (CurrentPage.Name == "Line-Up")
             {
@@ -311,12 +328,12 @@ namespace ProjectFestival.viewmodel
             //LineUp.JsonWegschrijven();
         }
 
-        private void BandSaveItem()
+        private void InfoBandSaveItem()
         {
             Band band = (Band)SelectedItem;
             int id = Convert.ToInt32(band.ID);
 
-            if (id > 0)
+            if (id != Band.aantal)
             {
                 Band.EditBand(band);
                 Band.bands[id - 1] = band;
@@ -343,7 +360,7 @@ namespace ProjectFestival.viewmodel
                 stage = (Stage)SelectedItem;
                 id = Convert.ToInt32(stage.ID);
 
-                if (id != Genre.aantal)
+                if (id != Stage.aantal)
                 {
                     Stage.EditStage(stage);
                     LineUp.StageList[id - 1] = stage;
@@ -362,7 +379,7 @@ namespace ProjectFestival.viewmodel
                 genre = (Genre)SelectedItem;
                 id = Convert.ToInt32(genre.ID);
 
-                if (id > 0)
+                if (id !=Genre.aantal)
                 {
                     Genre.EditGenre(genre);
                     Band.GenreList[id - 1] = genre;
@@ -491,23 +508,23 @@ namespace ProjectFestival.viewmodel
             {
                 ContactDeleteItem();
             }
-            else if (CurrentPage.Name == "Personeel")
+            if (CurrentPage.Name == "Personeel")
             {
                 PersoneelDeleteItem();
             }
-            else if (CurrentPage.Name == "Tickets")
+            if (CurrentPage.Name == "Tickets")
             {
                 TicketsDeleteItem();
             }
-            else if (CurrentPage.Name == "Verkoop")
+            if (CurrentPage.Name == "Verkoop")
             {
                 VerkoopDeleteItem();
             }
-            else if (CurrentPage.Name == "Genre & Stage")
+            if (CurrentPage.Name == "Genre & Stage")
             {
                 GenreStageDeleteItem();
             }
-            else if (CurrentPage.Name == "Info Bands")
+            if (CurrentPage.Name == "Info Bands" || CurrentPage.Name == "Bands")
             {
                 BandDeleteItem();
             }
