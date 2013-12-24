@@ -31,6 +31,7 @@ namespace ProjectFestival.model
         public static int aantal = 1;
 
         public static ObservableCollection<Stage> stages = new ObservableCollection<Stage>();
+        public static ObservableCollection<Stage> oStages = new ObservableCollection<Stage>();
 
         public static ObservableCollection<Stage> GetStages()
         {
@@ -59,6 +60,7 @@ namespace ProjectFestival.model
             {
                 ApplicationVM.Infotxt("Kan Stage tabel niet inlezen", "");
             }
+            oStages = stages;
             return stages;
         }
 
@@ -158,6 +160,27 @@ namespace ProjectFestival.model
         public override string ToString()
         {
             return Name;
+        }
+
+        public static void Zoeken(string parameter)
+        {
+            parameter = parameter.ToLower();
+            stages = new ObservableCollection<Stage>();
+
+            foreach (Stage c in oStages)
+            {
+                if (parameter != "" && parameter != "Zoeken")
+                {
+                    if ((c.Name.ToLower().Contains(parameter)) || (c.ID.ToString().ToLower().Contains(parameter)))
+                    {
+                        stages.Add(c);
+                    }
+                }
+                else
+                {
+                    stages.Add(c);
+                }
+            }
         }
     }
 }

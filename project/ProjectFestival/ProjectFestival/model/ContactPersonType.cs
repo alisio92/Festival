@@ -35,10 +35,12 @@ namespace ProjectFestival.model
             return Name;
         }
 
+        public static ObservableCollection<ContactPersonType> contactType = new ObservableCollection<ContactPersonType>();
+        public static ObservableCollection<ContactPersonType> oContactType = new ObservableCollection<ContactPersonType>();
+
         public static ObservableCollection<ContactPersonType> GetContactPersonType()
         {
             ApplicationVM.Infotxt("Inladen contact types", "");
-            ObservableCollection<ContactPersonType> contactType = new ObservableCollection<ContactPersonType>();
             try
             {
                 string sql = "SELECT * FROM ContactPersonType";
@@ -63,6 +65,7 @@ namespace ProjectFestival.model
             {
                 ApplicationVM.Infotxt("Kan ContactPersonType tabel niet inlezen", "");
             }
+            oContactType = contactType;
             return contactType;
         }
 
@@ -156,6 +159,27 @@ namespace ProjectFestival.model
                 ApplicationVM.Infotxt("Kan ContactPersonType niet wissen", "");
                 trans.Rollback();
                 return 0;
+            }
+        }
+
+        public static void Zoeken(string parameter)
+        {
+            parameter = parameter.ToLower();
+            contactType = new ObservableCollection<ContactPersonType>();
+
+            foreach (ContactPersonType c in oContactType)
+            {
+                if (parameter != "" && parameter != "Zoeken")
+                {
+                    if ((c.Name.ToLower().Contains(parameter)) || (c.ID.ToString().ToLower().Contains(parameter)))
+                    {
+                        contactType.Add(c);
+                    }
+                }
+                else
+                {
+                    contactType.Add(c);
+                }
             }
         }
     }

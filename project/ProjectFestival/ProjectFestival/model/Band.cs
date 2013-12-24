@@ -69,11 +69,12 @@ namespace ProjectFestival.model
             get { return _genreListBand; }
             set { _genreListBand = value; }
         }
-        
+
         public static int aantal = 1;
         public static int aantalGenres = 1;
 
         public static ObservableCollection<Band> bands = new ObservableCollection<Band>();
+        public static ObservableCollection<Band> oBands = new ObservableCollection<Band>();
 
         public static ObservableCollection<Band> GetBands()
         {
@@ -105,6 +106,7 @@ namespace ProjectFestival.model
             {
                 ApplicationVM.Infotxt("Kan Band tabel niet inlezen", "");
             }
+            oBands = bands;
             return bands;
         }
 
@@ -130,7 +132,7 @@ namespace ProjectFestival.model
 
             string[] split = record["Genre"].ToString().Split(new Char[] { ';' });
 
-            for (int i = 0; i < split.Count()-1; i++)
+            for (int i = 0; i < split.Count() - 1; i++)
             {
                 Genre genre = new Genre();
                 genre.ID = Convert.ToInt32(split[i]);
@@ -147,11 +149,11 @@ namespace ProjectFestival.model
             ApplicationVM.Infotxt("Band aanpassen", "");
             DbTransaction trans = null;
 
-            string genres="";
+            string genres = "";
 
-            foreach(Genre g in band.GenreListBand)
+            foreach (Genre g in band.GenreListBand)
             {
-                genres += g.ID+";";
+                genres += g.ID + ";";
             }
 
             try
@@ -251,6 +253,37 @@ namespace ProjectFestival.model
                 ApplicationVM.Infotxt("Kan Band niet wissen", "");
                 trans.Rollback();
                 return 0;
+            }
+        }
+
+        public static void Zoeken(string parameter)
+        {
+            parameter = parameter.ToLower();
+            bands = new ObservableCollection<Band>();
+
+            foreach (Band c in oBands)
+            {
+                if (parameter != "" && parameter != "Zoeken")
+                {
+                    if ((c.Name.ToLower().Contains(parameter)) || (c.ID.ToString().ToLower().Contains(parameter)) || (c.Facebook.ToString().ToLower().Contains(parameter)) || (c.Twitter.ToString().ToLower().Contains(parameter)))
+                    {
+                        bands.Add(c);
+                    }
+                    foreach (Genre g in c.GenreListBand)
+                    {
+                        if (g.Name.ToLower().Contains(parameter))
+                        {
+                            if (!bands.Contains(c))
+                            {
+                                bands.Add(c);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    bands.Add(c);
+                }
             }
         }
     }

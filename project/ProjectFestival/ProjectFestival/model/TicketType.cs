@@ -47,6 +47,7 @@ namespace ProjectFestival.model
         public static int aantal = 1;
 
         public static ObservableCollection<TicketType> ticketType = new ObservableCollection<TicketType>();
+        public static ObservableCollection<TicketType> oTicketType = new ObservableCollection<TicketType>();
 
         public static ObservableCollection<TicketType> GetTicketTypes()
         {
@@ -76,6 +77,7 @@ namespace ProjectFestival.model
             {
                 ApplicationVM.Infotxt("Kan TicketType tabel niet inlezen", "");
             }
+            oTicketType = ticketType;
             return ticketType;
         }
 
@@ -181,6 +183,27 @@ namespace ProjectFestival.model
         public override string ToString()
         {
             return Name;
+        }
+
+        public static void Zoeken(string parameter)
+        {
+            parameter = parameter.ToLower();
+            ticketType = new ObservableCollection<TicketType>();
+
+            foreach (TicketType c in oTicketType)
+            {
+                if (parameter != "" && parameter != "Zoeken")
+                {
+                    if ((c.Name.ToLower().Contains(parameter)) || (c.ID.ToString().ToLower().Contains(parameter)) || (c.Price.ToString().ToLower().Contains(parameter)) || (c.AvailableTickets.ToString().ToLower().Contains(parameter)))
+                    {
+                        ticketType.Add(c);
+                    }
+                }
+                else
+                {
+                    ticketType.Add(c);
+                }
+            }
         }
     }
 }

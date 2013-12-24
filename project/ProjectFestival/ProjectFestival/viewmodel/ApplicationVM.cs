@@ -16,7 +16,7 @@ namespace ProjectFestival.viewmodel
     {
         public ApplicationVM()
         {
-            Infotxt("Applicatie starten...","");
+            Infotxt("Applicatie starten...", "");
             PagesMainNav.Add(new ContactOverviewVM());
             PagesMainNav.Add(new LineUpOverviewVM());
             PagesMainNav.Add(new TicketOverviewVM());
@@ -24,11 +24,11 @@ namespace ProjectFestival.viewmodel
             CurrentPage = PagesMainNav[0];
             subNav();
             Infotxt("Applicatie starten klaar", "Applicatie starten...");
-        }        
+        }
 
         public static void Infotxt(string infoNew, string infoOld)
         {
-            if (infoOld=="")
+            if (infoOld == "")
             {
                 Info += infoNew + "\n";
             }
@@ -53,7 +53,7 @@ namespace ProjectFestival.viewmodel
         public static String Info
         {
             get { return _info; }
-            set { _info = value;}
+            set { _info = value; }
         }
         private void subNav()
         {
@@ -72,7 +72,7 @@ namespace ProjectFestival.viewmodel
             else if (CurrentPage.Name == "Line-Up")
             {
                 PagesSubNav.Add(new LineUpOverviewVM());
-                PagesSubNav.Add(new LineUpBandsVM());   
+                PagesSubNav.Add(new LineUpBandsVM());
                 PagesSubNav.Add(new LineUpGenreVM());
             }
         }
@@ -87,7 +87,7 @@ namespace ProjectFestival.viewmodel
                 OnPropertyChanged("CurrentPage");
             }
         }
-        
+
         private ObservableCollection<IPage> _pagesMainNav;
         public ObservableCollection<IPage> PagesMainNav
         {
@@ -147,7 +147,7 @@ namespace ProjectFestival.viewmodel
             {
             }
         }
-        
+
         private static object _selectedItem;
         public static object SelectedItem
         {
@@ -193,7 +193,7 @@ namespace ProjectFestival.viewmodel
 
         private void LostFocus()
         {
-            if(Search=="")
+            if (Search == "")
             {
                 Search = "Zoeken";
             }
@@ -214,17 +214,46 @@ namespace ProjectFestival.viewmodel
 
         private void Zoeken()
         {
-           
+
             if (CurrentPage.Name == "Contact")
             {
-                if (Search != "")
-                {
-                    ContactPerson.Zoeken(Search);
-                    ContactOverviewVM m = new ContactOverviewVM();
-                }
+                ContactPerson.Zoeken(Search);
+                CurrentPage = new ContactOverviewVM();
             }
-        }        
-        
+            if (CurrentPage.Name == "Personeel")
+            {
+                ContactPersonType.Zoeken(Search);
+                ContactPersonTitle.Zoeken(Search);
+                CurrentPage = new ContactPersoneelVM();
+            }
+            if (CurrentPage.Name == "Verkoop")
+            {
+                TicketType.Zoeken(Search);
+                CurrentPage = new TicketVerkoopVM();
+            }
+            if (CurrentPage.Name == "Tickets")
+            {
+                Ticket.Zoeken(Search);
+                CurrentPage = new TicketOverviewVM();
+            }
+            if (CurrentPage.Name == "Genre & Stage")
+            {
+                Genre.Zoeken(Search);
+                Stage.Zoeken(Search);
+                CurrentPage = new LineUpGenreVM();
+            }
+            if (CurrentPage.Name == "Bands")
+            {
+                Band.Zoeken(Search);
+                CurrentPage = new LineUpBandsVM();
+            }
+            if (CurrentPage.Name == "Line-Up")
+            {
+                LineUp.Zoeken(Search);
+                CurrentPage = new LineUpOverviewVM();
+            }
+        }
+
         private void AddItem()
         {
             if (CurrentPage.Name == "Personeel")
@@ -386,7 +415,7 @@ namespace ProjectFestival.viewmodel
                 genre = (Genre)SelectedItem;
                 id = Convert.ToInt32(genre.ID);
 
-                if (id !=Genre.aantal)
+                if (id != Genre.aantal)
                 {
                     Genre.EditGenre(genre);
                     Band.GenreList[id - 1] = genre;

@@ -30,10 +30,11 @@ namespace ProjectFestival.model
 
         public static int aantal = 1;
 
+        public static ObservableCollection<Genre> genres = new ObservableCollection<Genre>();
+        public static ObservableCollection<Genre> oGenres = new ObservableCollection<Genre>();
         public static ObservableCollection<Genre> GetGenres()
         {
             ApplicationVM.Infotxt("Inladen Genres", "");
-            ObservableCollection<Genre> genres = new ObservableCollection<Genre>();
             try
             {
                 string sql = "SELECT * FROM Genre";
@@ -58,6 +59,7 @@ namespace ProjectFestival.model
             {
                 ApplicationVM.Infotxt("Kan Genre tabel niet inlezen", "");
             }
+            oGenres = genres;
             return genres;
         }
 
@@ -157,6 +159,27 @@ namespace ProjectFestival.model
         public override string ToString()
         {
             return Name;
+        }
+
+        public static void Zoeken(string parameter)
+        {
+            parameter = parameter.ToLower();
+            genres = new ObservableCollection<Genre>();
+
+            foreach (Genre c in oGenres)
+            {
+                if (parameter != "" && parameter != "Zoeken")
+                {
+                    if ((c.Name.ToLower().Contains(parameter)) || (c.ID.ToString().ToLower().Contains(parameter)))
+                    {
+                        genres.Add(c);
+                    }
+                }
+                else
+                {
+                    genres.Add(c);
+                }
+            }
         }
     }
 }

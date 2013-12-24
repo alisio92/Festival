@@ -33,8 +33,8 @@ namespace ProjectFestival.viewmodel
 
         public ContactPersoneelVM()
         {
-            TypeList = ContactPerson.JobRoleList;
-            TitleList = ContactPerson.JobTitleList;
+            TypeList = ContactPersonType.contactType;
+            TitleList = ContactPersonTitle.contactTitle;
         }
 
         private ContactPersonType _selectedType;

@@ -31,8 +31,8 @@ namespace ProjectFestival.viewmodel
 
         public LineUpGenreVM()
         {
-            _genreList = Band.GenreList;
-            _stageList = LineUp.StageList;
+            _genreList = Genre.genres;
+            _stageList = Stage.stages;
         }
 
         private Genre _selectedGenre;

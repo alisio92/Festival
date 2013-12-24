@@ -48,6 +48,7 @@ namespace ProjectFestival.viewmodel
             }
             UrenList = clock.uren;
             StagesList = Stage.stages;
+            LineUpList = LineUp.lineUp;
         }
     }
 }

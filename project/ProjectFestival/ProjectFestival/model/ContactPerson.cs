@@ -153,12 +153,12 @@ namespace ProjectFestival.model
             contactPerson.JobRole = new ContactPersonType()
             {
                 ID = (int)record["JobRole"],
-                Name = JobRoleList[(int)record["JobRole"]-1].Name
+                Name = JobRoleList[(int)record["JobRole"] - 1].Name
             };
             contactPerson.JobTitle = new ContactPersonTitle()
             {
                 ID = (int)record["JobTitle"],
-                Name = JobTitleList[(int)record["JobTitle"]-1].Name
+                Name = JobTitleList[(int)record["JobTitle"] - 1].Name
             };
             contactPerson.City = record["City"].ToString();
             contactPerson.Email = record["Email"].ToString();
@@ -310,10 +310,19 @@ namespace ProjectFestival.model
 
         public static void Zoeken(string parameter)
         {
+            parameter = parameter.ToLower();
             contactPersons = new ObservableCollection<ContactPerson>();
+
             foreach (ContactPerson c in oContactPersons)
             {
-                if (c.Name.Contains(parameter))
+                if (parameter != "" && parameter != "Zoeken")
+                {
+                    if ((c.Name.ToLower().Contains(parameter)) || (c.JobRole.Name.ToLower().Contains(parameter)) || (c.JobTitle.Name.ToLower().Contains(parameter)) || (c.Company.ToLower().Contains(parameter)) || (c.City.ToLower().Contains(parameter)) || (c.Email.ToLower().Contains(parameter)) || (c.Phone.ToLower().Contains(parameter)) || (c.Cellphone.ToLower().Contains(parameter)) || (c.ID.ToString().ToLower().Contains(parameter)))
+                    {
+                        contactPersons.Add(c);
+                    }
+                }
+                else
                 {
                     contactPersons.Add(c);
                 }

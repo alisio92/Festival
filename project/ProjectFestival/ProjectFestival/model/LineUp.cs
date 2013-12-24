@@ -93,6 +93,7 @@ namespace ProjectFestival.model
         public static int vorigeWidth;
         
         public static ObservableCollection<LineUp> lineUp = new ObservableCollection<LineUp>();
+        public static ObservableCollection<LineUp> oLineUp = new ObservableCollection<LineUp>();
 
         public static ObservableCollection<LineUp> GetLineUp()
         {
@@ -123,7 +124,7 @@ namespace ProjectFestival.model
             {
                 ApplicationVM.Infotxt("Kan LineUp tabel niet inlezen", "");
             }
-
+            oLineUp = lineUp;
             return lineUp;
         }
 
@@ -315,6 +316,27 @@ namespace ProjectFestival.model
                 run.AppendChild(new Text(l.ID + " " + l.Band.Name + " " + l.Stage.Name + " " + l.Date + " " + l.From + " " + l.Until));
             }
             wordDocument.Close();
+        }
+
+        public static void Zoeken(string parameter)
+        {
+            parameter = parameter.ToLower();
+            lineUp = new ObservableCollection<LineUp>();
+
+            foreach (LineUp c in oLineUp)
+            {
+                if (parameter != "" && parameter != "Zoeken")
+                {
+                    if ((c.Band.Name.ToLower().Contains(parameter)) || (c.ID.ToString().ToLower().Contains(parameter)) || (c.From.ToLower().Contains(parameter)) || (c.Until.ToLower().Contains(parameter)) || (c.Stage.Name.ToLower().Contains(parameter)))
+                    {
+                        lineUp.Add(c);
+                    }
+                }
+                else
+                {
+                    lineUp.Add(c);
+                }
+            }
         }
     }
 }
