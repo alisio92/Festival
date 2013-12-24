@@ -280,6 +280,8 @@ namespace ProjectFestival.model
             ApplicationVM.Infotxt("TicketType aanpassen", "");
             DbTransaction trans = null;
 
+            TicketType.ticketType[id-1].AvailableTickets = vorig - tickets;
+
             try
             {
                 trans = Database.BeginTransaction();

@@ -54,7 +54,7 @@
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
                 <Grid Background="White" Margin="10">
-                    <Image Width="250" Height="250" Margin="5" AllowDrop="True" Source="{Binding SelectedBand.Picture,Converter={StaticResource image},UpdateSourceTrigger=PropertyChanged}">
+                    <Image x:Name="image" Width="250" Height="250" Margin="5" AllowDrop="True" Source="{Binding SelectedBand.Picture,Converter={StaticResource image},UpdateSourceTrigger=PropertyChanged}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Drop">
                                 <custom:EventToCommand Command="{Binding AddImageCommand}" PassEventArgsToCommand="True"/>

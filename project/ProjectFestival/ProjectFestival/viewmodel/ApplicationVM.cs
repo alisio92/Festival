@@ -142,6 +142,10 @@ namespace ProjectFestival.viewmodel
                         Ticket.TicketTypeList.RemoveAt(TicketType.aantal - 1);
                     }
                 }
+                if (CurrentPage.Name == "Verkoop")
+                {
+                    CurrentPage = new TicketVerkoopVM();
+                }
             }
             catch (Exception)
             {
@@ -342,6 +346,7 @@ namespace ProjectFestival.viewmodel
             if (CurrentPage.Name == "Info Bands")
             {
                 InfoBandSaveItem();
+                CurrentPage = new LineUpInfoVM();
             }
             if (CurrentPage.Name == "Line-Up")
             {
