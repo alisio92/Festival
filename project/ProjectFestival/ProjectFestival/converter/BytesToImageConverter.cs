@@ -15,13 +15,15 @@ namespace ProjectFestival.converter
 {
     public class BytesToImageConverter : IValueConverter
     {
+        public static BitmapImage imageSource = new BitmapImage();
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             byte[] bytes = value as byte[];
 
             if (value != null && value is byte[] && bytes.Length != 0)
-            {                
-                return BitmapImageFromBytes(bytes);
+            { 
+                imageSource = BitmapImageFromBytes(bytes);
+                return imageSource;
             }
             else
             {

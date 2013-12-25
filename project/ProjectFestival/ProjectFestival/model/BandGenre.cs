@@ -16,13 +16,6 @@ namespace ProjectFestival.model
             set { _genreList = value; }
         }
 
-        //private ObservableCollection<Genre> _genreListBand = new ObservableCollection<Genre>();
-        //public ObservableCollection<Genre> GenreListBand
-        //{
-        //    get { return _genreListBand; }
-        //    set { _genreListBand = value; }
-        //}
-
         private int _ID;
         public int ID
         {

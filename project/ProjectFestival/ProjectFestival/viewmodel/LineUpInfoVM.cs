@@ -102,10 +102,14 @@ namespace ProjectFestival.viewmodel
             {
                 _selectedGenre = value;
                 OnPropertyChanged("SelectedGenre");
-                Genre g = new Genre();
-                g = SelectedGenre.GenreBand;
-                SelectedBand.GenreListBand.Add(g);
+                if (BandGenre.aantal == SelectedGenre.ID)
+                {
+                    Genre g = new Genre();
+                    g = SelectedGenre.GenreBand;
+                    SelectedBand.GenreListBand.Add(g);
+                }
                 ApplicationVM.SelectedItem = SelectedBand;
+                ApplicationVM.BandGenre = SelectedGenre;
             }
         }
 

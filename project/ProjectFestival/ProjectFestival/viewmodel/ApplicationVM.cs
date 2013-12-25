@@ -159,6 +159,13 @@ namespace ProjectFestival.viewmodel
             set { _selectedItem = value; }
         }
 
+        private static BandGenre _bandGenre;
+        public static BandGenre BandGenre
+        {
+            get { return _bandGenre; }
+            set { _bandGenre = value; }
+        }
+
         public bool IsValid()
         {
             return Validator.TryValidateObject(this, new ValidationContext(this, null, null),
@@ -218,7 +225,6 @@ namespace ProjectFestival.viewmodel
 
         private void Zoeken()
         {
-
             if (CurrentPage.Name == "Contact")
             {
                 ContactPerson.Zoeken(Search);
@@ -258,27 +264,25 @@ namespace ProjectFestival.viewmodel
             }
         }
 
+        public static DialogResult MessageQuestion()
+        {
+            return MessageBox.Show("Je moet de huidige lijn eerst aanpassen voordat je aan een niewe lijn begint.\nWilt u de huidige lijn aanpassen?", "Nieuwe lijn", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+        }
+
+        public static void MessageInfo()
+        {
+            MessageBox.Show("Het laatste item mag niet leeg zijn", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
         private void AddItem()
         {
             if (CurrentPage.Name == "Personeel")
             {
-                ContactPersonType cp = new ContactPersonType();
-                cp.ID = ContactPersonType.aantal;
-                ContactPerson.JobRoleList.Add(cp);
-                ContactPersonTitle cpt = new ContactPersonTitle();
-                cpt.ID = ContactPersonTitle.aantal;
-                ContactPerson.JobTitleList.Add(cpt);
-                //ContactPersonTitle.aantal++;
-                //ContactPersonType.aantal++;
+                AddPersoneel();
             }
             if (CurrentPage.Name == "Contact")
             {
-                ContactPerson cp = new ContactPerson();
-                cp.JobRole = new ContactPersonType();
-                cp.JobTitle = new ContactPersonTitle();
-                cp.ID = ContactPerson.aantal;
-                ContactPerson.contactPersons.Add(cp);
-                //ContactPerson.aantal++;
+                AddContact();
             }
             if (CurrentPage.Name == "Tickets")
             {
@@ -286,14 +290,14 @@ namespace ProjectFestival.viewmodel
                 t.TicketType = new TicketType();
                 t.ID = Ticket.aantal;
                 Ticket.tickets.Add(t);
-                //Ticket.aantal++;
+                Ticket.aantal++;
             }
             if (CurrentPage.Name == "Verkoop")
             {
                 TicketType t = new TicketType();
                 t.ID = TicketType.aantal;
                 Ticket.TicketTypeList.Add(t);
-                //TicketType.aantal++;
+                TicketType.aantal++;
             }
 
             if (CurrentPage.Name == "Genre & Stage")
@@ -304,13 +308,15 @@ namespace ProjectFestival.viewmodel
                 Stage s = new Stage();
                 s.ID = Stage.aantal;
                 LineUp.StageList.Add(s);
-                //TicketType.aantal++;
+                Genre.aantal++;
+                Stage.aantal++;
             }
             if (CurrentPage.Name == "Bands")
             {
                 Band b = new Band();
                 b.ID = Band.aantal;
                 Band.bands.Add(b);
+                Band.aantal++;
             }
             if (CurrentPage.Name == "Info Bands")
             {
@@ -318,6 +324,99 @@ namespace ProjectFestival.viewmodel
                 g2.GenreBand = new Genre();
                 g2.ID = BandGenre.aantal;
                 BandGenre.bandGenre.Add(g2);
+                BandGenre.aantal++;
+            }
+        }
+
+        private void AddContact()
+        {
+            ContactPerson cperson = (ContactPerson)SelectedItem;
+            if (ContactPerson.contactPersons.Count() != 0 && cperson != null)
+            {
+                ContactPerson c = ContactPerson.contactPersons[cperson.ID];
+                if (c.Name != null && c.JobRole.Name != null && c.JobTitle.Name != null)
+                {
+                    ContactPerson cp = new ContactPerson();
+                    cp.JobRole = new ContactPersonType();
+                    cp.JobTitle = new ContactPersonTitle();
+                    cp.ID = ContactPerson.aantal;
+                    ContactPerson.contactPersons.Add(cp);
+                    ContactPerson.aantal++;
+                }
+                else
+                {
+                    MessageInfo();
+                }
+            }
+            else
+            {
+                ContactPerson cp = new ContactPerson();
+                cp.JobRole = new ContactPersonType();
+                cp.JobTitle = new ContactPersonTitle();
+                cp.ID = ContactPerson.aantal;
+                ContactPerson.contactPersons.Add(cp);
+                ContactPerson.aantal++;
+            }
+        }
+
+        private void AddPersoneel()
+        {
+            ContactPersonType cperson = null;
+            ContactPersonTitle cpersont = null;
+
+            if (SelectedItem.GetType() == typeof(ContactPersonType))
+            {
+                cperson = (ContactPersonType)SelectedItem;
+            }
+            else
+            {
+                cpersont = (ContactPersonTitle)SelectedItem;
+            }
+
+            if (ContactPersonType.contactType.Count() != 0 && cperson != null)
+            {
+                ContactPersonType c = ContactPersonType.contactType[cperson.ID];
+                if (c.Name != null)
+                {
+                    ContactPersonType cp = new ContactPersonType();
+                    cp.ID = ContactPersonType.aantal;
+                    ContactPerson.JobRoleList.Add(cp);
+                    ContactPersonType.aantal++;
+                }
+                else
+                {
+                    MessageInfo();
+                }
+            }
+            else
+            {
+                ContactPersonType cp = new ContactPersonType();
+                cp.ID = ContactPersonType.aantal;
+                ContactPerson.JobRoleList.Add(cp);
+                ContactPersonType.aantal++;
+            }
+
+            if (ContactPersonTitle.contactTitle.Count() != 0 && cpersont != null)
+            {
+                ContactPersonTitle c = ContactPersonTitle.contactTitle[cpersont.ID];
+                if (c.Name != null)
+                {
+                    ContactPersonTitle cpt = new ContactPersonTitle();
+                    cpt.ID = ContactPersonTitle.aantal;
+                    ContactPerson.JobTitleList.Add(cpt);
+                    ContactPersonTitle.aantal++;
+                }
+                else
+                {
+                    MessageInfo();
+                }
+            }
+            else
+            {
+                ContactPersonTitle cpt = new ContactPersonTitle();
+                cpt.ID = ContactPersonTitle.aantal;
+                ContactPerson.JobTitleList.Add(cpt);
+                ContactPersonTitle.aantal++;
             }
         }
 
@@ -486,39 +585,29 @@ namespace ProjectFestival.viewmodel
             {
 
                 contactPersonType = (ContactPersonType)SelectedItem;
-                id = Convert.ToInt32(contactPersonType.ID);
+                id = ContactPersonType.contactType.IndexOf(contactPersonType);
 
-                if (id != ContactPersonType.aantal)
+                if (id != ContactPersonType.contactType.Count() - 1)
                 {
                     ContactPersonType.EditType(contactPersonType);
-                    ContactPerson.JobRoleList[id - 1] = contactPersonType;
                 }
                 else
                 {
                     ContactPersonType.AddType(contactPersonType);
-                    id = ContactPersonType.aantal;
-                    contactPersonType.ID = id;
-                    ContactPerson.JobRoleList[id - 1] = new ContactPersonType();
-                    ContactPerson.JobRoleList[id - 1] = contactPersonType;
                 }
             }
             else if (SelectedItem.GetType() == typeof(ContactPersonTitle))
             {
                 contactPersonTitle = (ContactPersonTitle)SelectedItem;
-                id = Convert.ToInt32(contactPersonTitle.ID);
+                id = ContactPersonTitle.contactTitle.IndexOf(contactPersonTitle);
 
-                if (id != ContactPersonTitle.aantal)
+                if (id != ContactPersonTitle.contactTitle.Count() - 1)
                 {
                     ContactPersonTitle.EditTitle(contactPersonTitle);
-                    ContactPerson.JobTitleList[id - 1] = contactPersonTitle;
                 }
                 else
                 {
                     ContactPersonTitle.AddTitle(contactPersonTitle);
-                    id = ContactPersonTitle.aantal;
-                    contactPersonTitle.ID = id;
-                    ContactPerson.JobTitleList[id - 1] = new ContactPersonTitle();
-                    ContactPerson.JobTitleList[id - 1] = contactPersonTitle;
                 }
             }
         }
@@ -526,20 +615,15 @@ namespace ProjectFestival.viewmodel
         private void ContactSaveItem()
         {
             ContactPerson contactPersoon = (ContactPerson)SelectedItem;
-            int id = Convert.ToInt32(contactPersoon.ID);
+            int id = ContactPerson.contactPersons.IndexOf(contactPersoon);
 
-            if (id != ContactPerson.aantal)
+            if (id != ContactPerson.contactPersons.Count() - 1)
             {
                 ContactPerson.EditContact(contactPersoon);
-                ContactPerson.contactPersons[id - 1] = contactPersoon;
             }
             else
             {
                 ContactPerson.AddContact(contactPersoon);
-                id = ContactPerson.aantal;
-                contactPersoon.ID = id;
-                ContactPerson.contactPersons[id - 1] = new ContactPerson();
-                ContactPerson.contactPersons[id - 1] = contactPersoon;
             }
         }
 
@@ -577,8 +661,9 @@ namespace ProjectFestival.viewmodel
 
         private void GenreDeleteItem()
         {
-            BandGenre bandGenre = (BandGenre)SelectedItem;
-            BandGenre.bandGenre.Remove(bandGenre);
+            Band band = (Band)SelectedItem;
+            band.GenreListBand.Remove(BandGenre.GenreBand);
+            CurrentPage = new LineUpInfoVM();
         }
 
         private void BandDeleteItem()
@@ -628,14 +713,12 @@ namespace ProjectFestival.viewmodel
             if (SelectedItem.GetType() == typeof(ContactPersonType))
             {
                 ContactPersonType contactPersonType = (ContactPersonType)SelectedItem;
-                int id = Convert.ToInt32(contactPersonType.ID);
                 ContactPersonType.DeleteType(contactPersonType);
                 ContactPerson.JobRoleList.Remove(contactPersonType);
             }
             else if (SelectedItem.GetType() == typeof(ContactPersonTitle))
             {
                 ContactPersonTitle contactPersonTitle = (ContactPersonTitle)SelectedItem;
-                int id = Convert.ToInt32(contactPersonTitle.ID);
                 ContactPersonTitle.DeleteTitle(contactPersonTitle);
                 ContactPerson.JobTitleList.Remove(contactPersonTitle);
             }
@@ -644,7 +727,6 @@ namespace ProjectFestival.viewmodel
         private void ContactDeleteItem()
         {
             ContactPerson contactPersoon = (ContactPerson)SelectedItem;
-            int id = Convert.ToInt32(contactPersoon.ID);
             ContactPerson.DeleteContact(contactPersoon);
             ContactPerson.contactPersons.Remove(contactPersoon);
         }

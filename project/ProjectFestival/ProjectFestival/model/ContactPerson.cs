@@ -28,6 +28,13 @@ namespace ProjectFestival.model
             set { _ID = value; }
         }
 
+        private int _IDDatabase;
+        public int IDDatabase
+        {
+            get { return _IDDatabase; }
+            set { _IDDatabase = value; }
+        }
+
         [Required(ErrorMessage = "Naam mag niet leeg zijn")]
         [StringLength(50, MinimumLength = 2, ErrorMessage = "De lengte moet tussen 2 en 50 karakters liggen")]
         private String _name;
@@ -143,23 +150,41 @@ namespace ProjectFestival.model
             return contactPersons;
         }
 
-        private static ContactPerson Create(IDataRecord record)
+        public static ContactPerson Create(IDataRecord record)
         {
             ContactPerson contactPerson = new ContactPerson();
 
-            contactPerson.ID = Convert.ToInt32(record["ID"]);
+            contactPerson.ID = aantal;
+            contactPerson.IDDatabase = Convert.ToInt32(record["ID"]);
             contactPerson.Name = record["Name"].ToString();
             contactPerson.Company = record["Company"].ToString();
-            contactPerson.JobRole = new ContactPersonType()
+
+            foreach (ContactPersonType type in JobRoleList)
             {
-                ID = (int)record["JobRole"],
-                Name = JobRoleList[(int)record["JobRole"] - 1].Name
-            };
-            contactPerson.JobTitle = new ContactPersonTitle()
+                if (type.IDDatabase == (int)record["JobRole"])
+                {
+                    contactPerson.JobRole = new ContactPersonType()
+                    {
+                        IDDatabase = type.IDDatabase,
+                        ID = type.ID,
+                        Name = type.Name
+                    };
+                }
+            }
+
+            foreach (ContactPersonTitle title in JobTitleList)
             {
-                ID = (int)record["JobTitle"],
-                Name = JobTitleList[(int)record["JobTitle"] - 1].Name
-            };
+                if (title.IDDatabase == (int)record["JobTitle"])
+                {
+                    contactPerson.JobTitle = new ContactPersonTitle()
+                    {
+                        IDDatabase = title.IDDatabase,
+                        ID = title.ID,
+                        Name = title.Name
+                    };
+                }
+            }
+
             contactPerson.City = record["City"].ToString();
             contactPerson.Email = record["Email"].ToString();
             if (record["Cellphone"].ToString() != "")
@@ -178,7 +203,6 @@ namespace ProjectFestival.model
             {
                 contactPerson.Phone = "N/A";
             }
-
             return contactPerson;
         }
 
@@ -193,10 +217,10 @@ namespace ProjectFestival.model
 
                 string sql = "UPDATE Contactperson SET Name=@Name,Company=@Company,JobRole=@JobRole,Jobtitle=@JobTitle,City=@City,Email=@Email,Phone=@Phone,Cellphone=@Cellphone WHERE ID=@ID";
                 DbParameter par1 = Database.AddParameter("@Name", contactPerson.Name);
-                DbParameter par2 = Database.AddParameter("@ID", contactPerson.ID);
+                DbParameter par2 = Database.AddParameter("@ID", contactPerson.IDDatabase);
                 DbParameter par3 = Database.AddParameter("@Company", contactPerson.Company);
-                DbParameter par4 = Database.AddParameter("@JobRole", contactPerson.JobRole.ID);
-                DbParameter par5 = Database.AddParameter("@JobTitle", contactPerson.JobTitle.ID);
+                DbParameter par4 = Database.AddParameter("@JobRole", JobRoleList[contactPerson.JobRole.ID-1].IDDatabase);
+                DbParameter par5 = Database.AddParameter("@JobTitle", JobTitleList[contactPerson.JobTitle.ID-1].IDDatabase);
                 DbParameter par6 = Database.AddParameter("@City", contactPerson.City);
                 DbParameter par7 = Database.AddParameter("@Email", contactPerson.Email);
                 DbParameter par8 = Database.AddParameter("@Phone", contactPerson.Phone);
@@ -226,19 +250,18 @@ namespace ProjectFestival.model
             {
                 trans = Database.BeginTransaction();
 
-                string sql = "INSERT INTO Contactperson VALUES(@ID,@Name,@Company,@JobRole,@JobTitle,@City,@Email,@Phone,@Cellphone)";
+                string sql = "INSERT INTO Contactperson VALUES(@Name,@Company,@JobRole,@JobTitle,@City,@Email,@Phone,@Cellphone)";
                 DbParameter par1 = Database.AddParameter("@Name", contactPerson.Name);
                 DbParameter par2 = Database.AddParameter("@Company", contactPerson.Company);
-                DbParameter par3 = Database.AddParameter("@JobRole", contactPerson.JobRole.ID);
-                DbParameter par4 = Database.AddParameter("@JobTitle", contactPerson.JobTitle.ID);
+                DbParameter par3 = Database.AddParameter("@JobRole", JobRoleList[contactPerson.JobRole.ID-1].IDDatabase);
+                DbParameter par4 = Database.AddParameter("@JobTitle", JobTitleList[contactPerson.JobTitle.ID-1].IDDatabase);
                 DbParameter par5 = Database.AddParameter("@City", contactPerson.City);
                 DbParameter par6 = Database.AddParameter("@Email", contactPerson.Email);
                 DbParameter par7 = Database.AddParameter("@Phone", contactPerson.Phone);
                 DbParameter par8 = Database.AddParameter("@Cellphone", contactPerson.Cellphone);
-                DbParameter par9 = Database.AddParameter("@ID", aantal);
 
                 int rowsaffected = 0;
-                rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5, par6, par7, par8, par9);
+                rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5, par6, par7, par8);
 
                 trans.Commit();
                 ApplicationVM.Infotxt("ContactPerson toegevoegd", "ContactPerson aanpassen");
@@ -262,7 +285,7 @@ namespace ProjectFestival.model
                 trans = Database.BeginTransaction();
 
                 string sql = "DELETE FROM ContactPerson WHERE ID = @ID";
-                DbParameter par1 = Database.AddParameter("@ID", contactPerson.ID);
+                DbParameter par1 = Database.AddParameter("@ID", contactPerson.IDDatabase);
 
                 int rowsaffected = 0;
                 rowsaffected += Database.ModifyData(trans, sql, par1);

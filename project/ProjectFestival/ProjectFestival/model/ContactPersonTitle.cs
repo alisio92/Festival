@@ -21,6 +21,13 @@ namespace ProjectFestival.model
             set { _id = value; }
         }
 
+        private int _IDDatabase;
+        public int IDDatabase
+        {
+            get { return _IDDatabase; }
+            set { _IDDatabase = value; }
+        }
+        
         private String _name;
         public String Name
         {
@@ -69,11 +76,12 @@ namespace ProjectFestival.model
             return contactTitle;
         }
 
-        private static ContactPersonTitle Create(IDataRecord record)
+        public static ContactPersonTitle Create(IDataRecord record)
         {
             ContactPersonTitle contactPersonTitle = new ContactPersonTitle();
 
-            contactPersonTitle.ID = Convert.ToInt32(record["ID"]);
+            contactPersonTitle.ID = aantal;
+            contactPersonTitle.IDDatabase = Convert.ToInt32(record["ID"]);
             contactPersonTitle.Name = record["Name"].ToString();
 
             return contactPersonTitle;
@@ -88,12 +96,11 @@ namespace ProjectFestival.model
             {
                 trans = Database.BeginTransaction();
 
-                string sql = "INSERT INTO ContactpersonTitle VALUES(@ID,@Name)";
+                string sql = "INSERT INTO ContactpersonTitle VALUES(@Name)";
                 DbParameter par1 = Database.AddParameter("@Name", contactPersonTitle.Name);
-                DbParameter par2 = Database.AddParameter("@ID", aantal);
 
                 int rowsaffected = 0;
-                rowsaffected += Database.ModifyData(trans, sql, par1, par2);
+                rowsaffected += Database.ModifyData(trans, sql, par1);
 
                 trans.Commit();
                 ApplicationVM.Infotxt("ContactPersonTitle toegevoegd", "ContactPersonTitle aanpassen");
@@ -118,7 +125,7 @@ namespace ProjectFestival.model
 
                 string sql = "UPDATE ContactpersonTitle SET Name=@Name WHERE ID=@ID";
                 DbParameter par1 = Database.AddParameter("@Name", contactPersonTitle.Name);
-                DbParameter par2 = Database.AddParameter("@ID", contactPersonTitle.ID);
+                DbParameter par2 = Database.AddParameter("@ID", contactPersonTitle.IDDatabase);
 
                 int rowsaffected = 0;
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2);
@@ -145,7 +152,7 @@ namespace ProjectFestival.model
                 trans = Database.BeginTransaction();
 
                 string sql = "DELETE FROM ContactPersonTitle WHERE ID = @ID";
-                DbParameter par1 = Database.AddParameter("@ID", contactPersonTitle.ID);
+                DbParameter par1 = Database.AddParameter("@ID", contactPersonTitle.IDDatabase);
 
                 int rowsaffected = 0;
                 rowsaffected += Database.ModifyData(trans, sql, par1);
