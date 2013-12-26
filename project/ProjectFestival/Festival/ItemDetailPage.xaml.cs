@@ -151,11 +151,11 @@ namespace Festival
             }
             else
             {
-                request.Data.Properties.Description = "Recipe ingredients and directions";
+                request.Data.Properties.Description = "Recipe genres and discription";
 
                 // Share recipe text
                 var recipe = "\r\nINGREDIENTS\r\n";
-                recipe += String.Join("\r\n", item.Ingredients);
+                recipe += String.Join("\r\n", item.Genres);
                 recipe += ("\r\n\r\nDIRECTIONS\r\n" + item.Directions);
                 request.Data.SetText(recipe);
 

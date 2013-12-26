@@ -393,7 +393,7 @@ namespace ProjectFestival.viewmodel
             }
             if (CurrentPage.Name == "Genre & Stage")
             {
-                GenreStageSaveItem();
+                genrestageSaveItem();
             }
             if (CurrentPage.Name == "Info Bands")
             {
@@ -441,7 +441,7 @@ namespace ProjectFestival.viewmodel
             }
         }
 
-        private void GenreStageSaveItem()
+        private void genrestageSaveItem()
         {
             int id = 0;
             Stage stage = null;
@@ -602,7 +602,7 @@ namespace ProjectFestival.viewmodel
             }
             if (CurrentPage.Name == "Genre & Stage")
             {
-                GenreStageDeleteItem();
+                genrestageDeleteItem();
             }
             if (CurrentPage.Name == "Bands")
             {
@@ -629,7 +629,7 @@ namespace ProjectFestival.viewmodel
             Band.bands.Remove(band);
         }
 
-        private void GenreStageDeleteItem()
+        private void genrestageDeleteItem()
         {
             if (SelectedItem.GetType() == typeof(Stage))
             {

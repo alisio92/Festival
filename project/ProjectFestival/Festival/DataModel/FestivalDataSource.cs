@@ -115,35 +115,43 @@ namespace Festival.Data
             : base(String.Empty, String.Empty, String.Empty, String.Empty)
         {
         }
-        
-        public FestivalDataItem(String uniqueId, String title, String shortTitle, String imagePath, int preptime, String directions, ObservableCollection<string> ingredients, FestivalDataGroup group)
+
+        public FestivalDataItem(String uniqueId, String title, String shortTitle, String imagePath, String twitter, String facebook, String discription, ObservableCollection<string> genres, FestivalDataGroup group)
             : base(uniqueId, title, shortTitle, imagePath)
         {
-            this._preptime = preptime;
-            this._directions = directions;
-            this._ingredients = ingredients;
+            this._twitter = twitter;
+            this._facebook = facebook;
+            this._discription = discription;
+            this._genres = genres;
             this._group = group;
         }
 
-        private int _preptime = 0;
-        public int PrepTime
+        private string _twitter;
+        public string Twitter
         {
-            get { return this._preptime; }
-            set { this.SetProperty(ref this._preptime, value); }
-        }
-        
-        private string _directions = string.Empty;
-        public string Directions
-        {
-            get { return this._directions; }
-            set { this.SetProperty(ref this._directions, value); }
+            get { return this._twitter; }
+            set { this.SetProperty(ref this._twitter, value); }
         }
 
-        private ObservableCollection<string> _ingredients;
-        public ObservableCollection<string> Ingredients
+        private string _facebook;
+        public string Facebook
         {
-            get { return this._ingredients; }
-            set { this.SetProperty(ref this._ingredients, value); }
+            get { return this._facebook; }
+            set { this.SetProperty(ref this._facebook, value); }
+        }
+        
+        private string _discription = string.Empty;
+        public string Directions
+        {
+            get { return this._discription; }
+            set { this.SetProperty(ref this._discription, value); }
+        }
+
+        private ObservableCollection<string> _genres;
+        public ObservableCollection<string> Genres
+        {
+            get { return this._genres; }
+            set { this.SetProperty(ref this._genres, value); }
         }
     
         private FestivalDataGroup _group;
@@ -356,16 +364,19 @@ namespace Festival.Data
                         case "shortTitle":
                             recipe.ShortTitle = val.GetString();
                             break;
-                        case "preptime":
-                            recipe.PrepTime = (int)val.GetNumber();
+                        case "twitter":
+                            recipe.Twitter = val.GetString();
                             break;
-                        case "directions":
+                        case "facebook":
+                            recipe.Facebook = val.GetString();
+                            break;
+                        case "discription":
                             recipe.Directions = val.GetString();
                             break;
-                        case "ingredients":
-                            var ingredients = val.GetArray();
-                            var list = (from i in ingredients select i.GetString()).ToList();
-                            recipe.Ingredients = new ObservableCollection<string>(list);
+                        case "genres":
+                            var genres = val.GetArray();
+                            var list = (from i in genres select i.GetString()).ToList();
+                            recipe.Genres = new ObservableCollection<string>(list);
                             break;
                         case "backgroundImage":
                             recipe.SetImage(val.GetString());
@@ -422,7 +433,7 @@ namespace Festival.Data
                     case "backgroundImage":
                         group.SetImage(val.GetString());
                         break;
-                    case "groupImage" ://mag waarschijnlijk weg
+                    case "groupImage" :
                         group.SetGroupImage(val.GetString());
                         break; 
                 }

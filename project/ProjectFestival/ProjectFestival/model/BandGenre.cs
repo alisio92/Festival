@@ -34,7 +34,7 @@ namespace ProjectFestival.model
 
         public static ObservableCollection<BandGenre> bandGenre;
 
-        public static ObservableCollection<BandGenre> GetBandGenres(ObservableCollection<Genre> genreListBand)
+        public static ObservableCollection<BandGenre> GetBandgenres(ObservableCollection<Genre> genreListBand)
         {
             bandGenre = new ObservableCollection<BandGenre>();
             aantal = 1;

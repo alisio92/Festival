@@ -1665,10 +1665,15 @@
             </Border>
             <StackPanel Grid.Column="1" VerticalAlignment="Top" Margin="10,0,0,0">
                 <TextBlock Text="{Binding ShortTitle}" Style="{StaticResource TitleTextStyle}" TextWrapping="NoWrap"/>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Preparation time:" Style="{StaticResource BodyTextStyle}" />
-                    <TextBlock Text="{Binding PrepTime}" Style="{StaticResource BodyTextStyle}" Margin="4,0,4,0" />
-                    <TextBlock Text="minutes" Style="{StaticResource BodyTextStyle}" />
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontSize="26.667" FontWeight="Light" Text="Facebook:"/>
+                        <TextBlock FontSize="26.667" FontWeight="Light" Text="{Binding Facebook}" Margin="8,0,8,0"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontSize="26.667" FontWeight="Light" Text="Twitter:"/>
+                        <TextBlock FontSize="26.667" FontWeight="Light" Text="{Binding Twitter}" Margin="8,0,8,0"/>
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
         </Grid>
@@ -1707,10 +1712,15 @@
             </Border>
             <StackPanel Grid.Column="1" Margin="10,0,0,0">
                 <TextBlock Text="{Binding ShortTitle}" Style="{StaticResource ItemTextStyle}" MaxHeight="40"/>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Preparation time:" Style="{StaticResource CaptionTextStyle}" />
-                    <TextBlock Text="{Binding PrepTime}" Style="{StaticResource CaptionTextStyle}" Margin="4,0,4,0" />
-                    <TextBlock Text="minutes" Style="{StaticResource CaptionTextStyle}" />
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontSize="26.667" FontWeight="Light" Text="Facebook:"/>
+                        <TextBlock FontSize="26.667" FontWeight="Light" Text="{Binding Facebook}" Margin="8,0,8,0"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontSize="26.667" FontWeight="Light" Text="Twitter:"/>
+                        <TextBlock FontSize="26.667" FontWeight="Light" Text="{Binding Twitter}" Margin="8,0,8,0"/>
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
         </Grid>

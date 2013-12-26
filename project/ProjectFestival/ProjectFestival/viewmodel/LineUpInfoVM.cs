@@ -135,7 +135,7 @@ namespace ProjectFestival.viewmodel
 
         public LineUpInfoVM()
         {
-            BandList = BandGenre.GetBandGenres(SelectedBand.GenreListBand);
+            BandList = BandGenre.GetBandgenres(SelectedBand.GenreListBand);
             _genreList = BandGenre.GenreList;
         }
     }

@@ -150,7 +150,6 @@
     <Content Include="Assets\LightGray.png" />
     <Content Include="Assets\MediumGray.png" />
     <Content Include="Assets\DarkGray.png" />
-    <Content Include="Data\Festival2.txt" />
     <Content Include="Data\Festival.txt" />
     <Content Include="Images\chinese\Chinese_1_150_C.jpg" />
     <Content Include="Images\chinese\Chinese_1_600_C.jpg" />

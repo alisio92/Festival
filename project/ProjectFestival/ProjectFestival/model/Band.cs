@@ -71,7 +71,7 @@ namespace ProjectFestival.model
         }
 
         public static int aantal = 1;
-        public static int aantalGenres = 1;
+        public static int aantalgenres = 1;
 
         public static ObservableCollection<Band> bands = new ObservableCollection<Band>();
         public static ObservableCollection<Band> oBands = new ObservableCollection<Band>();
@@ -79,7 +79,7 @@ namespace ProjectFestival.model
         public static ObservableCollection<Band> GetBands()
         {
             ApplicationVM.Infotxt("Inladen Band", "");
-            GenreList = Genre.GetGenres();
+            GenreList = Genre.Getgenres();
             BandGenre.GenreList = GenreList;
 
             try
@@ -138,7 +138,7 @@ namespace ProjectFestival.model
                 genre.ID = Convert.ToInt32(split[i]);
                 genre.Name = GenreList[Convert.ToInt32(split[i]) - 1].Name;
                 band.GenreListBand.Add(genre);
-                aantalGenres++;
+                aantalgenres++;
             }
 
             return band;
