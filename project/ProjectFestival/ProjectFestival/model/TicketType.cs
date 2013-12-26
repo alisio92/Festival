@@ -23,6 +23,13 @@ namespace ProjectFestival.model
             set { _id = value; }
         }
 
+        private int _IDDatabase;
+        public int IDDatabase
+        {
+            get { return _IDDatabase; }
+            set { _IDDatabase = value; }
+        }
+        
         private String _name;
         public String Name
         {
@@ -51,6 +58,7 @@ namespace ProjectFestival.model
 
         public static ObservableCollection<TicketType> GetTicketTypes()
         {
+            aantal = 1;
             ticketType = new ObservableCollection<TicketType>();
             ApplicationVM.Infotxt("Inladen ticket types", "");
             try
@@ -85,7 +93,8 @@ namespace ProjectFestival.model
         {
             TicketType ticketType = new TicketType();
 
-            ticketType.ID = Convert.ToInt32(record["ID"]);
+            ticketType.ID = aantal;
+            ticketType.IDDatabase = Convert.ToInt32(record["ID"]);
             ticketType.Name = record["Name"].ToString();
             ticketType.Price = Convert.ToDouble(record["Price"].ToString());
             ticketType.AvailableTickets = Convert.ToInt32(record["AvailableTickets"]);
@@ -104,7 +113,7 @@ namespace ProjectFestival.model
 
                 string sql = "UPDATE TicketType SET Name=@Name,Price=@Price,AvailableTickets=@AvailableTickets WHERE ID=@ID";
                 DbParameter par1 = Database.AddParameter("@Name", ticketType.Name);
-                DbParameter par2 = Database.AddParameter("@ID", ticketType.ID);
+                DbParameter par2 = Database.AddParameter("@ID", ticketType.IDDatabase);
                 DbParameter par3 = Database.AddParameter("@Price", ticketType.Price);
                 DbParameter par4 = Database.AddParameter("@AvailableTickets", ticketType.AvailableTickets);
 
@@ -132,14 +141,13 @@ namespace ProjectFestival.model
             {
                 trans = Database.BeginTransaction();
 
-                string sql = "INSERT INTO TicketType VALUES(@ID,@Name,@price,@AvailableTickets)";
+                string sql = "INSERT INTO TicketType VALUES(@Name,@price,@AvailableTickets)";
                 DbParameter par1 = Database.AddParameter("@Name", ticketType.Name);
-                DbParameter par2 = Database.AddParameter("@ID", aantal);
-                DbParameter par3 = Database.AddParameter("@Price", ticketType.Price);
-                DbParameter par4 = Database.AddParameter("@AvailableTickets", ticketType.AvailableTickets);
+                DbParameter par2 = Database.AddParameter("@Price", ticketType.Price);
+                DbParameter par3 = Database.AddParameter("@AvailableTickets", ticketType.AvailableTickets);
 
                 int rowsaffected = 0;
-                rowsaffected += Database.ModifyData(trans, sql, par1, par2,par3,par4);
+                rowsaffected += Database.ModifyData(trans, sql, par1, par2,par3);
 
                 trans.Commit();
                 ApplicationVM.Infotxt("TicketType toegevoegd", "TicketType aanpassen");
@@ -163,7 +171,7 @@ namespace ProjectFestival.model
                 trans = Database.BeginTransaction();
 
                 string sql = "DELETE FROM TicketType WHERE ID = @ID";
-                DbParameter par1 = Database.AddParameter("@ID", ticketType.ID);
+                DbParameter par1 = Database.AddParameter("@ID", ticketType.IDDatabase);
 
                 int rowsaffected = 0;
                 rowsaffected += Database.ModifyData(trans, sql, par1);

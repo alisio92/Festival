@@ -1,4 +1,6 @@
-﻿using ProjectFestival.database;
+﻿using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
+using ProjectFestival.database;
 using ProjectFestival.viewmodel;
 using System;
 using System.Collections.Generic;
@@ -21,6 +23,13 @@ namespace ProjectFestival.model
         {
             get { return _id; }
             set { _id = value; }
+        }
+
+        private int _IDDatabase;
+        public int IDDatabase
+        {
+            get { return _IDDatabase; }
+            set { _IDDatabase = value; }
         }
 
         private String _ticketHolder;
@@ -101,15 +110,25 @@ namespace ProjectFestival.model
         {
             Ticket ticket = new Ticket();
 
-            ticket.ID = Convert.ToInt32(record["ID"]);
+            ticket.ID = aantal;
+            ticket.IDDatabase = Convert.ToInt32(record["ID"]);
             ticket.TicketHolder = record["TicketHolder"].ToString();
             ticket.TicketHolderEmail = record["TicketHolderEmail"].ToString();
             ticket.Amount = (int)record["Amount"];
-            ticket.TicketType = new TicketType()
+            foreach (TicketType type in TicketTypeList)
             {
-                ID = (int)record["TicketType"],
-                Name = TicketTypeList[(int)record["TicketType"] - 1].Name
-            };
+                if (type.IDDatabase == (int)record["TicketType"])
+                {
+                    ticket.TicketType = new TicketType()
+                    {
+                        IDDatabase = type.IDDatabase,
+                        ID = type.ID,
+                        Name = type.Name,
+                        AvailableTickets = type.AvailableTickets,
+                        Price = type.Price
+                    };
+                }
+            }
 
             return ticket;
         }
@@ -121,88 +140,99 @@ namespace ProjectFestival.model
 
             ObservableCollection<TicketType> ticketType = TicketType.GetTicketTypes();
             ObservableCollection<Ticket> ticketVorig = Ticket.GetTickets();
-            int aantaltickets = ticketType[ticket.TicketType.ID - 1].AvailableTickets;
+            int index = 0;
+            int index2 = 0;
+            for (int i = 0; i < ticketType.Count(); i++)
+            {
+                if (ticketType[i].Name == ticket.TicketType.Name)
+                {
+                    index = i;
+                }
+            }
+            for (int i2 = 0; i2 < tickets.Count(); i2++)
+            {
+                if (tickets[i2].TicketHolder == ticket.TicketHolder)
+                {
+                    index2 = i2;
+                }
+            }
+            int aantaltickets = ticketType[index].AvailableTickets;
             int aantalNu = ticket.Amount;
-            int aantalVorig = ticketVorig[ticket.ID - 1].Amount;
+            int aantalVorig = ticketVorig[index2].Amount;
 
-            if (aantalNu > aantalVorig)
+            if ((ticket.TicketHolder != ticketVorig[index2].TicketHolder) || (ticket.TicketHolderEmail != ticketVorig[index2].TicketHolderEmail) || (ticket.Amount != ticketVorig[index2].Amount) || (ticket.TicketType.Name != ticketVorig[index2].TicketType.Name))
             {
-                if (aantaltickets - (aantalNu - aantalVorig) >= 0)
+                if (aantalNu > aantalVorig)
                 {
-                    return EditTicket(trans, ticket, aantaltickets);
-                }
-                else
-                {
-                    ApplicationVM.Infotxt("Er zijn niet genoeg tickets beschikbaar", "");
-                    return 0;
-                }
-            }
-            else if (aantalNu < aantalVorig)
-            {
-                if (aantalNu >= 0)
-                {
-                    return EditTicket(trans, ticket, aantaltickets);
-                }
-                else
-                {
-                    return 0;
-                }
-            }
-            else
-            {
-                int idVorig = ticketVorig[ticket.ID - 1].TicketType.ID;
-                if (idVorig != ticket.TicketType.ID)
-                {
-                    if (aantaltickets >= aantalNu)
+                    if (aantaltickets - (aantalNu - aantalVorig) >= 0)
                     {
-                        int rowsaffected = 0;
-                        rowsaffected += EditTicketType(idVorig, -aantalVorig, ticketType[idVorig - 1].AvailableTickets);
-                        rowsaffected += EditTicketType(ticket.TicketType.ID, aantalVorig, aantaltickets);
-                        try
-                        {
-                            trans = Database.BeginTransaction();
-
-                            string sql = "UPDATE Ticket SET TicketHolder=@TicketHolder,TicketHolderEmail=@TicketHolderEmail,TicketType=@TicketType,Amount=@Amount WHERE ID=@ID";
-                            DbParameter par1 = Database.AddParameter("@TicketHolder", ticket.TicketHolder);
-                            DbParameter par2 = Database.AddParameter("@ID", ticket.ID);
-                            DbParameter par3 = Database.AddParameter("@TicketHolderEmail", ticket.TicketHolderEmail);
-                            DbParameter par4 = Database.AddParameter("@TicketType", ticket.TicketType.ID);
-                            DbParameter par5 = Database.AddParameter("@Amount", ticket.Amount);
-
-                            rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5);
-
-                            trans.Commit();
-                            ApplicationVM.Infotxt("Ticket aangepast", "Ticket aanpassen");
-                            return rowsaffected;
-                        }
-                        catch (Exception)
-                        {
-                            ApplicationVM.Infotxt("Kan Ticket niet aanpassen", "");
-                            trans.Rollback();
-                            return 0;
-                        }
+                        return EditTicket(trans, ticket, aantaltickets, index);
                     }
                     else
                     {
-                        ApplicationVM.Infotxt("Kan Ticket niet aanpassen", "");
+                        ApplicationVM.Infotxt("Er zijn niet genoeg tickets beschikbaar", "");
                         return 0;
                     }
                 }
+                else if (aantalNu < aantalVorig)
+                {
+                    if (aantalNu >= 0)
+                    {
+                        return EditTicket(trans, ticket, aantaltickets, index);
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+
+                }
                 else
                 {
-                    ApplicationVM.Infotxt("Kan Ticket niet aanpassen", "");
-                    return 0;
+                    int idVorig = ticketVorig[ticket.ID - 1].TicketType.ID;
+                    if (idVorig != ticket.TicketType.ID)
+                    {
+                        if (aantaltickets >= aantalNu)
+                        {
+                            int rowsaffected = 0;
+                            rowsaffected += EditTicketType(ticket.TicketType.IDDatabase, -aantalVorig, ticketType[idVorig - 1].AvailableTickets, idVorig);
+                            rowsaffected += EditTicketType(ticket.TicketType.IDDatabase, aantalVorig, aantaltickets, ticket.TicketType.ID);
+                            try
+                            {
+                                trans = Database.BeginTransaction();
+
+                                string sql = "UPDATE Ticket SET TicketHolder=@TicketHolder,TicketHolderEmail=@TicketHolderEmail,TicketType=@TicketType,Amount=@Amount WHERE ID=@ID";
+                                DbParameter par1 = Database.AddParameter("@TicketHolder", ticket.TicketHolder);
+                                DbParameter par2 = Database.AddParameter("@ID", ticket.ID);
+                                DbParameter par3 = Database.AddParameter("@TicketHolderEmail", ticket.TicketHolderEmail);
+                                DbParameter par4 = Database.AddParameter("@TicketType", TicketTypeList[ticket.TicketType.ID - 1].IDDatabase);
+                                DbParameter par5 = Database.AddParameter("@Amount", ticket.Amount);
+
+                                rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5);
+
+                                trans.Commit();
+                                ApplicationVM.Infotxt("Ticket aangepast", "Ticket aanpassen");
+                                return rowsaffected;
+                            }
+                            catch (Exception)
+                            {
+                                ApplicationVM.Infotxt("Kan Ticket niet aanpassen", "");
+                                trans.Rollback();
+                                return 0;
+                            }
+                        }
+                    }
                 }
             }
+            return 0;
         }
 
-        public static int EditTicket(DbTransaction trans, Ticket ticket, int aantaltickets)
+        public static int EditTicket(DbTransaction trans, Ticket ticket, int aantaltickets, int index)
         {
             ObservableCollection<TicketType> types = new ObservableCollection<TicketType>();
             types = TicketType.GetTicketTypes();
-            int vorig = tickets[ticket.ID - 1].Amount;
+            int vorig = tickets[index].Amount;
 
-            EditTicketType(ticket.TicketType.ID, ticket.Amount - vorig, aantaltickets);
+            EditTicketType(ticket.TicketType.IDDatabase, ticket.Amount - vorig, aantaltickets, ticket.TicketType.ID);
 
             try
             {
@@ -210,9 +240,9 @@ namespace ProjectFestival.model
 
                 string sql = "UPDATE Ticket SET TicketHolder=@TicketHolder,TicketHolderEmail=@TicketHolderEmail,TicketType=@TicketType,Amount=@Amount WHERE ID=@ID";
                 DbParameter par1 = Database.AddParameter("@TicketHolder", ticket.TicketHolder);
-                DbParameter par2 = Database.AddParameter("@ID", ticket.ID);
+                DbParameter par2 = Database.AddParameter("@ID", ticket.IDDatabase);
                 DbParameter par3 = Database.AddParameter("@TicketHolderEmail", ticket.TicketHolderEmail);
-                DbParameter par4 = Database.AddParameter("@TicketType", ticket.TicketType.ID);
+                DbParameter par4 = Database.AddParameter("@TicketType", TicketTypeList[ticket.TicketType.ID - 1].IDDatabase);
                 DbParameter par5 = Database.AddParameter("@Amount", ticket.Amount);
 
                 int rowsaffected = 0;
@@ -234,28 +264,35 @@ namespace ProjectFestival.model
         {
             ApplicationVM.Infotxt("Ticket toevoegen", "");
             DbTransaction trans = null;
+            int index = 0;
+            for (int i = 0; i < TicketTypeList.Count(); i++)
+            {
+                if (ticket.TicketType.Name == TicketTypeList[i].Name)
+                {
+                    index = i;
+                }
+            }
 
-            int aantaltickets = TicketType.ticketType[ticket.TicketType.ID - 1].AvailableTickets;
+            int aantaltickets = TicketType.ticketType[index].AvailableTickets;
             ObservableCollection<TicketType> types = TicketType.GetTicketTypes();
-            int vorig = types[ticket.TicketType.ID - 1].AvailableTickets;
+            int vorig = types[index].AvailableTickets;
 
             if (vorig - ticket.Amount >= 0)
             {
-                EditTicketType(ticket.TicketType.ID, ticket.Amount, vorig);
+                EditTicketType(TicketTypeList[index].IDDatabase, ticket.Amount, vorig, index);
 
                 try
                 {
                     trans = Database.BeginTransaction();
 
-                    string sql = "INSERT INTO Ticket VALUES(@ID,@TicketHolder,@TicketHolderEmail,@TicketType,@Amount)";
+                    string sql = "INSERT INTO Ticket VALUES(@TicketHolder,@TicketHolderEmail,@TicketType,@Amount)";
                     DbParameter par1 = Database.AddParameter("@TicketHolder", ticket.TicketHolder);
-                    DbParameter par2 = Database.AddParameter("@ID", aantal);
-                    DbParameter par3 = Database.AddParameter("@TicketHolderEmail", ticket.TicketHolderEmail);
-                    DbParameter par4 = Database.AddParameter("@TicketType", ticket.TicketType.ID);
-                    DbParameter par5 = Database.AddParameter("@Amount", ticket.Amount);
+                    DbParameter par2 = Database.AddParameter("@TicketHolderEmail", ticket.TicketHolderEmail);
+                    DbParameter par3 = Database.AddParameter("@TicketType", TicketTypeList[index].IDDatabase);
+                    DbParameter par4 = Database.AddParameter("@Amount", ticket.Amount);
 
                     int rowsaffected = 0;
-                    rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5);
+                    rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4);
 
                     trans.Commit();
                     ApplicationVM.Infotxt("Ticket toegevoegd", "Ticket aanpassen");
@@ -275,19 +312,19 @@ namespace ProjectFestival.model
             }
         }
 
-        public static int EditTicketType(int id, int tickets, int vorig)
+        public static int EditTicketType(int idDatabase, int tickets, int vorig, int id)
         {
             ApplicationVM.Infotxt("TicketType aanpassen", "");
             DbTransaction trans = null;
 
-            TicketType.ticketType[id-1].AvailableTickets = vorig - tickets;
+            TicketType.ticketType[id].AvailableTickets = vorig - tickets;
 
             try
             {
                 trans = Database.BeginTransaction();
 
                 string sql = "UPDATE TicketType SET AvailableTickets=@AvailableTickets WHERE ID=@ID";
-                DbParameter par1 = Database.AddParameter("@ID", id);
+                DbParameter par1 = Database.AddParameter("@ID", idDatabase);
                 DbParameter par2 = Database.AddParameter("@AvailableTickets", vorig - tickets);
 
                 int rowsaffected = 0;
@@ -310,12 +347,27 @@ namespace ProjectFestival.model
             ApplicationVM.Infotxt("Ticket wissen", "");
             DbTransaction trans = null;
 
+            ObservableCollection<TicketType> types = new ObservableCollection<TicketType>();
+            types = TicketType.GetTicketTypes();
+
+            int index = 0;
+            for (int i = 0; i < types.Count(); i++)
+            {
+                if (types[i].Name == ticket.TicketType.Name)
+                {
+                    index = i;
+                }
+            }
+            int vorig = TicketTypeList[index].AvailableTickets;
+
+            EditTicketType(ticket.TicketType.IDDatabase, -ticket.Amount, vorig, index);
+
             try
             {
                 trans = Database.BeginTransaction();
 
                 string sql = "DELETE FROM Ticket WHERE ID = @ID";
-                DbParameter par1 = Database.AddParameter("@ID", ticket.ID);
+                DbParameter par1 = Database.AddParameter("@ID", ticket.IDDatabase);
 
                 int rowsaffected = 0;
                 rowsaffected += Database.ModifyData(trans, sql, par1);
@@ -355,6 +407,39 @@ namespace ProjectFestival.model
                 {
                     tickets.Add(c);
                 }
+            }
+        }
+
+        public static void PrintTickets()
+        {
+            foreach (Ticket ssc in tickets)
+            {
+                string filename = "testttttt.docx";
+                File.Copy("template.docx", filename, true);
+                WordprocessingDocument newdoc = WordprocessingDocument.Open(filename, true);
+                IDictionary<String, BookmarkStart> bookmarks = new Dictionary<String, BookmarkStart>();
+                foreach (BookmarkStart bms in newdoc.MainDocumentPart.RootElement.Descendants<BookmarkStart>())
+                {
+                    bookmarks[bms.Name] = bms;
+                }
+
+                double prijs = ssc.TicketType.Price * ssc.Amount;
+
+                bookmarks["Date"].Parent.InsertAfter<Run>(new Run(new Text(DateTime.Today.ToString())), bookmarks["Date"]);
+                bookmarks["Name"].Parent.InsertAfter<Run>(new Run(new Text(ssc.TicketHolder)), bookmarks["Name"]);
+                bookmarks["Type"].Parent.InsertAfter<Run>(new Run(new Text(ssc.TicketType.Name)), bookmarks["Type"]);
+                bookmarks["Amount"].Parent.InsertAfter<Run>(new Run(new Text(ssc.Amount.ToString())), bookmarks["Amount"]);
+                bookmarks["Price"].Parent.InsertAfter<Run>(new Run(new Text(ssc.TicketType.Price.ToString())), bookmarks["Price"]);
+                bookmarks["Total"].Parent.InsertAfter<Run>(new Run(new Text(prijs.ToString())), bookmarks["Total"]);
+                Run run = new Run(new Text("111000111"));
+                RunProperties prop = new RunProperties();
+                RunFonts font = new RunFonts() { Ascii = "Free 3 of 9 Extended", HighAnsi = "Free 3 of 9 Extended" };
+                FontSize size = new FontSize() { Val = "96" };
+                prop.Append(font);
+                prop.Append(size);
+                run.PrependChild<RunProperties>(prop);
+                bookmarks["Barcode"].Parent.InsertAfter<Run>(run, bookmarks["Barcode"]);
+                newdoc.Close();
             }
         }
     }

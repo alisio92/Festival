@@ -47,6 +47,7 @@ namespace ProjectFestival.model
 
         public static ObservableCollection<ContactPersonType> GetContactPersonType()
         {
+            aantal = 1;
             ApplicationVM.Infotxt("Inladen contact types", "");
             try
             {

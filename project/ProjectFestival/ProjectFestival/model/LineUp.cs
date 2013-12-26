@@ -15,6 +15,8 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using Newtonsoft.Json.Converters;
 using ProjectFestival.viewmodel;
 using System.Data.SqlClient;
+using System.Windows.Input;
+using GalaSoft.MvvmLight.Command;
 
 namespace ProjectFestival.model
 {
@@ -91,7 +93,7 @@ namespace ProjectFestival.model
         }
 
         public static int vorigeWidth;
-        
+
         public static ObservableCollection<LineUp> lineUp = new ObservableCollection<LineUp>();
         public static ObservableCollection<LineUp> oLineUp = new ObservableCollection<LineUp>();
 
@@ -163,16 +165,16 @@ namespace ProjectFestival.model
             return from;
         }
 
-        public static string GetWidth(LineUp lineUp,string[] from,string[] until)
+        public static string GetWidth(LineUp lineUp, string[] from, string[] until)
         {
             int uurUntil = Convert.ToInt32(until[0]);
             int uurFrom = Convert.ToInt32(from[0]);
             double minutenUntil = Convert.ToDouble(until[1]);
             double minutenFrom = Convert.ToDouble(from[1]);
 
-            double uur = (uurUntil + minutenUntil/60) - (uurFrom + minutenFrom/60);
+            double uur = (uurUntil + minutenUntil / 60) - (uurFrom + minutenFrom / 60);
 
-            int width = (int)(100 * uur*2);
+            int width = (int)(100 * uur * 2);
 
             return width.ToString();
         }
@@ -181,16 +183,16 @@ namespace ProjectFestival.model
         {
             double multiply = (double)(Convert.ToInt32(from[1]) / 3 * 10);
             double multiply2 = (double)(Convert.ToInt32(until[1]) / 3 * 10);
-            int start = (int)(100 * (Convert.ToInt32(from[0])*2 + multiply/100));
-            int left = (int)(100 * (Convert.ToInt32(from[0])*2 + multiply/100))-vorigeWidth;
+            int start = (int)(100 * (Convert.ToInt32(from[0]) * 2 + multiply / 100));
+            int left = (int)(100 * (Convert.ToInt32(from[0]) * 2 + multiply / 100)) - vorigeWidth;
 
-            int top = (Convert.ToInt32(lineUp.Stage.ID)-1)*70+10;
+            int top = (Convert.ToInt32(lineUp.Stage.ID) - 1) * 70 + 10;
 
-            vorigeWidth = Convert.ToInt32(lineUp.Width)+start;
-            
-            return left+","+top+",0,0";
+            vorigeWidth = Convert.ToInt32(lineUp.Width) + start;
+
+            return left + "," + top + ",0,0";
         }
-        
+
         public static int AddLineUp(LineUp lineUp)
         {
             ApplicationVM.Infotxt("LineUp toevoegen", "");
@@ -241,7 +243,7 @@ namespace ProjectFestival.model
                 DbParameter par6 = Database.AddParameter("@Band", lineUp.Band.ID);
 
                 int rowsaffected = 0;
-                rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5,par6);
+                rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5, par6);
 
                 trans.Commit();
                 ApplicationVM.Infotxt("LineUp aangepast", "LineUp aanpassen");
@@ -282,6 +284,60 @@ namespace ProjectFestival.model
             }
         }
 
+        public static void PrintTicket()
+        {
+
+            foreach (LineUp ssc in lineUp)
+            {
+                string filename = "testttttt.docx";
+                File.Copy("template.docx", filename, true);
+                WordprocessingDocument newdoc = WordprocessingDocument.Open(filename, true);
+                IDictionary<String, BookmarkStart> bookmarks = new Dictionary<String, BookmarkStart>();
+                foreach (BookmarkStart bms in newdoc.MainDocumentPart.RootElement.Descendants<BookmarkStart>())
+                {
+                    bookmarks[bms.Name] = bms;
+                }
+                bookmarks["Name"].Parent.InsertAfter<Run>(new Run(new Text()), bookmarks["Name"]);
+                bookmarks["Group"].Parent.InsertAfter<Run>(new Run(new Text(ssc.From)), bookmarks["Group"]);
+                bookmarks["Total"].Parent.InsertAfter<Run>(new Run(new Text(ssc.Until.ToString())),
+                bookmarks["Total"]);
+                newdoc.Close();
+            }
+
+
+            //WordprocessingDocument wordDocument = WordprocessingDocument.Create(AppDomain.CurrentDomain.BaseDirectory + "test2.doc", WordprocessingDocumentType.Document);
+            //IDictionary<String, BookmarkStart> bookmarks = new Dictionary<String, BookmarkStart>();
+
+            //foreach (BookmarkStart bms in wordDocument.MainDocumentPart.RootElement.Descendants<BookmarkStart>())
+            //{
+            //    bookmarks[bms.Name] = bms;
+            //}
+            //MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
+
+            //mainPart.Document = new Document();
+
+            //foreach (LineUp l in lineUp)
+            //{
+            //    Body body = mainPart.Document.AppendChild(new Body());
+            //    Paragraph para = body.AppendChild(new Paragraph());
+            //    Run run = para.AppendChild(new Run());
+            //    run.AppendChild(new Text(l.ID + " " + l.Band.Name + " " + l.Stage.Name + " " + l.Date + " " + l.From + " " + l.Until));
+            //    RunProperties prop = new RunProperties();
+            //    RunFonts font = new RunFonts() { Ascii = "Free 3 of 9 Extended", HighAnsi = "Free 3 of 9 Extended" };
+            //    FontSize size = new FontSize() { Val = "96" };
+            //    prop.Append(font);
+            //    prop.Append(size);
+            //    run.PrependChild<RunProperties>(prop);
+            //    bookmarks["code"].Parent.InsertAfter<Run>(run, bookmarks["code"]);
+            //}
+
+            ////Run running = new Run(new Text("lolollolllo"));
+      
+
+
+            //wordDocument.Close();
+        }
+
         public static void JsonWegschrijven()
         {
             for (int i = 0; i < 5; i++)
@@ -302,20 +358,6 @@ namespace ProjectFestival.model
             StreamWriter sw = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + "test.txt");
             sw.WriteLine("this \"word\" test");
             sw.Close();
-
-            WordprocessingDocument wordDocument = WordprocessingDocument.Create(AppDomain.CurrentDomain.BaseDirectory + "test2.doc", WordprocessingDocumentType.Document);
-            MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
-
-            mainPart.Document = new Document();
-
-            foreach (LineUp l in lineUp)
-            {
-                Body body = mainPart.Document.AppendChild(new Body());
-                Paragraph para = body.AppendChild(new Paragraph());
-                Run run = para.AppendChild(new Run());
-                run.AppendChild(new Text(l.ID + " " + l.Band.Name + " " + l.Stage.Name + " " + l.Date + " " + l.From + " " + l.Until));
-            }
-            wordDocument.Close();
         }
 
         public static void Zoeken(string parameter)
@@ -337,6 +379,28 @@ namespace ProjectFestival.model
                     lineUp.Add(c);
                 }
             }
+        }
+
+        public static int index = 1;
+
+        public override string ToString()
+        {
+            return Band.Name + " " + From + " " + Until;
+        }
+
+        public ICommand Clickcommand
+        {
+            get { return new RelayCommand<object>(ClickEvent); }
+        }
+
+        private void ClickEvent(object e)
+        {
+            index = Convert.ToInt32(e);
+        }
+
+        public static LineUp GetSelected(int i)
+        {
+            return lineUp[i];
         }
     }
 }

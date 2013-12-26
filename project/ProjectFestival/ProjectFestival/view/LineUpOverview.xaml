@@ -6,6 +6,8 @@
              xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:converter="clr-namespace:ProjectFestival.converter"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:cmd="http://www.galasoft.ch/mvvmlight"
              mc:Ignorable="d" 
              d:DesignHeight="740" d:DesignWidth="960">
 
@@ -31,6 +33,11 @@
                     <TextBlock Text="{Binding From}" Background="Gray" Padding="5,0,0,0"/>
                     <TextBlock Text="{Binding Until}" Grid.Column="1" Background="Gray" Padding="5,0,0,0"/>
                 </Grid>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDown">
+                        <cmd:EventToCommand Command="{Binding Clickcommand}" PassEventArgsToCommand="True" CommandParameter="{Binding ID}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="scTemplateStages">
@@ -48,7 +55,11 @@
             <ColumnDefinition Width="100"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
-        <ItemsControl ItemsSource="{Binding StagesList}" ItemsPanel="{StaticResource ItemsPanel}" ItemTemplate="{StaticResource scTemplateStages}" Grid.Row="1" Margin="0,30" Foreground="White"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="120"/>
+        </Grid.RowDefinitions>
+        <ItemsControl ItemsSource="{Binding StagesList}" ItemsPanel="{StaticResource ItemsPanel}" ItemTemplate="{StaticResource scTemplateStages}" Grid.Row="0" Margin="0,30" Foreground="White"/>
         <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Auto" Grid.Column="1" Background="white">
             <Grid>
                 <Grid.RowDefinitions>
@@ -56,8 +67,58 @@
                     <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
                 <ItemsControl ItemsSource="{Binding UrenList}" ItemsPanel="{StaticResource ItemsPanel}" ItemTemplate="{StaticResource scTemplateUren}" Grid.Row="0" Background="black" Padding="10,0,0,0"/>
-                <ItemsControl ItemsSource="{Binding LineUpList}" ItemsPanel="{StaticResource ItemsPanel}" ItemTemplate="{StaticResource scTemplateLineUp}" Grid.Row="1" Padding="10,0,0,0"/>
+                <ItemsControl ItemsSource="{Binding LineUpList}" ItemsPanel="{StaticResource ItemsPanel}" ItemTemplate="{StaticResource scTemplateLineUp}" Grid.Row="1" Padding="10,0,0,0">
+                    <!--<i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDown">
+                            <cmd:EventToCommand Command="{Binding Clickcommand}" PassEventArgsToCommand="True"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>-->
+                </ItemsControl>
             </Grid>
         </ScrollViewer>
+        <Grid Grid.Row="1" Grid.Column="1">
+            <!--<Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>-->
+
+            <DataGrid AutoGenerateColumns="False" Grid.Row="1" ItemsSource="{Binding LineUpSelected}" SelectedItem="{Binding SelectedLineUp,UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="False">
+                <DataGrid.Columns>
+                <DataGridTemplateColumn Width="1*" Header="Band">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                                <ComboBox ItemsSource="{Binding BandList}"  DisplayMemberPath="Name" SelectedItem="{Binding Band.Name,UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="ID" SelectedValue="{Binding Band.ID,UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Width="1*" Header="Stage">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox ItemsSource="{Binding StageList}" DisplayMemberPath="Name" SelectedItem="{Binding Stage.Name,UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="ID" SelectedValue="{Binding Stage.ID,UpdateSourceTrigger=PropertyChanged}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="From" Width="1*" Binding="{Binding From}"/>
+                    <DataGridTextColumn Header="Until" Width="1*" Binding="{Binding Until}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <!--<ComboBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding LineUpList}"></ComboBox>
+            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding StagesList}" DisplayMemberPath="Name" SelectedItem="{Binding Stage.Name,UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="ID" SelectedValue="{Binding Stage.ID,UpdateSourceTrigger=PropertyChanged}"></ComboBox>
+            <ComboBox Grid.Column="2" Grid.Row="1" ItemsSource="{Binding BandsList}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedLineUp.Band.Name,UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="ID" SelectedValue="{Binding SelectedLineUp.Band.ID,UpdateSourceTrigger=PropertyChanged}"></ComboBox>
+            <TextBlock Text="Stage:" Grid.Row="0" Grid.Column="1" Foreground="White" Margin="10"></TextBlock>
+            <TextBlock Text="Band:" Grid.Row="0" Grid.Column="2" Foreground="White" Margin="10"></TextBlock>
+            <TextBlock Text="From:" Grid.Row="0" Grid.Column="3" Foreground="White" Margin="10"></TextBlock>
+            <TextBlock Text="Until:" Grid.Row="0" Grid.Column="4" Foreground="White" Margin="10"></TextBlock>
+            <TextBox Text="{Binding SelectedLineUp.From}" Grid.Column="3" Grid.Row="1"></TextBox>
+            <TextBox Text="{Binding SelectedLineUp.Until}" Grid.Column="4" Grid.Row="1"></TextBox>-->
+        </Grid>
     </Grid>
 </UserControl>

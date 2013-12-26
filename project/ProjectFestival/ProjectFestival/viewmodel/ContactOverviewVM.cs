@@ -27,7 +27,7 @@ namespace ProjectFestival.viewmodel
             get { return _contactList; }
             set { _contactList = value; OnPropertyChanged("ContactList"); }
         }
-
+        
         public ContactPerson oSelected;
 
         private ContactPerson _selectedContact;
@@ -37,7 +37,7 @@ namespace ProjectFestival.viewmodel
             set
             {
                 _selectedContact = value;
-                SelectedChanged();
+                //SelectedChanged();
                 OnPropertyChanged("SelectedContact");
                 ApplicationVM.SelectedItem = SelectedContact;
             }

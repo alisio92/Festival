@@ -49,7 +49,7 @@ namespace ProjectFestival.viewmodel
             set
             {
                 _selectedType = value;
-                SelectedChanged();
+                //SelectedChanged();
                 OnPropertyChanged("SelectedType");
                 ApplicationVM.SelectedItem = SelectedType;
             }
@@ -62,7 +62,7 @@ namespace ProjectFestival.viewmodel
             set
             {
                 _selectedTitle = value;
-                SelectedChanged();
+                //SelectedChanged();
                 OnPropertyChanged("SelectedTitle");
                 ApplicationVM.SelectedItem = SelectedTitle;
             }

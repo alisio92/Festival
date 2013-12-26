@@ -124,24 +124,6 @@ namespace ProjectFestival.viewmodel
             }
             try
             {
-                if (CurrentPage.Name == "Contact")
-                {
-                    if (ContactPerson.JobRoleList[ContactPersonType.aantal - 1].Name == null)
-                    {
-                        ContactPerson.JobRoleList.RemoveAt(ContactPersonType.aantal - 1);
-                    }
-                    if (ContactPerson.JobTitleList[ContactPersonTitle.aantal - 1].Name == null)
-                    {
-                        ContactPerson.JobTitleList.RemoveAt(ContactPersonTitle.aantal - 1);
-                    }
-                }
-                if (CurrentPage.Name == "Tickets")
-                {
-                    if (Ticket.TicketTypeList[TicketType.aantal - 1].Name == null)
-                    {
-                        Ticket.TicketTypeList.RemoveAt(TicketType.aantal - 1);
-                    }
-                }
                 if (CurrentPage.Name == "Verkoop")
                 {
                     CurrentPage = new TicketVerkoopVM();
@@ -330,23 +312,17 @@ namespace ProjectFestival.viewmodel
 
         private void AddContact()
         {
-            ContactPerson cperson = (ContactPerson)SelectedItem;
-            if (ContactPerson.contactPersons.Count() != 0 && cperson != null)
+            bool isMessage = false;
+            foreach (ContactPerson c in ContactPerson.contactPersons)
             {
-                ContactPerson c = ContactPerson.contactPersons[cperson.ID];
-                if (c.Name != null && c.JobRole.Name != null && c.JobTitle.Name != null)
+                if (c.Name == null || c.JobRole.Name == null || c.JobTitle.Name == null)
                 {
-                    ContactPerson cp = new ContactPerson();
-                    cp.JobRole = new ContactPersonType();
-                    cp.JobTitle = new ContactPersonTitle();
-                    cp.ID = ContactPerson.aantal;
-                    ContactPerson.contactPersons.Add(cp);
-                    ContactPerson.aantal++;
+                    isMessage = true;
                 }
-                else
-                {
-                    MessageInfo();
-                }
+            }
+            if (isMessage)
+            {
+                MessageInfo();
             }
             else
             {
@@ -361,57 +337,34 @@ namespace ProjectFestival.viewmodel
 
         private void AddPersoneel()
         {
-            ContactPersonType cperson = null;
-            ContactPersonTitle cpersont = null;
-
-            if (SelectedItem.GetType() == typeof(ContactPersonType))
+            bool isMessageType = false;
+            bool isMessageTitle = false;
+            foreach (ContactPersonType c in ContactPersonType.contactType)
             {
-                cperson = (ContactPersonType)SelectedItem;
-            }
-            else
-            {
-                cpersont = (ContactPersonTitle)SelectedItem;
-            }
-
-            if (ContactPersonType.contactType.Count() != 0 && cperson != null)
-            {
-                ContactPersonType c = ContactPersonType.contactType[cperson.ID];
-                if (c.Name != null)
+                if (c.Name == null)
                 {
-                    ContactPersonType cp = new ContactPersonType();
-                    cp.ID = ContactPersonType.aantal;
-                    ContactPerson.JobRoleList.Add(cp);
-                    ContactPersonType.aantal++;
-                }
-                else
-                {
-                    MessageInfo();
+                    isMessageType = true;
                 }
             }
-            else
+            foreach (ContactPersonTitle c in ContactPersonTitle.contactTitle)
+            {
+                if (c.Name == null)
+                {
+                    isMessageTitle = true;
+                }
+            }
+            if (isMessageType && isMessageTitle)
+            {
+                MessageInfo();
+            }
+            if (!isMessageType)
             {
                 ContactPersonType cp = new ContactPersonType();
                 cp.ID = ContactPersonType.aantal;
                 ContactPerson.JobRoleList.Add(cp);
                 ContactPersonType.aantal++;
             }
-
-            if (ContactPersonTitle.contactTitle.Count() != 0 && cpersont != null)
-            {
-                ContactPersonTitle c = ContactPersonTitle.contactTitle[cpersont.ID];
-                if (c.Name != null)
-                {
-                    ContactPersonTitle cpt = new ContactPersonTitle();
-                    cpt.ID = ContactPersonTitle.aantal;
-                    ContactPerson.JobTitleList.Add(cpt);
-                    ContactPersonTitle.aantal++;
-                }
-                else
-                {
-                    MessageInfo();
-                }
-            }
-            else
+            if (!isMessageTitle)
             {
                 ContactPersonTitle cpt = new ContactPersonTitle();
                 cpt.ID = ContactPersonTitle.aantal;
@@ -538,40 +491,39 @@ namespace ProjectFestival.viewmodel
         private void VerkoopSaveItem()
         {
             TicketType ticketType = (TicketType)SelectedItem;
-            int id = Convert.ToInt32(ticketType.ID);
+            int id = TicketType.ticketType.IndexOf(ticketType);
+            id = TicketType.ticketType[id].IDDatabase;
 
-            if (id != TicketType.aantal)
+            if (id != 0)
             {
                 TicketType.EditType(ticketType);
-                Ticket.TicketTypeList[id - 1] = ticketType;
             }
             else
             {
                 TicketType.AddType(ticketType);
-                id = TicketType.aantal;
-                ticketType.ID = id;
-                Ticket.TicketTypeList[id - 1] = new TicketType();
-                Ticket.TicketTypeList[id - 1] = ticketType;
             }
         }
 
         private void TicketsSaveItem()
         {
             Ticket ticket = (Ticket)SelectedItem;
-            int id = Convert.ToInt32(ticket.ID);
+            int id = 0;
+            for (int i = 0; i < Ticket.tickets.Count(); i++)
+            {
+                if (Ticket.tickets[i].TicketHolder == ticket.TicketHolder)
+                {
+                    id = i;
+                }
+            }
+            id = Ticket.tickets[id].IDDatabase;
 
-            if (id != Ticket.aantal)
+            if (id != 0)
             {
                 Ticket.EditTicket(ticket);
-                Ticket.tickets[id - 1] = ticket;
             }
             else
             {
                 Ticket.AddTicket(ticket);
-                id = Ticket.aantal;
-                ticket.ID = id;
-                Ticket.tickets[id - 1] = new Ticket();
-                Ticket.tickets[id - 1] = ticket;
             }
         }
 
@@ -586,8 +538,9 @@ namespace ProjectFestival.viewmodel
 
                 contactPersonType = (ContactPersonType)SelectedItem;
                 id = ContactPersonType.contactType.IndexOf(contactPersonType);
+                id = ContactPersonType.contactType[id].IDDatabase;
 
-                if (id != ContactPersonType.contactType.Count() - 1)
+                if (id != 0)
                 {
                     ContactPersonType.EditType(contactPersonType);
                 }
@@ -600,8 +553,9 @@ namespace ProjectFestival.viewmodel
             {
                 contactPersonTitle = (ContactPersonTitle)SelectedItem;
                 id = ContactPersonTitle.contactTitle.IndexOf(contactPersonTitle);
+                id = ContactPersonTitle.contactTitle[id].IDDatabase;
 
-                if (id != ContactPersonTitle.contactTitle.Count() - 1)
+                if (id != 0)
                 {
                     ContactPersonTitle.EditTitle(contactPersonTitle);
                 }
@@ -616,8 +570,9 @@ namespace ProjectFestival.viewmodel
         {
             ContactPerson contactPersoon = (ContactPerson)SelectedItem;
             int id = ContactPerson.contactPersons.IndexOf(contactPersoon);
+            id = ContactPerson.contactPersons[id].IDDatabase;
 
-            if (id != ContactPerson.contactPersons.Count() - 1)
+            if (id !=0)
             {
                 ContactPerson.EditContact(contactPersoon);
             }

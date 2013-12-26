@@ -41,6 +41,7 @@ namespace ProjectFestival.viewmodel
                 Ticket.GetTickets();
             }
             _ticketList = Ticket.tickets;
+            Ticket.PrintTickets();
         }
     }
 }
