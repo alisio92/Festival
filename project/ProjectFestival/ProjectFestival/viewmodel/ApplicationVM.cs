@@ -16,14 +16,13 @@ namespace ProjectFestival.viewmodel
     {
         public ApplicationVM()
         {
-            Infotxt("Applicatie starten...", "");
             PagesMainNav.Add(new ContactOverviewVM());
             PagesMainNav.Add(new LineUpOverviewVM());
             PagesMainNav.Add(new TicketOverviewVM());
 
             CurrentPage = PagesMainNav[0];
             subNav();
-            Infotxt("Applicatie starten klaar", "Applicatie starten...");
+            LineUp.JsonWegschrijven();
         }
 
         public static void Infotxt(string infoNew, string infoOld)

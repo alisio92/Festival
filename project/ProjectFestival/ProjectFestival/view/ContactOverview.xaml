@@ -5,13 +5,21 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:converter="clr-namespace:ProjectFestival.converter"
              mc:Ignorable="d" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:cmd="http://www.galasoft.ch/mvvmlight"
              d:DesignHeight="740" d:DesignWidth="960">
     
     <Grid>
         <DataGrid AutoGenerateColumns="False" Grid.Row="1" ItemsSource="{Binding ContactList}" SelectedItem="{Binding SelectedContact,UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Width="25" Binding="{Binding ID}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Naam" Width="1*" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="Naam" Width="1*" Binding="{Binding Name}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="TextChanged">
+                            <cmd:EventToCommand Command="{Binding TestCommand}" PassEventArgsToCommand="True"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </DataGridTextColumn>
                 <DataGridTextColumn Header="Bedrijf" Width="1*" Binding="{Binding Company}"/>
                 <DataGridTemplateColumn Width="1*" Header="Functie">
                     <DataGridTemplateColumn.CellTemplate>

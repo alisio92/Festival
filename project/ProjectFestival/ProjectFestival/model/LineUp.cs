@@ -148,7 +148,12 @@ namespace ProjectFestival.model
 
         private static void SortList()
         {
-            ObservableCollection<LineUp> temp1 = lineUp;
+            ObservableCollection<LineUp> temp1 = new ObservableCollection<LineUp>();
+
+            foreach (LineUp l in lineUp)
+            {
+                temp1.Add(l);
+            }
             ObservableCollection<LineUp> temp2 = new ObservableCollection<LineUp>();
             int ruimte = 0;
             //sLineUp.Add(lineUp[0]);
@@ -161,7 +166,7 @@ namespace ProjectFestival.model
                 {
                     if (temp1[i].Stage.ID == id)
                     {
-                        temp1[i].Margin = GetMargin(temp1[i], GetFrom(temp1[i]), GetUntil(temp1[i]), temp1[i].Stage.ID-ruimte);
+                        temp1[i].Margin = GetMargin(temp1[i], GetFrom(temp1[i]), GetUntil(temp1[i]), temp1[i].Stage.ID - ruimte);
                         ruimte = temp1[i].Stage.ID;
                         temp2.Add(temp1[i]);
                         temp1.RemoveAt(i);
@@ -227,7 +232,7 @@ namespace ProjectFestival.model
             return width.ToString();
         }
 
-        public static string GetMargin(LineUp lineUp, string[] from, string[] until,int ruimte)
+        public static string GetMargin(LineUp lineUp, string[] from, string[] until, int ruimte)
         {
             int top = 0;
             //top = ((lineUp.Stage.ID - 1) * 60) - Height - ((aantal - 1) * 8); //((lineUp.Stage.ID - 1) * 60)
@@ -391,24 +396,44 @@ namespace ProjectFestival.model
 
         public static void JsonWegschrijven()
         {
-            for (int i = 0; i < 5; i++)
-            {
-                LineUp l = new LineUp();
-                l.ID = i;
-                l.From = "17/12/2013-18:00";
-                l.Until = "17/12/2013-18:00";
-                l.Band = Band.bands[0];
-                l.Stage = new Stage()
-                {
-                    ID = i,
-                    Name = "bob" + i,
-                };
-                lineUp.Add(l);
-            }
-
             StreamWriter sw = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + "test.txt");
-            sw.WriteLine("this \"word\" test");
+            //sw.WriteLine("this \"word\" test");
+            lineUp.RemoveAt(1);
+            lineUp.RemoveAt(1);
+            lineUp.RemoveAt(1);
+            sw.WriteLine("[ ");
+            for (int i = 0; i < lineUp.Count(); i++)
+            {
+                foreach (Band b in Band.bands)
+                {
+                    if (b.Name == lineUp[i].Band.Name)
+                    {
+                        foreach (Genre g in Band.GenreList)
+                        {
+                            WegTeSchrijvenItem(sw, i, g,b);
+                        }
+                    }
+                }
+            }
+            sw.WriteLine("]");
             sw.Close();
+        }
+
+        private static void WegTeSchrijvenItem(StreamWriter sw, int i, Genre g,Band b)
+        {
+            sw.WriteLine("{ ");
+            sw.WriteLine("\"backgroundImage\" : \"images/" + g.Name + "/" + lineUp[i].Band.Name + ".jpg,");
+            sw.WriteLine("\"discription\" : \"" + b.Description+"\",");
+            sw.WriteLine("\"group\" : { \"backgroundImage\" : \"images/" + g.Name + "/" + g.Name+"_group_detail.jpg\",");
+
+            if (lineUp.Count() == 1 || lineUp.Count() - 1 == i)
+            {
+                sw.WriteLine("}");
+            }
+            else
+            {
+                sw.WriteLine("},");
+            }
         }
 
         public static void Zoeken(string parameter)

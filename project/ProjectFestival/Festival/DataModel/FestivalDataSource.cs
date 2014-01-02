@@ -141,7 +141,7 @@ namespace Festival.Data
         }
         
         private string _discription = string.Empty;
-        public string Directions
+        public string Discription
         {
             get { return this._discription; }
             set { this.SetProperty(ref this._discription, value); }
@@ -371,7 +371,7 @@ namespace Festival.Data
                             recipe.Facebook = val.GetString();
                             break;
                         case "discription":
-                            recipe.Directions = val.GetString();
+                            recipe.Discription = val.GetString();
                             break;
                         case "genres":
                             var genres = val.GetArray();

@@ -156,7 +156,7 @@ namespace Festival
                 // Share recipe text
                 var recipe = "\r\nINGREDIENTS\r\n";
                 recipe += String.Join("\r\n", item.Genres);
-                recipe += ("\r\n\r\nDIRECTIONS\r\n" + item.Directions);
+                recipe += ("\r\n\r\nDIRECTIONS\r\n" + item.Discription);
                 request.Data.SetText(recipe);
 
                 // Share recipe image

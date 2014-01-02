@@ -19,6 +19,16 @@ namespace ProjectFestival.viewmodel
             get { return "Contact"; }
         }
 
+        public ICommand TestCommand
+        {
+            get { return new RelayCommand(SearchItem); }
+        }
+
+        private void SearchItem()
+        {
+            //
+        }
+
         private static Boolean isRunning = false;
 
         private ObservableCollection<ContactPerson> _contactList;

@@ -39,7 +39,7 @@
             <v:LineUpInfo/>
         </DataTemplate>
     </Window.Resources>
-    <Grid> <!--Style="{StaticResource Background}">-->
+    <Grid>
         <Grid.Background>
             <ImageBrush ImageSource="C:\Users\alisio\Desktop\howest\2NMCT\Business Applications\oefeningen\ProjectFestival\ProjectFestival\images\zwartevilt.png"/>
         </Grid.Background>
@@ -47,7 +47,7 @@
             <RowDefinition Height="70"/>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="210"/>
-            <RowDefinition Height="100"/>
+            <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
@@ -79,9 +79,6 @@
                     <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
                 <TextBlock Style="{StaticResource Title}">
-                    <!--<TextBlock.Background>
-                        <ImageBrush ImageSource="C:\Users\alisio\Desktop\howest\2NMCT\Business Applications\oefeningen\ProjectFestival\ProjectFestival\images\zwartevilt.png"/>
-                    </TextBlock.Background>-->
                 </TextBlock>
                 <TextBox Style="{StaticResource Zoeken}" Grid.Row="1" Text="{Binding Search,UpdateSourceTrigger=PropertyChanged}">
                     <i:Interaction.Triggers>
@@ -117,18 +114,15 @@
         <Grid Row="1" ColumnSpan="2" RowSpan="2"  Grid.Column="1">
             <ContentControl Content="{Binding CurrentPage}"/>
         </Grid>
-        <Grid Row="2" x:Name="bob">
+        <Grid Row="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
-            <Button x:Name="btnToevoegen" Content="Toevoegen" Command="{Binding AddItemCommand,UpdateSourceTrigger=PropertyChanged}"/>
-            <Button x:Name="btnAanpassen" Content="Aanpassen" Grid.Row="1" Command="{Binding SaveItemCommand}" CommandParameter="{Binding SelectedItem}"/>
-            <Button x:Name="btnWissen" Content="Wissen" Grid.Row="2" Command="{Binding DeleteItemCommand}" CommandParameter="{Binding SelectedItem}"/>
+            <Button Content="Toevoegen" Command="{Binding AddItemCommand}"/>
+            <Button Content="Aanpassen" Grid.Row="1" Command="{Binding SaveItemCommand}" CommandParameter="{Binding SelectedItem}"/>
+            <Button Content="Wissen" Grid.Row="2" Command="{Binding DeleteItemCommand}" CommandParameter="{Binding SelectedItem}"/>
         </Grid>
-        <ScrollViewer Grid.ColumnSpan="3" Grid.Row="3">
-            <TextBlock Text="{Binding Info}" Name="txbName" Style="{StaticResource Info}"/>
-        </ScrollViewer>
     </Grid>
 </Window>

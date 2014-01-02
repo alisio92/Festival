@@ -77,7 +77,7 @@ namespace Festival
 
                 foreach (var item in group.Items)
                 {
-                    if (item.Title.ToLower().Contains(query) || item.Directions.ToLower().Contains(query))
+                    if (item.Title.ToLower().Contains(query) || item.Discription.ToLower().Contains(query))
                     {
                         all.Add(item);
                         items.Add(item);

@@ -151,6 +151,7 @@
     <Content Include="Assets\MediumGray.png" />
     <Content Include="Assets\DarkGray.png" />
     <Content Include="Data\Festival.txt" />
+    <Content Include="Data\Festival1.txt" />
     <Content Include="Images\chinese\Chinese_1_150_C.jpg" />
     <Content Include="Images\chinese\Chinese_1_600_C.jpg" />
     <Content Include="Images\chinese\Chinese_2_150_C.jpg" />

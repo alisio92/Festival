@@ -2,7 +2,7 @@
     "discription" : "Mix the ground pork with the salt, sugar, pepper, cornstarch and sesame oil. Add the dried mushrooms and Chinese sausage.Divide into 18 approximately equal portions. Take one portion of the meat and slightly flatten in your hand. Place a cooked quail egg on top of the meat and cover the meat around the egg to make a small round ball. Set aside. Dough:Mix the flour and sugar in a big bowl. Pour the milk in and mix until it becomes a dough Let it sit for 5 minutes. Divide into about 18 equal portions. If you feel any lumps, work through the dough with your hands to remove them. Forming and Cooking the Buns: flour, 18 pieces of dough, 18 balls of meat filling,  parchment paper, cut into 18 square. On a floured surface, roll out a piece of dough into a circle, ideally tapered at the edges Dip one of the prepared meat fillings in flour, With the piece of dough in one hand, place the meat filling on top. ",
     "group" : { "backgroundImage" : "images/Chinese/chinese_group_detail.png",
         "description" : "lolololololololol",
-        "groupImage" : "images/Chinese/chinese_groupderp.png",
+        "groupImage" : "images/Chinese/chinese_group.png",
         "key" : "Rock",
         "shortTitle" : "Rock",
         "title" : "Rock"
@@ -14,7 +14,7 @@
     "facebook" : "www.facebook.be",
 	"twitter" : "www.twitter.be",
     "shortTitle" : "The Derps",
-    "tileImage" : "images/Chinese/Chinese_1_150_C.jpg",
+    "tileImage" : "images/Chinese/Chinese_2_150_C.jpg",
     "title" : "The Derps"
   }
 ]
