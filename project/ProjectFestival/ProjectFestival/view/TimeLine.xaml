@@ -1,0 +1,73 @@
+﻿<UserControl x:Class="ProjectFestival.view.TimeLine"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:tt="clr-namespace:TimeLineTool;assembly=TimeLineTool"
+             xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:converter="clr-namespace:ProjectFestival.converter"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:cmd="http://www.galasoft.ch/mvvmlight"
+             mc:Ignorable="d" 
+             d:DesignHeight="740" d:DesignWidth="960">
+
+    <UserControl.Resources>
+        <converter:DateToYearMonthDayConverter x:Key="Date"/>
+        <ItemsPanelTemplate x:Key="ItemsPanel">
+            <WrapPanel/>
+        </ItemsPanelTemplate>
+        <DataTemplate x:Key="scTemplateUren">
+            <StackPanel>
+                <TextBlock Text="{Binding Uur}" Width="100" Foreground="White"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="scTemplateStages">
+            <StackPanel>
+                <TextBlock Text="{Binding Name}" Width="100" Height="55" Margin="20,10,10,0" />
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="C:\Users\alisio\Desktop\howest\2NMCT\Business Applications\oefeningen\ProjectFestival\ProjectFestival\images\zwartevilt.png"/>
+        </Grid.Background>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <ItemsControl ItemsSource="{Binding StagesList}" ItemsPanel="{StaticResource ItemsPanel}" ItemTemplate="{StaticResource scTemplateStages}" Grid.Row="0" Margin="0,28,0,0" Foreground="White" Padding="0,28,0,0"/>
+        <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Auto" Grid.Column="1" Background="white">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <ItemsControl ItemsSource="{Binding UrenList}" ItemsPanel="{StaticResource ItemsPanel}" ItemTemplate="{StaticResource scTemplateUren}" Grid.Row="0" Background="black" Padding="10,0,0,0"/>
+                <ListView ItemsSource="{Binding LineUpList}" HorizontalContentAlignment="Left" Grid.Row="1" Margin="-8,0">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Background="Gray" Width="{Binding Width}" Margin="{Binding Margin}" Height="60">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="20"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="{Binding Date,Converter={StaticResource Date}}" Grid.Row="0"/>
+                                <TextBlock Text="{Binding Band.Name}" TextAlignment="Center" Grid.Row="1"/>
+                                <Grid Grid.Row="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding From}" Grid.Column="0" Padding="5,0"/>
+                                    <TextBlock Text="{Binding Until}" Grid.Column="1" Padding="5,0"/>
+                                </Grid>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

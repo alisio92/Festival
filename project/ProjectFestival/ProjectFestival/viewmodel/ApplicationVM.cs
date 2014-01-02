@@ -72,6 +72,7 @@ namespace ProjectFestival.viewmodel
             else if (CurrentPage.Name == "Line-Up")
             {
                 PagesSubNav.Add(new LineUpOverviewVM());
+                PagesSubNav.Add(new TimeLineVM());
                 PagesSubNav.Add(new LineUpBandsVM());
                 PagesSubNav.Add(new LineUpGenreVM());
             }
@@ -308,6 +309,15 @@ namespace ProjectFestival.viewmodel
                 BandGenre.bandGenre.Add(g2);
                 BandGenre.aantal++;
             }
+            if (CurrentPage.Name == "Line-Up")
+            {
+                LineUp l = new LineUp();
+                l.Band = new Band();
+                l.Stage = new Stage();
+                l.ID = LineUp.aantal;
+                LineUp.lineUp.Add(l);
+                LineUp.aantal++;
+            }
         }
 
         private void AddContact()
@@ -417,8 +427,25 @@ namespace ProjectFestival.viewmodel
 
         private void LineUpSaveItem()
         {
-            LineUp.AddLineUp((LineUp)SelectedItem);
-            //LineUp.JsonWegschrijven();
+            LineUp lineUp = (LineUp)SelectedItem;
+            int id = 0;
+            for (int i = 0; i < LineUp.lineUp.Count(); i++)
+            {
+                if ((LineUp.lineUp[i].Band == lineUp.Band) && (LineUp.lineUp[i].Stage == lineUp.Stage))
+                {
+                    id = i;
+                }
+            }
+            id = LineUp.lineUp[id].ID;
+
+            if (id != LineUp.aantal-1)
+            {
+                LineUp.EditLineUp(lineUp);
+            }
+            else
+            {
+                LineUp.AddLineUp(lineUp);
+            }
         }
 
         private void InfoBandSaveItem()

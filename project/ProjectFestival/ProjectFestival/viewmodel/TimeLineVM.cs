@@ -11,14 +11,12 @@ using System.Windows.Input;
 
 namespace ProjectFestival.viewmodel
 {
-    class LineUpOverviewVM : ObservableObject, IPage
+    class TimeLineVM : ObservableObject, IPage
     {
-        public string Name 
+        public string Name
         {
-            get { return "Line-Up"; }
+            get { return "TimeLine"; }
         }
-
-        private static Boolean isRunning = false;
 
         private ObservableCollection<LineUp> _lineUpList;
         public ObservableCollection<LineUp> LineUpList
@@ -41,36 +39,19 @@ namespace ProjectFestival.viewmodel
             set { _bandList = value; OnPropertyChanged("BandsList"); }
         }
 
-        private ObservableCollection<Festival> _dateList;
-        public ObservableCollection<Festival> DateList
+        private ObservableCollection<clock> _urenList;
+        public ObservableCollection<clock> UrenList
         {
-            get { return _dateList; }
-            set { _dateList = value; OnPropertyChanged("DateList"); }
+            get { return _urenList; }
+            set { _urenList = value; OnPropertyChanged("UrenList"); }
         }
 
-        private LineUp _selectedLineUp;
-        public LineUp SelectedLineUp
+        public TimeLineVM()
         {
-            get { return _selectedLineUp; }
-            set 
-            {
-                _selectedLineUp = value;
-                OnPropertyChanged("SelectedLineUp");
-                ApplicationVM.SelectedItem = SelectedLineUp;
-            }
-        }
-
-        public LineUpOverviewVM()
-        {
-            if (!isRunning)
-            {
-                isRunning = true;
-                LineUpList = LineUp.GetLineUp();
-            }
+            UrenList = clock.GetUren();
             StagesList = Stage.stages;
-            LineUpList = LineUp.lineUp;
+            LineUpList = LineUp.sLineUp;
             BandsList = LineUp.BandList;
-            DateList = Festival.festival;
         }
     }
 }

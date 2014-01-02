@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,17 +13,18 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TimeLineTool;
 
 namespace ProjectFestival.view
 {
     /// <summary>
-    /// Interaction logic for LineUp.xaml
+    /// Interaction logic for LineUpOverview.xaml
     /// </summary>
-    public partial class TimeLine : UserControl
+    public partial class LineUpOverview : UserControl
     {
-        public TimeLine()
+        public LineUpOverview()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }

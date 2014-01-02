@@ -26,6 +26,9 @@
         <DataTemplate DataType="{x:Type vm:LineUpOverviewVM}">
             <v:LineUpOverview/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:TimeLineVM}">
+            <v:TimeLine/>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type vm:LineUpBandsVM}">
             <v:LineUpBands/>
         </DataTemplate>

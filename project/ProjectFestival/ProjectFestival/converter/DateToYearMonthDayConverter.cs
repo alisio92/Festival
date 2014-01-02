@@ -16,8 +16,8 @@ namespace ProjectFestival.converter
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            throw new NotImplementedException();
+        {           
+            return (DateTime)value;
         }
     }
 }

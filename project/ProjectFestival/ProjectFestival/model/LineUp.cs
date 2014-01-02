@@ -92,9 +92,20 @@ namespace ProjectFestival.model
             set { _bandList = value; }
         }
 
+        private static ObservableCollection<Festival> _dateList;
+        public static ObservableCollection<Festival> DateList
+        {
+            get { return _dateList; }
+            set { _dateList = value; }
+        }
+
         public static int vorigeWidth;
+        public static int Height = 0;
+        public static int aantal = 1;
+        public static int aantal2 = 1;
 
         public static ObservableCollection<LineUp> lineUp = new ObservableCollection<LineUp>();
+        public static ObservableCollection<LineUp> sLineUp = new ObservableCollection<LineUp>();
         public static ObservableCollection<LineUp> oLineUp = new ObservableCollection<LineUp>();
 
         public static ObservableCollection<LineUp> GetLineUp()
@@ -102,6 +113,7 @@ namespace ProjectFestival.model
             ApplicationVM.Infotxt("Inladen LineUp", "");
             StageList = Stage.GetStages();
             BandList = Band.GetBands();
+            DateList = Festival.GetFestival();
 
             try
             {
@@ -111,6 +123,7 @@ namespace ProjectFestival.model
                 while (reader.Read())
                 {
                     lineUp.Add(Create(reader));
+                    aantal++;
                 }
                 ApplicationVM.Infotxt("LineUp ingeladen", "Inladen LineUp");
             }
@@ -127,8 +140,43 @@ namespace ProjectFestival.model
                 ApplicationVM.Infotxt("Kan LineUp tabel niet inlezen", "");
             }
             oLineUp = lineUp;
+
+            SortList();
+
             return lineUp;
         }
+
+        private static void SortList()
+        {
+            ObservableCollection<LineUp> temp1 = lineUp;
+            ObservableCollection<LineUp> temp2 = new ObservableCollection<LineUp>();
+            int ruimte = 0;
+            //sLineUp.Add(lineUp[0]);
+
+            int id = 1;
+            while (temp1.Count() > 0)
+            {
+                bool isToegevoegd = false;
+                for (int i = 0; i < temp1.Count(); i++)
+                {
+                    if (temp1[i].Stage.ID == id)
+                    {
+                        temp1[i].Margin = GetMargin(temp1[i], GetFrom(temp1[i]), GetUntil(temp1[i]), temp1[i].Stage.ID-ruimte);
+                        ruimte = temp1[i].Stage.ID;
+                        temp2.Add(temp1[i]);
+                        temp1.RemoveAt(i);
+                        isToegevoegd = true;
+                        aantal2++;
+                    }
+                }
+                if (!isToegevoegd)
+                {
+                    id++;
+                }
+            }
+            sLineUp = temp2;
+        }
+
 
         private static LineUp Create(IDataRecord record)
         {
@@ -148,7 +196,7 @@ namespace ProjectFestival.model
                 Name = StageList[(int)record["Stage"] - 1].Name
             };
             lineUp.Width = GetWidth(lineUp, GetFrom(lineUp), GetUntil(lineUp));
-            lineUp.Margin = GetMargin(lineUp, GetFrom(lineUp), GetUntil(lineUp));
+            //lineUp.Margin = GetMargin(lineUp, GetFrom(lineUp), GetUntil(lineUp));
 
             return lineUp;
         }
@@ -179,18 +227,21 @@ namespace ProjectFestival.model
             return width.ToString();
         }
 
-        public static string GetMargin(LineUp lineUp, string[] from, string[] until)
+        public static string GetMargin(LineUp lineUp, string[] from, string[] until,int ruimte)
         {
-            double multiply = (double)(Convert.ToInt32(from[1]) / 3 * 10);
-            double multiply2 = (double)(Convert.ToInt32(until[1]) / 3 * 10);
-            int start = (int)(100 * (Convert.ToInt32(from[0]) * 2 + multiply / 100));
-            int left = (int)(100 * (Convert.ToInt32(from[0]) * 2 + multiply / 100)) - vorigeWidth;
-
-            int top = (Convert.ToInt32(lineUp.Stage.ID) - 1) * 70 + 10;
-
-            vorigeWidth = Convert.ToInt32(lineUp.Width) + start;
-
-            return left + "," + top + ",0,0";
+            int top = 0;
+            //top = ((lineUp.Stage.ID - 1) * 60) - Height - ((aantal - 1) * 8); //((lineUp.Stage.ID - 1) * 60)
+            top = ((ruimte - 1) * 60);// -((aantal2 - 1) * 8);
+            //int height = ((lineUp.Stage.ID) * 60);
+            //if (height > Height)
+            //{
+            //    Height = height+60;
+            //}
+            //Height = height;
+            int uur = Convert.ToInt32(from[0]);
+            double minuut = Convert.ToDouble(from[1]) / 60;
+            double left = (uur * 200) + (minuut * 200);
+            return Convert.ToInt32(left) + "," + top + ",0,0";
         }
 
         public static int AddLineUp(LineUp lineUp)
@@ -204,7 +255,7 @@ namespace ProjectFestival.model
 
                 string sql = "INSERT INTO LineUp VALUES(@ID,@Date,@StartTime,@EndTime,@Stage,@Band)";
                 DbParameter par1 = Database.AddParameter("@ID", lineUp.ID);
-                DbParameter par2 = Database.AddParameter("@Date", lineUp.Date);
+                DbParameter par2 = Database.AddParameter("@Date", DateTime.Today);
                 DbParameter par3 = Database.AddParameter("@StartTime", lineUp.From);
                 DbParameter par4 = Database.AddParameter("@EndTime", lineUp.Until);
                 DbParameter par5 = Database.AddParameter("@Stage", lineUp.Stage.ID);
@@ -236,7 +287,7 @@ namespace ProjectFestival.model
 
                 string sql = "UPDATE LineUp SET Date=@Date,StartTime=@StartTime,EndTime=@EndTime,Stage=@Stage,Band=@Band WHERE ID=@ID";
                 DbParameter par1 = Database.AddParameter("@ID", lineUp.ID);
-                DbParameter par2 = Database.AddParameter("@Date", lineUp.Date);
+                DbParameter par2 = Database.AddParameter("@Date", DateTime.Today);
                 DbParameter par3 = Database.AddParameter("@StartTime", lineUp.From);
                 DbParameter par4 = Database.AddParameter("@EndTime", lineUp.Until);
                 DbParameter par5 = Database.AddParameter("@Stage", lineUp.Stage.ID);
@@ -332,7 +383,7 @@ namespace ProjectFestival.model
             //}
 
             ////Run running = new Run(new Text("lolollolllo"));
-      
+
 
 
             //wordDocument.Close();
@@ -381,26 +432,9 @@ namespace ProjectFestival.model
             }
         }
 
-        public static int index = 1;
-
         public override string ToString()
         {
             return Band.Name + " " + From + " " + Until;
-        }
-
-        public ICommand Clickcommand
-        {
-            get { return new RelayCommand<object>(ClickEvent); }
-        }
-
-        private void ClickEvent(object e)
-        {
-            index = Convert.ToInt32(e);
-        }
-
-        public static LineUp GetSelected(int i)
-        {
-            return lineUp[i];
         }
     }
 }

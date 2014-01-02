@@ -114,8 +114,12 @@
     <Compile Include="viewmodel\LineUpInfoVM.cs" />
     <Compile Include="viewmodel\TicketOverviewVM.cs" />
     <Compile Include="viewmodel\TicketVerkoopVM.cs" />
+    <Compile Include="viewmodel\TimeLineVM.cs" />
     <Compile Include="view\ContactPersoneel.xaml.cs">
       <DependentUpon>ContactPersoneel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="view\LineUpOverview.xaml.cs">
+      <DependentUpon>LineUpOverview.xaml</DependentUpon>
     </Compile>
     <Compile Include="view\LineUpBands.xaml.cs">
       <DependentUpon>LineUpBands.xaml</DependentUpon>
@@ -188,6 +192,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="view\LineUpOverview.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="view\LineUpBands.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -200,7 +208,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="view\LineUpOverview.xaml">
+    <Page Include="view\TimeLine.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -220,8 +228,8 @@
     <Compile Include="view\ContactOverview.xaml.cs">
       <DependentUpon>ContactOverview.xaml</DependentUpon>
     </Compile>
-    <Compile Include="view\LineUpOverview.xaml.cs">
-      <DependentUpon>LineUpOverview.xaml</DependentUpon>
+    <Compile Include="view\TimeLine.xaml.cs">
+      <DependentUpon>TimeLine.xaml</DependentUpon>
     </Compile>
     <Compile Include="view\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
