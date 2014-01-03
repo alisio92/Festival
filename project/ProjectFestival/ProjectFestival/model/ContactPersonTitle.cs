@@ -16,8 +16,8 @@ namespace ProjectFestival.model
     public class ContactPersonTitle
     {
         public static int aantal = 1;
-        public static ObservableCollection<ContactPersonTitle> contactTitle = new ObservableCollection<ContactPersonTitle>();
-        public static ObservableCollection<ContactPersonTitle> oContactTitle = new ObservableCollection<ContactPersonTitle>();
+        public static ObservableCollection<ContactPersonTitle> contactTitles = new ObservableCollection<ContactPersonTitle>();
+        public static ObservableCollection<ContactPersonTitle> oContactTitles = new ObservableCollection<ContactPersonTitle>();
         
         private int _id;
         public int ID
@@ -50,7 +50,7 @@ namespace ProjectFestival.model
 
                 while (reader.Read())
                 {
-                    contactTitle.Add(Create(reader));
+                    contactTitles.Add(Create(reader));
                     aantal++;
                 }
             }
@@ -58,8 +58,8 @@ namespace ProjectFestival.model
             {
                 FileWriter.WriteToFile(e.Message);
             }
-            oContactTitle = contactTitle;
-            return contactTitle;
+            oContactTitles = contactTitles;
+            return contactTitles;
         }
 
         public static ContactPersonTitle Create(IDataRecord record)
@@ -152,20 +152,20 @@ namespace ProjectFestival.model
         public static void Zoeken(string parameter)
         {
             parameter = parameter.ToLower();
-            contactTitle = new ObservableCollection<ContactPersonTitle>();
+            contactTitles = new ObservableCollection<ContactPersonTitle>();
 
-            foreach (ContactPersonTitle c in oContactTitle)
+            foreach (ContactPersonTitle contactPersonTitle in oContactTitles)
             {
                 if (parameter != "" && parameter != "Zoeken")
                 {
-                    if ((c.Name.ToLower().Contains(parameter)) || (c.ID.ToString().ToLower().Contains(parameter)))
+                    if ((contactPersonTitle.Name.ToLower().Contains(parameter)) || (contactPersonTitle.ID.ToString().ToLower().Contains(parameter)))
                     {
-                        contactTitle.Add(c);
+                        contactTitles.Add(contactPersonTitle);
                     }
                 }
                 else
                 {
-                    contactTitle.Add(c);
+                    contactTitles.Add(contactPersonTitle);
                 }
             }
         }

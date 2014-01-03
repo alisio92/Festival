@@ -32,7 +32,7 @@
             <TextBox.Text>
                 <Binding Path="Company" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
-                        <c:TextNumber Min="5" Max="60"/>
+                        <c:TextNumber Min="1" Max="60"/>
                     </Binding.ValidationRules>
                 </Binding>
             </TextBox.Text>
@@ -230,7 +230,7 @@
             <TextBox.Text>
                 <Binding Path="TicketHolderEmail" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
-                        <c:Number Min="5" Max="60"/>
+                        <c:Email Min="5" Max="60"/>
                     </Binding.ValidationRules>
                 </Binding>
             </TextBox.Text>

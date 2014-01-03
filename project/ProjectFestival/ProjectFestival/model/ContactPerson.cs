@@ -291,18 +291,18 @@ namespace ProjectFestival.model
             parameter = parameter.ToLower();
             contactPersons = new ObservableCollection<ContactPerson>();
 
-            foreach (ContactPerson c in oContactPersons)
+            foreach (ContactPerson contactPerson in oContactPersons)
             {
                 if (parameter != "" && parameter != "Zoeken")
                 {
-                    if ((c.Name.ToLower().Contains(parameter)) || (c.JobRole.Name.ToLower().Contains(parameter)) || (c.JobTitle.Name.ToLower().Contains(parameter)) || (c.Company.ToLower().Contains(parameter)) || (c.City.ToLower().Contains(parameter)) || (c.Email.ToLower().Contains(parameter)) || (c.Phone.ToLower().Contains(parameter)) || (c.Cellphone.ToLower().Contains(parameter)) || (c.ID.ToString().ToLower().Contains(parameter)))
+                    if ((contactPerson.Name.ToLower().Contains(parameter)) || (contactPerson.JobRole.Name.ToLower().Contains(parameter)) || (contactPerson.JobTitle.Name.ToLower().Contains(parameter)) || (contactPerson.Company.ToLower().Contains(parameter)) || (contactPerson.City.ToLower().Contains(parameter)) || (contactPerson.Email.ToLower().Contains(parameter)) || (contactPerson.Phone.ToLower().Contains(parameter)) || (contactPerson.Cellphone.ToLower().Contains(parameter)) || (contactPerson.ID.ToString().ToLower().Contains(parameter)))
                     {
-                        contactPersons.Add(c);
+                        contactPersons.Add(contactPerson);
                     }
                 }
                 else
                 {
-                    contactPersons.Add(c);
+                    contactPersons.Add(contactPerson);
                 }
             }
         }

@@ -21,8 +21,8 @@ namespace ProjectFestival.viewmodel
 
         public ContactPersoneelVM()
         {
-            TypeList = ContactPersonType.contactType;
-            TitleList = ContactPersonTitle.contactTitle;
+            TypeList = ContactPersonType.contactTypes;
+            TitleList = ContactPersonTitle.contactTitles;
         }
         
         private ObservableCollection<ContactPersonType> _typeList;

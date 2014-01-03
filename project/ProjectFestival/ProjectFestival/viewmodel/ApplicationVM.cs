@@ -261,6 +261,11 @@ namespace ProjectFestival.viewmodel
             MessageBox.Show("Je moet een item selecteren om te wissen.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        public static void MessageTickets()
+        {
+            MessageBox.Show("Er zijn geen genoeg tickets beschikbaar.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
         private void AddItem()
         {
             if (CurrentPage.Name == "Personeel")
@@ -273,18 +278,11 @@ namespace ProjectFestival.viewmodel
             }
             if (CurrentPage.Name == "Tickets")
             {
-                Ticket t = new Ticket();
-                t.TicketType = new TicketType();
-                t.ID = Ticket.aantal;
-                Ticket.tickets.Add(t);
-                Ticket.aantal++;
+                AddTicket();
             }
             if (CurrentPage.Name == "Verkoop")
             {
-                TicketType t = new TicketType();
-                t.ID = TicketType.aantal;
-                Ticket.TicketTypeList.Add(t);
-                TicketType.aantal++;
+                AddTicketType();
             }
 
             if (CurrentPage.Name == "Genre & Stage")
@@ -324,12 +322,59 @@ namespace ProjectFestival.viewmodel
             }
         }
 
+        private void AddTicket()
+        {
+            bool isMessage = false;
+            foreach (Ticket ticket in Ticket.tickets)
+            {
+                if (ticket.TicketHolder == null || ticket.TicketHolderEmail == null || ticket.TicketType.Name == null || ticket.Amount== null)
+                {
+                    isMessage = true;
+                }
+            }
+            if (isMessage)
+            {
+                MessageInfo();
+            }
+            else
+            {
+                Ticket t = new Ticket();
+                t.TicketType = new TicketType();
+                t.ID = Ticket.aantal;
+                Ticket.tickets.Add(t);
+                Ticket.aantal++;
+            }
+        }
+
+        private void AddTicketType()
+        {
+            bool isMessage = false;
+            foreach (TicketType tType in TicketType.ticketTypes)
+            {
+                if (tType.Name == null || tType.Price == null || tType.AvailableTickets == null)
+                {
+                    isMessage = true;
+                }
+            }
+            if (isMessage)
+            {
+                MessageInfo();
+            }
+            else
+            {
+                TicketType tType = new TicketType();
+                tType.ID = TicketType.aantal;
+                Ticket.TicketTypeList.Add(tType);
+                TicketType.aantal++;
+            }
+        }
+
         private void AddContact()
         {
             bool isMessage = false;
-            foreach (ContactPerson c in ContactPerson.contactPersons)
+            foreach (ContactPerson cp in ContactPerson.contactPersons)
             {
-                if (c.Name == null || c.JobRole.Name == null || c.JobTitle.Name == null)
+                if (cp.Name == null || cp.JobRole.Name == null || cp.JobTitle.Name == null)
                 {
                     isMessage = true;
                 }
@@ -353,16 +398,16 @@ namespace ProjectFestival.viewmodel
         {
             bool isMessageType = false;
             bool isMessageTitle = false;
-            foreach (ContactPersonType c in ContactPersonType.contactType)
+            foreach (ContactPersonType cpType in ContactPersonType.contactTypes)
             {
-                if (c.Name == null)
+                if (cpType.Name == null)
                 {
                     isMessageType = true;
                 }
             }
-            foreach (ContactPersonTitle c in ContactPersonTitle.contactTitle)
+            foreach (ContactPersonTitle cpTitle in ContactPersonTitle.contactTitles)
             {
-                if (c.Name == null)
+                if (cpTitle.Name == null)
                 {
                     isMessageTitle = true;
                 }
@@ -373,16 +418,16 @@ namespace ProjectFestival.viewmodel
             }
             if (!isMessageType)
             {
-                ContactPersonType cp = new ContactPersonType();
-                cp.ID = ContactPersonType.aantal;
-                ContactPerson.JobRoleList.Add(cp);
+                ContactPersonType cpType = new ContactPersonType();
+                cpType.ID = ContactPersonType.aantal;
+                ContactPerson.JobRoleList.Add(cpType);
                 ContactPersonType.aantal++;
             }
             if (!isMessageTitle)
             {
-                ContactPersonTitle cpt = new ContactPersonTitle();
-                cpt.ID = ContactPersonTitle.aantal;
-                ContactPerson.JobTitleList.Add(cpt);
+                ContactPersonTitle cpTitle = new ContactPersonTitle();
+                cpTitle.ID = ContactPersonTitle.aantal;
+                ContactPerson.JobTitleList.Add(cpTitle);
                 ContactPersonTitle.aantal++;
             }
         }
@@ -522,39 +567,67 @@ namespace ProjectFestival.viewmodel
         private void VerkoopSaveItem()
         {
             TicketType ticketType = (TicketType)SelectedItem;
-            int id = TicketType.ticketType.IndexOf(ticketType);
-            id = TicketType.ticketType[id].IDDatabase;
-
-            if (id != 0)
+            if (ticketType != null)
             {
-                TicketType.EditType(ticketType);
+                int id = TicketType.ticketTypes.IndexOf(ticketType);
+                id = TicketType.ticketTypes[id].IDDatabase;
+
+                if (id != 0)
+                {
+                    TicketType.EditType(ticketType);
+                }
+                else
+                {
+                    TicketType.AddType(ticketType);
+                }
             }
             else
             {
-                TicketType.AddType(ticketType);
+                DialogResult result = MessageQuestion();
+                if (result == DialogResult.Yes)
+                {
+                    foreach (TicketType c in TicketType.ticketTypes)
+                    {
+                        TicketType.EditType(c);
+                    }
+                }
             }
         }
 
         private void TicketsSaveItem()
         {
             Ticket ticket = (Ticket)SelectedItem;
-            int id = 0;
-            for (int i = 0; i < Ticket.tickets.Count(); i++)
+            if (ticket != null)
             {
-                if (Ticket.tickets[i].TicketHolder == ticket.TicketHolder)
+                int id = 0;
+                for (int i = 0; i < Ticket.tickets.Count(); i++)
                 {
-                    id = i;
+                    if (Ticket.tickets[i].TicketHolder == ticket.TicketHolder && Ticket.tickets[i].TicketHolderEmail == ticket.TicketHolderEmail)
+                    {
+                        id = i;
+                    }
                 }
-            }
-            id = Ticket.tickets[id].IDDatabase;
+                id = Ticket.tickets[id].IDDatabase;
 
-            if (id != 0)
-            {
-                Ticket.EditTicket(ticket);
+                if (id != 0)
+                {
+                    Ticket.EditTicket(ticket);
+                }
+                else
+                {
+                    Ticket.AddTicket(ticket);
+                }
             }
             else
             {
-                Ticket.AddTicket(ticket);
+                DialogResult result = MessageQuestion();
+                if (result == DialogResult.Yes)
+                {
+                    foreach (Ticket c in Ticket.tickets)
+                    {
+                        Ticket.EditTicket(c);
+                    }
+                }
             }
         }
 
@@ -564,35 +637,53 @@ namespace ProjectFestival.viewmodel
             ContactPersonType contactPersonType = null;
             ContactPersonTitle contactPersonTitle = null;
 
-            if (SelectedItem.GetType() == typeof(ContactPersonType))
+            if (SelectedItem != null)
             {
-
-                contactPersonType = (ContactPersonType)SelectedItem;
-                id = ContactPersonType.contactType.IndexOf(contactPersonType);
-                id = ContactPersonType.contactType[id].IDDatabase;
-
-                if (id != 0)
+                if (SelectedItem.GetType() == typeof(ContactPersonType))
                 {
-                    ContactPersonType.EditType(contactPersonType);
+
+                    contactPersonType = (ContactPersonType)SelectedItem;
+                    id = ContactPersonType.contactTypes.IndexOf(contactPersonType);
+                    id = ContactPersonType.contactTypes[id].IDDatabase;
+
+                    if (id != 0)
+                    {
+                        ContactPersonType.EditType(contactPersonType);
+                    }
+                    else
+                    {
+                        ContactPersonType.AddType(contactPersonType);
+                    }
                 }
-                else
+                else if (SelectedItem.GetType() == typeof(ContactPersonTitle))
                 {
-                    ContactPersonType.AddType(contactPersonType);
+                    contactPersonTitle = (ContactPersonTitle)SelectedItem;
+                    id = ContactPersonTitle.contactTitles.IndexOf(contactPersonTitle);
+                    id = ContactPersonTitle.contactTitles[id].IDDatabase;
+
+                    if (id != 0)
+                    {
+                        ContactPersonTitle.EditTitle(contactPersonTitle);
+                    }
+                    else
+                    {
+                        ContactPersonTitle.AddTitle(contactPersonTitle);
+                    }
                 }
             }
-            else if (SelectedItem.GetType() == typeof(ContactPersonTitle))
+            else
             {
-                contactPersonTitle = (ContactPersonTitle)SelectedItem;
-                id = ContactPersonTitle.contactTitle.IndexOf(contactPersonTitle);
-                id = ContactPersonTitle.contactTitle[id].IDDatabase;
-
-                if (id != 0)
+                DialogResult result = MessageQuestion();
+                if (result == DialogResult.Yes)
                 {
-                    ContactPersonTitle.EditTitle(contactPersonTitle);
-                }
-                else
-                {
-                    ContactPersonTitle.AddTitle(contactPersonTitle);
+                    foreach (ContactPersonTitle cpTitle in ContactPersonTitle.contactTitles)
+                    {
+                        ContactPersonTitle.EditTitle(cpTitle);
+                    }
+                    foreach (ContactPersonType cpType in ContactPersonType.contactTypes)
+                    {
+                        ContactPersonType.EditType(cpType);
+                    }
                 }
             }
         }
@@ -619,9 +710,9 @@ namespace ProjectFestival.viewmodel
                 DialogResult result = MessageQuestion();
                 if (result == DialogResult.Yes)
                 {
-                    foreach (ContactPerson c in ContactPerson.contactPersons)
+                    foreach (ContactPerson cp in ContactPerson.contactPersons)
                     {
-                        ContactPerson.EditContact(c);
+                        ContactPerson.EditContact(cp);
                     }
                 }
             }
@@ -676,7 +767,6 @@ namespace ProjectFestival.viewmodel
         private void BandDeleteItem()
         {
             Band band = (Band)SelectedItem;
-            int id = Convert.ToInt32(band.ID);
             Band.DeleteBand(band);
             Band.bands.Remove(band);
         }
@@ -686,14 +776,12 @@ namespace ProjectFestival.viewmodel
             if (SelectedItem.GetType() == typeof(Stage))
             {
                 Stage stage = (Stage)SelectedItem;
-                int id = Convert.ToInt32(stage.ID);
                 Stage.DeleteStage(stage);
                 LineUp.StageList.Remove(stage);
             }
             else if (SelectedItem.GetType() == typeof(Genre))
             {
                 Genre genre = (Genre)SelectedItem;
-                int id = Convert.ToInt32(genre.ID);
                 Genre.DeleteGenre(genre);
                 Band.GenreList.Remove(genre);
             }
@@ -702,7 +790,6 @@ namespace ProjectFestival.viewmodel
         private void VerkoopDeleteItem()
         {
             TicketType ticket = (TicketType)SelectedItem;
-            int id = Convert.ToInt32(ticket.ID);
             TicketType.DeleteType(ticket);
             Ticket.TicketTypeList.Remove(ticket);
         }
@@ -710,7 +797,6 @@ namespace ProjectFestival.viewmodel
         private void TicketsDeleteItem()
         {
             Ticket ticket = (Ticket)SelectedItem;
-            int id = Convert.ToInt32(ticket.ID);
             Ticket.DeleteTicket(ticket);
             Ticket.tickets.Remove(ticket);
         }

@@ -1,5 +1,6 @@
 ﻿using ProjectFestival.database;
 using ProjectFestival.viewmodel;
+using ProjectFestival.writetofile;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,6 +17,10 @@ namespace ProjectFestival.model
 {
     public class TicketType
     {
+        public static int aantal = 1;
+        public static ObservableCollection<TicketType> ticketTypes = new ObservableCollection<TicketType>();
+        public static ObservableCollection<TicketType> oTicketTypes = new ObservableCollection<TicketType>();
+
         private int _id;
         public int ID
         {
@@ -51,16 +56,10 @@ namespace ProjectFestival.model
             set { _availableTickets = value; }
         }
 
-        public static int aantal = 1;
-
-        public static ObservableCollection<TicketType> ticketType = new ObservableCollection<TicketType>();
-        public static ObservableCollection<TicketType> oTicketType = new ObservableCollection<TicketType>();
-
         public static ObservableCollection<TicketType> GetTicketTypes()
         {
             aantal = 1;
-            ticketType = new ObservableCollection<TicketType>();
-            ApplicationVM.Infotxt("Inladen ticket types", "");
+            ticketTypes = new ObservableCollection<TicketType>();
             try
             {
                 string sql = "SELECT * FROM TicketType";
@@ -68,25 +67,16 @@ namespace ProjectFestival.model
 
                 while (reader.Read())
                 {
-                    ticketType.Add(Create(reader));
+                    ticketTypes.Add(Create(reader));
                     aantal++;
                 }
-                ApplicationVM.Infotxt("Ticket types ingeladen", "Inladen ticket types");
             }
-            catch (SqlException)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan database TicketType niet vinden", "");
+                FileWriter.WriteToFile(e.Message);
             }
-            catch (IndexOutOfRangeException)
-            {
-                ApplicationVM.Infotxt("Kolommen database hebben niet de juiste naam", "");
-            }
-            catch (Exception)
-            {
-                ApplicationVM.Infotxt("Kan TicketType tabel niet inlezen", "");
-            }
-            oTicketType = ticketType;
-            return ticketType;
+            oTicketTypes = ticketTypes;
+            return ticketTypes;
         }
 
         private static TicketType Create(IDataRecord record)
@@ -104,7 +94,6 @@ namespace ProjectFestival.model
 
         public static int EditType(TicketType ticketType)
         {
-            ApplicationVM.Infotxt("TicketType aanpassen", "");
             DbTransaction trans = null;
 
             try
@@ -121,12 +110,11 @@ namespace ProjectFestival.model
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2,par3,par4);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("TicketType aangepast", "TicketType aanpassen");
                 return rowsaffected;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan TicketType niet aanpassen", "");
+                FileWriter.WriteToFile(e.Message);
                 trans.Rollback();
                 return 0;
             }
@@ -134,7 +122,6 @@ namespace ProjectFestival.model
         
         public static int AddType(TicketType ticketType)
         {
-            ApplicationVM.Infotxt("TicketType toevoegen", "");
             DbTransaction trans = null;
 
             try
@@ -150,12 +137,11 @@ namespace ProjectFestival.model
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2,par3);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("TicketType toegevoegd", "TicketType aanpassen");
                 return rowsaffected;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan TicketType niet toevoegen", "");
+                FileWriter.WriteToFile(e.Message);
                 trans.Rollback();
                 return 0;
             }
@@ -163,7 +149,6 @@ namespace ProjectFestival.model
 
         public static int DeleteType(TicketType ticketType)
         {
-            ApplicationVM.Infotxt("TicketType wissen", "");
             DbTransaction trans = null;
 
             try
@@ -177,41 +162,40 @@ namespace ProjectFestival.model
                 rowsaffected += Database.ModifyData(trans, sql, par1);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("TicketType gewist", "TicketType wissen");
                 return rowsaffected;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan TicketType niet wissen", "");
+                FileWriter.WriteToFile(e.Message);
                 trans.Rollback();
                 return 0;
             }
-        }
-        
-        public override string ToString()
-        {
-            return Name;
         }
 
         public static void Zoeken(string parameter)
         {
             parameter = parameter.ToLower();
-            ticketType = new ObservableCollection<TicketType>();
+            ticketTypes = new ObservableCollection<TicketType>();
 
-            foreach (TicketType c in oTicketType)
+            foreach (TicketType ticketType in oTicketTypes)
             {
                 if (parameter != "" && parameter != "Zoeken")
                 {
-                    if ((c.Name.ToLower().Contains(parameter)) || (c.ID.ToString().ToLower().Contains(parameter)) || (c.Price.ToString().ToLower().Contains(parameter)) || (c.AvailableTickets.ToString().ToLower().Contains(parameter)))
+                    if ((ticketType.Name.ToLower().Contains(parameter)) || (ticketType.ID.ToString().ToLower().Contains(parameter)) || (ticketType.Price.ToString().ToLower().Contains(parameter)) || (ticketType.AvailableTickets.ToString().ToLower().Contains(parameter)))
                     {
-                        ticketType.Add(c);
+                        ticketTypes.Add(ticketType);
                     }
                 }
                 else
                 {
-                    ticketType.Add(c);
+                    ticketTypes.Add(ticketType);
                 }
             }
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

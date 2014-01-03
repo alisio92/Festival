@@ -2,6 +2,7 @@
 using DocumentFormat.OpenXml.Wordprocessing;
 using ProjectFestival.database;
 using ProjectFestival.viewmodel;
+using ProjectFestival.writetofile;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,12 +13,18 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Forms;
 using System.Xml;
 
 namespace ProjectFestival.model
 {
     public class Ticket
     {
+        public static int aantal = 1;
+        public static ObservableCollection<Ticket> tickets = new ObservableCollection<Ticket>();
+        public static ObservableCollection<Ticket> oTickets = new ObservableCollection<Ticket>();
+
         private int _id;
         public int ID
         {
@@ -67,15 +74,10 @@ namespace ProjectFestival.model
             set { _ticketTypeList = value; }
         }
 
-        public static ObservableCollection<Ticket> tickets = new ObservableCollection<Ticket>();
-        public static ObservableCollection<Ticket> oTickets = new ObservableCollection<Ticket>();
-
-        public static int aantal = 1;
-
         public static ObservableCollection<Ticket> GetTickets()
         {
+            aantal = 1;
             tickets = new ObservableCollection<Ticket>();
-            ApplicationVM.Infotxt("Inladen klanten", "");
             TicketTypeList = TicketType.GetTicketTypes();
 
             try
@@ -88,19 +90,10 @@ namespace ProjectFestival.model
                     tickets.Add(Create(reader));
                     aantal++;
                 }
-                ApplicationVM.Infotxt("Klanten ingeladen", "Inladen klanten");
             }
-            catch (SqlException)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan database Ticket niet vinden", "");
-            }
-            catch (IndexOutOfRangeException)
-            {
-                ApplicationVM.Infotxt("Kolommen database hebben niet de juiste naam", "");
-            }
-            catch (Exception)
-            {
-                ApplicationVM.Infotxt("Kan Ticket tabel niet inlezen", "");
+                FileWriter.WriteToFile(e.Message);
             }
             oTickets = tickets;
             return tickets;
@@ -135,7 +128,6 @@ namespace ProjectFestival.model
 
         public static int EditTicket(Ticket ticket)
         {
-            ApplicationVM.Infotxt("Ticket aanpassen", "");
             DbTransaction trans = null;
 
             ObservableCollection<TicketType> ticketType = TicketType.GetTicketTypes();
@@ -170,7 +162,6 @@ namespace ProjectFestival.model
                     }
                     else
                     {
-                        ApplicationVM.Infotxt("Er zijn niet genoeg tickets beschikbaar", "");
                         return 0;
                     }
                 }
@@ -210,12 +201,10 @@ namespace ProjectFestival.model
                                 rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5);
 
                                 trans.Commit();
-                                ApplicationVM.Infotxt("Ticket aangepast", "Ticket aanpassen");
                                 return rowsaffected;
                             }
                             catch (Exception)
                             {
-                                ApplicationVM.Infotxt("Kan Ticket niet aanpassen", "");
                                 trans.Rollback();
                                 return 0;
                             }
@@ -249,12 +238,11 @@ namespace ProjectFestival.model
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("Ticket aangepast", "Ticket aanpassen");
                 return rowsaffected;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan Ticket niet aanpassen", "");
+                FileWriter.WriteToFile(e.Message);
                 trans.Rollback();
                 return 0;
             }
@@ -262,7 +250,6 @@ namespace ProjectFestival.model
 
         public static int AddTicket(Ticket ticket)
         {
-            ApplicationVM.Infotxt("Ticket toevoegen", "");
             DbTransaction trans = null;
             int index = 0;
             for (int i = 0; i < TicketTypeList.Count(); i++)
@@ -273,7 +260,7 @@ namespace ProjectFestival.model
                 }
             }
 
-            int aantaltickets = TicketType.ticketType[index].AvailableTickets;
+            int aantaltickets = TicketType.ticketTypes[index].AvailableTickets;
             ObservableCollection<TicketType> types = TicketType.GetTicketTypes();
             int vorig = types[index].AvailableTickets;
 
@@ -295,29 +282,27 @@ namespace ProjectFestival.model
                     rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4);
 
                     trans.Commit();
-                    ApplicationVM.Infotxt("Ticket toegevoegd", "Ticket aanpassen");
                     return rowsaffected;
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    ApplicationVM.Infotxt("Kan ticket niet toevoegen", "");
+                    FileWriter.WriteToFile(e.Message);
                     trans.Rollback();
                     return 0;
                 }
             }
             else
             {
-                ApplicationVM.Infotxt("Er zijn niet genoeg tickets beschikbaar", "");
+                ApplicationVM.MessageTickets();
                 return 0;
             }
         }
 
         public static int EditTicketType(int idDatabase, int tickets, int vorig, int id)
         {
-            ApplicationVM.Infotxt("TicketType aanpassen", "");
             DbTransaction trans = null;
 
-            TicketType.ticketType[id].AvailableTickets = vorig - tickets;
+            TicketType.ticketTypes[id].AvailableTickets = vorig - tickets;
 
             try
             {
@@ -331,12 +316,11 @@ namespace ProjectFestival.model
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("TicketType aangepast", "TicketType aanpassen");
                 return rowsaffected;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan TicketType niet aanpassen", "");
+                FileWriter.WriteToFile(e.Message);
                 trans.Rollback();
                 return 0;
             }
@@ -344,7 +328,6 @@ namespace ProjectFestival.model
 
         public static int DeleteTicket(Ticket ticket)
         {
-            ApplicationVM.Infotxt("Ticket wissen", "");
             DbTransaction trans = null;
 
             ObservableCollection<TicketType> types = new ObservableCollection<TicketType>();
@@ -373,20 +356,14 @@ namespace ProjectFestival.model
                 rowsaffected += Database.ModifyData(trans, sql, par1);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("Ticket gewist", "Ticket wissen");
                 return rowsaffected;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan ticket niet wissen", "");
+                FileWriter.WriteToFile(e.Message);
                 trans.Rollback();
                 return 0;
             }
-        }
-
-        public override string ToString()
-        {
-            return ID + " " + TicketHolder + " " + TicketType + " " + TicketHolderEmail + " " + Amount;
         }
 
         public static void Zoeken(string parameter)
@@ -394,18 +371,18 @@ namespace ProjectFestival.model
             parameter = parameter.ToLower();
             tickets = new ObservableCollection<Ticket>();
 
-            foreach (Ticket c in oTickets)
+            foreach (Ticket ticket in oTickets)
             {
                 if (parameter != "" && parameter != "Zoeken")
                 {
-                    if ((c.TicketHolder.ToLower().Contains(parameter)) || (c.TicketHolderEmail.ToLower().Contains(parameter)) || (c.TicketType.Name.ToLower().Contains(parameter)) || (c.Amount.ToString().ToLower().Contains(parameter)) || (c.ID.ToString().ToLower().Contains(parameter)))
+                    if ((ticket.TicketHolder.ToLower().Contains(parameter)) || (ticket.TicketHolderEmail.ToLower().Contains(parameter)) || (ticket.TicketType.Name.ToLower().Contains(parameter)) || (ticket.Amount.ToString().ToLower().Contains(parameter)) || (ticket.ID.ToString().ToLower().Contains(parameter)))
                     {
-                        tickets.Add(c);
+                        tickets.Add(ticket);
                     }
                 }
                 else
                 {
-                    tickets.Add(c);
+                    tickets.Add(ticket);
                 }
             }
         }
@@ -441,6 +418,11 @@ namespace ProjectFestival.model
                 bookmarks["Barcode"].Parent.InsertAfter<Run>(run, bookmarks["Barcode"]);
                 newdoc.Close();
             }
+        }
+
+        public override string ToString()
+        {
+            return ID + " " + TicketHolder + " " + TicketType + " " + TicketHolderEmail + " " + Amount;
         }
     }
 }

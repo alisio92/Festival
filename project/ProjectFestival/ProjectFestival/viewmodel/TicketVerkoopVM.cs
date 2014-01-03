@@ -17,6 +17,11 @@ namespace ProjectFestival.viewmodel
             get { return "Verkoop"; }
         }
 
+        public TicketVerkoopVM()
+        {
+            _tickeTypetList = TicketType.ticketTypes;
+        }
+        
         private ObservableCollection<TicketType> _tickeTypetList;
         public ObservableCollection<TicketType> TicketTypeList
         {
@@ -29,11 +34,6 @@ namespace ProjectFestival.viewmodel
         {
             get { return _selectedTicketType; }
             set { _selectedTicketType = value; OnPropertyChanged("SelectedTicketType"); ApplicationVM.SelectedItem = SelectedTicketType; }
-        }
-
-        public TicketVerkoopVM()
-        {
-            _tickeTypetList = TicketType.ticketType;
         }
     }
 }

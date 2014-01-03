@@ -28,7 +28,7 @@ namespace ProjectFestival.errormodel
         public override ValidationResult Validate(object value, System.Globalization.CultureInfo cultureInfo)
         {
             ValidationResult result = null;
-            string pattern = @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z";
+            string pattern = @"^[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*(\.[A-Za-z]{2,4})$";
             string input = value.ToString();
             if (input.Length > Min && input.Length < Max)
             {

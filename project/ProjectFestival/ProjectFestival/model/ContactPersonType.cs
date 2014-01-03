@@ -16,8 +16,8 @@ namespace ProjectFestival.model
     public class ContactPersonType
     {
         public static int aantal = 1;
-        public static ObservableCollection<ContactPersonType> contactType = new ObservableCollection<ContactPersonType>();
-        public static ObservableCollection<ContactPersonType> oContactType = new ObservableCollection<ContactPersonType>();
+        public static ObservableCollection<ContactPersonType> contactTypes = new ObservableCollection<ContactPersonType>();
+        public static ObservableCollection<ContactPersonType> oContactTypes = new ObservableCollection<ContactPersonType>();
 
         private int _id;
         public int ID
@@ -50,7 +50,7 @@ namespace ProjectFestival.model
 
                 while (reader.Read())
                 {
-                    contactType.Add(Create(reader));
+                    contactTypes.Add(Create(reader));
                     aantal++;
                 }
             }
@@ -58,8 +58,8 @@ namespace ProjectFestival.model
             {
                 FileWriter.WriteToFile(e.Message);
             }
-            oContactType = contactType;
-            return contactType;
+            oContactTypes = contactTypes;
+            return contactTypes;
         }
 
         public static ContactPersonType Create(IDataRecord record)
@@ -152,20 +152,20 @@ namespace ProjectFestival.model
         public static void Zoeken(string parameter)
         {
             parameter = parameter.ToLower();
-            contactType = new ObservableCollection<ContactPersonType>();
+            contactTypes = new ObservableCollection<ContactPersonType>();
 
-            foreach (ContactPersonType c in oContactType)
+            foreach (ContactPersonType contactPersonType in oContactTypes)
             {
                 if (parameter != "" && parameter != "Zoeken")
                 {
-                    if ((c.Name.ToLower().Contains(parameter)) || (c.ID.ToString().ToLower().Contains(parameter)))
+                    if ((contactPersonType.Name.ToLower().Contains(parameter)) || (contactPersonType.ID.ToString().ToLower().Contains(parameter)))
                     {
-                        contactType.Add(c);
+                        contactTypes.Add(contactPersonType);
                     }
                 }
                 else
                 {
-                    contactType.Add(c);
+                    contactTypes.Add(contactPersonType);
                 }
             }
         }
