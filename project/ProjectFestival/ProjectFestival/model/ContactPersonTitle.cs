@@ -1,5 +1,6 @@
 ﻿using ProjectFestival.database;
 using ProjectFestival.viewmodel;
+using ProjectFestival.writetofile;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,6 +15,10 @@ namespace ProjectFestival.model
 {
     public class ContactPersonTitle
     {
+        public static int aantal = 1;
+        public static ObservableCollection<ContactPersonTitle> contactTitle = new ObservableCollection<ContactPersonTitle>();
+        public static ObservableCollection<ContactPersonTitle> oContactTitle = new ObservableCollection<ContactPersonTitle>();
+        
         private int _id;
         public int ID
         {
@@ -35,19 +40,9 @@ namespace ProjectFestival.model
             set { _name = value; }
         }
 
-        public static int aantal = 1;
-
-        public override string ToString()
-        {
-            return Name;
-        }
-
-        public static ObservableCollection<ContactPersonTitle> contactTitle = new ObservableCollection<ContactPersonTitle>();
-        public static ObservableCollection<ContactPersonTitle> oContactTitle = new ObservableCollection<ContactPersonTitle>();
-
         public static ObservableCollection<ContactPersonTitle> GetContactPersonTitle()
         {
-            ApplicationVM.Infotxt("Inladen contact titels", "");
+            aantal = 1;
             try
             {
                 string sql = "SELECT * FROM ContactPersonTitle";
@@ -58,19 +53,10 @@ namespace ProjectFestival.model
                     contactTitle.Add(Create(reader));
                     aantal++;
                 }
-                ApplicationVM.Infotxt("Contact titels ingeladen", "Inladen contact titels");
             }
-            catch (SqlException)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan database ContactPersonTitle niet vinden", "");
-            }
-            catch (IndexOutOfRangeException)
-            {
-                ApplicationVM.Infotxt("Kolommen database hebben niet de juiste naam", "");
-            }
-            catch (Exception)
-            {
-                ApplicationVM.Infotxt("Kan ContactPersonTitle tabel niet inlezen", "");
+                FileWriter.WriteToFile(e.Message);
             }
             oContactTitle = contactTitle;
             return contactTitle;
@@ -89,7 +75,6 @@ namespace ProjectFestival.model
 
         public static int AddTitle(ContactPersonTitle contactPersonTitle)
         {
-            ApplicationVM.Infotxt("ContactPersonTitle toevoegen", "");
             DbTransaction trans = null;
 
             try
@@ -103,12 +88,11 @@ namespace ProjectFestival.model
                 rowsaffected += Database.ModifyData(trans, sql, par1);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("ContactPersonTitle toegevoegd", "ContactPersonTitle aanpassen");
                 return rowsaffected;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan ContactPersonTitle niet toevoegen", "");
+                FileWriter.WriteToFile(e.Message);
                 trans.Rollback();
                 return 0;
             }
@@ -116,7 +100,6 @@ namespace ProjectFestival.model
 
         public static int EditTitle(ContactPersonTitle contactPersonTitle)
         {
-            ApplicationVM.Infotxt("ContactPersonTitle aanpassen", "");
             DbTransaction trans = null;
 
             try
@@ -131,12 +114,11 @@ namespace ProjectFestival.model
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("ContactPersonTitle aangepast", "ContactPersonTitle aanpassen");
                 return rowsaffected;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan ContactPersonTitle niet aanpassen", "");
+                FileWriter.WriteToFile(e.Message);
                 trans.Rollback();
                 return 0;
             }
@@ -144,7 +126,6 @@ namespace ProjectFestival.model
 
         public static int DeleteTitle(ContactPersonTitle contactPersonTitle)
         {
-            ApplicationVM.Infotxt("ContactPersonTitle wissen", "");
             DbTransaction trans = null;
 
             try
@@ -158,12 +139,11 @@ namespace ProjectFestival.model
                 rowsaffected += Database.ModifyData(trans, sql, par1);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("ContactPersonTitle gewist", "ContactPersonTitle wissen");
                 return rowsaffected;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan ContactPersonTitle niet wissen", "");
+                FileWriter.WriteToFile(e.Message);
                 trans.Rollback();
                 return 0;
             }
@@ -188,6 +168,11 @@ namespace ProjectFestival.model
                     contactTitle.Add(c);
                 }
             }
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

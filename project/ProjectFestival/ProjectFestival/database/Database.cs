@@ -1,8 +1,10 @@
-﻿using System;
+﻿using ProjectFestival.writetofile;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,7 +26,14 @@ namespace ProjectFestival.model
         {
             DbConnection con = DbProviderFactories.GetFactory(ConnectionString.ProviderName).CreateConnection();
             con.ConnectionString = ConnectionString.ConnectionString;
-            con.Open();
+            try
+            {
+                con.Open();
+            }
+            catch(SqlException e)
+            {
+                FileWriter.WriteToFile(e.Message);
+            }
             return con;
         }
 

@@ -248,12 +248,17 @@ namespace ProjectFestival.viewmodel
 
         public static DialogResult MessageQuestion()
         {
-            return MessageBox.Show("Je moet de huidige lijn eerst aanpassen voordat je aan een niewe lijn begint.\nWilt u de huidige lijn aanpassen?", "Nieuwe lijn", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            return MessageBox.Show("Wilt u alles opslaan?", "Aanpassen", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         }
 
         public static void MessageInfo()
         {
-            MessageBox.Show("Het laatste item mag niet leeg zijn", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Het laatste item mag niet leeg zijn.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        public static void MessageDelete()
+        {
+            MessageBox.Show("Je moet een item selecteren om te wissen.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void AddItem()
@@ -437,7 +442,7 @@ namespace ProjectFestival.viewmodel
             }
             id = LineUp.lineUp[id].ID;
 
-            if (id != LineUp.aantal-1)
+            if (id != LineUp.aantal - 1)
             {
                 LineUp.EditLineUp(lineUp);
             }
@@ -595,48 +600,69 @@ namespace ProjectFestival.viewmodel
         private void ContactSaveItem()
         {
             ContactPerson contactPersoon = (ContactPerson)SelectedItem;
-            int id = ContactPerson.contactPersons.IndexOf(contactPersoon);
-            id = ContactPerson.contactPersons[id].IDDatabase;
-
-            if (id !=0)
+            if (contactPersoon != null)
             {
-                ContactPerson.EditContact(contactPersoon);
+                int id = ContactPerson.contactPersons.IndexOf(contactPersoon);
+                id = ContactPerson.contactPersons[id].IDDatabase;
+
+                if (id != 0)
+                {
+                    ContactPerson.EditContact(contactPersoon);
+                }
+                else
+                {
+                    ContactPerson.AddContact(contactPersoon);
+                }
             }
             else
             {
-                ContactPerson.AddContact(contactPersoon);
+                DialogResult result = MessageQuestion();
+                if (result == DialogResult.Yes)
+                {
+                    foreach (ContactPerson c in ContactPerson.contactPersons)
+                    {
+                        ContactPerson.EditContact(c);
+                    }
+                }
             }
         }
 
         public void DeleteItem()
         {
-            if (CurrentPage.Name == "Contact")
+            if (SelectedItem != null)
             {
-                ContactDeleteItem();
+                if (CurrentPage.Name == "Contact")
+                {
+                    ContactDeleteItem();
+                }
+                if (CurrentPage.Name == "Personeel")
+                {
+                    PersoneelDeleteItem();
+                }
+                if (CurrentPage.Name == "Tickets")
+                {
+                    TicketsDeleteItem();
+                }
+                if (CurrentPage.Name == "Verkoop")
+                {
+                    VerkoopDeleteItem();
+                }
+                if (CurrentPage.Name == "Genre & Stage")
+                {
+                    genrestageDeleteItem();
+                }
+                if (CurrentPage.Name == "Bands")
+                {
+                    BandDeleteItem();
+                }
+                if (CurrentPage.Name == "Info Bands")
+                {
+                    GenreDeleteItem();
+                }
             }
-            if (CurrentPage.Name == "Personeel")
+            else
             {
-                PersoneelDeleteItem();
-            }
-            if (CurrentPage.Name == "Tickets")
-            {
-                TicketsDeleteItem();
-            }
-            if (CurrentPage.Name == "Verkoop")
-            {
-                VerkoopDeleteItem();
-            }
-            if (CurrentPage.Name == "Genre & Stage")
-            {
-                genrestageDeleteItem();
-            }
-            if (CurrentPage.Name == "Bands")
-            {
-                BandDeleteItem();
-            }
-            if (CurrentPage.Name == "Info Bands")
-            {
-                GenreDeleteItem();
+                MessageDelete();
             }
         }
 

@@ -8,38 +8,32 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:cmd="http://www.galasoft.ch/mvvmlight"
              d:DesignHeight="740" d:DesignWidth="960">
-    
-    <Grid>
-        <DataGrid AutoGenerateColumns="False" Grid.Row="1" ItemsSource="{Binding ContactList}" SelectedItem="{Binding SelectedContact,UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="False">
+
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding ContactList}" SelectedItem="{Binding SelectedContact,UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Width="25" Binding="{Binding ID}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Naam" Width="1*" Binding="{Binding Name}">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="TextChanged">
-                            <cmd:EventToCommand Command="{Binding TestCommand}" PassEventArgsToCommand="True"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </DataGridTextColumn>
-                <DataGridTextColumn Header="Bedrijf" Width="1*" Binding="{Binding Company}"/>
-                <DataGridTemplateColumn Width="1*" Header="Functie">
+                <DataGridTemplateColumn Header="ID" CellTemplate="{StaticResource IDTemplate}"/>
+                <DataGridTemplateColumn Header="Naam" CellTemplate="{StaticResource NameTemplate}" CellEditingTemplate="{StaticResource EditingNameTemplate}"/>
+                <DataGridTemplateColumn Header="Bedrijf" CellTemplate="{StaticResource CompanyTemplate}" CellEditingTemplate="{StaticResource EditingCompanyTemplate}"/>
+                <DataGridTemplateColumn Width="200" Header="Functie">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding JobRoleList}"  DisplayMemberPath="Name" SelectedItem="{Binding JobRole.Name,UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="ID" SelectedValue="{Binding JobRole.ID,UpdateSourceTrigger=PropertyChanged}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Width="1*" Header="Title">
+                <DataGridTemplateColumn Width="200" Header="Title">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding JobTitleList}" DisplayMemberPath="Name" SelectedItem="{Binding JobTitle.Name,UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="ID" SelectedValue="{Binding JobTitle.ID,UpdateSourceTrigger=PropertyChanged}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Stad" Width="1*" Binding="{Binding City}"/>
-                <DataGridTextColumn Header="Email" Width="200" Binding="{Binding Email}"/>
-                <DataGridTextColumn Header="Telefoon" Width="1*" Binding="{Binding Phone}"/>
-                <DataGridTextColumn Header="GSM" Width="1*" Binding="{Binding Cellphone}"/>
+                <DataGridTemplateColumn Header="Stad" CellTemplate="{StaticResource StadTemplate}" CellEditingTemplate="{StaticResource EditingStadTemplate}"/>
+                <DataGridTemplateColumn Header="Email" CellTemplate="{StaticResource EmailTemplate}" CellEditingTemplate="{StaticResource EditingEmailTemplate}"/>
+                <DataGridTemplateColumn Header="Telefoon" CellTemplate="{StaticResource TelefoonTemplate}" CellEditingTemplate="{StaticResource EditingTelefoonTemplate}"/>
+                <DataGridTemplateColumn Header="GSM" CellTemplate="{StaticResource GSMTemplate}" CellEditingTemplate="{StaticResource EditingGSMTemplate}"/>
             </DataGrid.Columns>
         </DataGrid>
-    </Grid>
+    </ScrollViewer>
 </UserControl>

@@ -1,5 +1,6 @@
 ﻿using ProjectFestival.database;
 using ProjectFestival.viewmodel;
+using ProjectFestival.writetofile;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,6 +15,10 @@ namespace ProjectFestival.model
 {
     public class ContactPersonType
     {
+        public static int aantal = 1;
+        public static ObservableCollection<ContactPersonType> contactType = new ObservableCollection<ContactPersonType>();
+        public static ObservableCollection<ContactPersonType> oContactType = new ObservableCollection<ContactPersonType>();
+
         private int _id;
         public int ID
         {
@@ -35,20 +40,9 @@ namespace ProjectFestival.model
             set { _name = value; }
         }
 
-        public static int aantal = 1;
-
-        public override string ToString()
-        {
-            return Name;
-        }
-
-        public static ObservableCollection<ContactPersonType> contactType = new ObservableCollection<ContactPersonType>();
-        public static ObservableCollection<ContactPersonType> oContactType = new ObservableCollection<ContactPersonType>();
-
         public static ObservableCollection<ContactPersonType> GetContactPersonType()
         {
             aantal = 1;
-            ApplicationVM.Infotxt("Inladen contact types", "");
             try
             {
                 string sql = "SELECT * FROM ContactPersonType";
@@ -59,19 +53,10 @@ namespace ProjectFestival.model
                     contactType.Add(Create(reader));
                     aantal++;
                 }
-                ApplicationVM.Infotxt("Contact types ingeladen", "Inladen contact types");
             }
-            catch (SqlException)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan database ContactPersonType niet vinden", "");
-            }
-            catch (IndexOutOfRangeException)
-            {
-                ApplicationVM.Infotxt("Kolommen database hebben niet de juiste naam", "");
-            }
-            catch (Exception)
-            {
-                ApplicationVM.Infotxt("Kan ContactPersonType tabel niet inlezen", "");
+                FileWriter.WriteToFile(e.Message);
             }
             oContactType = contactType;
             return contactType;
@@ -90,7 +75,6 @@ namespace ProjectFestival.model
 
         public static int AddType(ContactPersonType contactPersonType)
         {
-            ApplicationVM.Infotxt("ContactPersonType toevoegen", "");
             DbTransaction trans = null;
 
             try
@@ -104,12 +88,11 @@ namespace ProjectFestival.model
                 rowsaffected += Database.ModifyData(trans, sql, par1);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("ContactPersonType toegevoegd", "ContactPersonType aanpassen");
                 return rowsaffected;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan ContactPersonType niet toevoegen", "");
+                FileWriter.WriteToFile(e.Message);
                 trans.Rollback();
                 return 0;
             }
@@ -117,7 +100,6 @@ namespace ProjectFestival.model
 
         public static int EditType(ContactPersonType contactPersonType)
         {
-            ApplicationVM.Infotxt("ContactPersonType aanpassen", "");
             DbTransaction trans = null;
 
             try
@@ -132,12 +114,11 @@ namespace ProjectFestival.model
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("ContactPersonType aangepast", "ContactPersonType aanpassen");
                 return rowsaffected;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan ContactPersonType niet aanpassen", "");
+                FileWriter.WriteToFile(e.Message);
                 trans.Rollback();
                 return 0;
             }
@@ -145,7 +126,6 @@ namespace ProjectFestival.model
         
         public static int DeleteType(ContactPersonType contactPersonType)
         {
-            ApplicationVM.Infotxt("ContactPersonType wissen", "");
             DbTransaction trans = null;
 
             try
@@ -159,12 +139,11 @@ namespace ProjectFestival.model
                 rowsaffected += Database.ModifyData(trans, sql, par1);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("ContactPersonType gewist", "ContactPersonType wissen");
                 return rowsaffected;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan ContactPersonType niet wissen", "");
+                FileWriter.WriteToFile(e.Message);
                 trans.Rollback();
                 return 0;
             }
@@ -189,6 +168,11 @@ namespace ProjectFestival.model
                     contactType.Add(c);
                 }
             }
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

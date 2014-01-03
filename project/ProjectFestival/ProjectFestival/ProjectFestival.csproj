@@ -95,6 +95,10 @@
     <Compile Include="converter\BytesToImageConverter.cs" />
     <Compile Include="converter\DateToYearMonthDayConverter.cs" />
     <Compile Include="database\DBConnection.cs" />
+    <Compile Include="errormodel\Email.cs" />
+    <Compile Include="errormodel\Number.cs" />
+    <Compile Include="errormodel\Text.cs" />
+    <Compile Include="errormodel\TextNumber.cs" />
     <Compile Include="model\Band.cs" />
     <Compile Include="model\BandGenre.cs" />
     <Compile Include="model\ContactPerson.cs" />
@@ -136,11 +140,16 @@
     <Compile Include="view\TicketVerkoop.xaml.cs">
       <DependentUpon>TicketVerkoop.xaml</DependentUpon>
     </Compile>
+    <Compile Include="writetofile\FileWriter.cs" />
     <Page Include="Dictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dictionary1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Templates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -277,6 +286,7 @@
   <ItemGroup>
     <Resource Include="images\noimage.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
