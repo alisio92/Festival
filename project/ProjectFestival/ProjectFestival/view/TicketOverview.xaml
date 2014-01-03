@@ -6,21 +6,21 @@
              mc:Ignorable="d" 
              d:DesignHeight="740" d:DesignWidth="960">
 
-    <Grid>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
         <DataGrid AutoGenerateColumns="False" Grid.Row="1" ItemsSource="{Binding TicketList}" SelectedItem="{Binding SelectedTicket}" CanUserAddRows="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Width="25" Binding="{Binding ID}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Naam" Width="1*" Binding="{Binding TicketHolder}"/>
-                <DataGridTextColumn Header="Email" Width="1*" Binding="{Binding TicketHolderEmail}"/>
-                <DataGridTemplateColumn Width="1*" Header="Type">
+                <DataGridTemplateColumn Header="ID" CellTemplate="{StaticResource IDTemplate}"/>
+                <DataGridTemplateColumn Header="Naam" CellTemplate="{StaticResource TicketHolderTemplate}" CellEditingTemplate="{StaticResource EditingTicketHolderTemplate}"/>
+                <DataGridTemplateColumn Header="Email" CellTemplate="{StaticResource TicketHolderEmailTemplate}" CellEditingTemplate="{StaticResource EditingTicketHolderEmailTemplate}"/>
+                <DataGridTemplateColumn Width="200" Header="Type">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <ComboBox ItemsSource="{Binding TicketTypeList}" DisplayMemberPath="Name" SelectedItem="{Binding TicketType.Name,UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="ID" SelectedValue="{Binding TicketType.ID,UpdateSourceTrigger=PropertyChanged}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Aantal" Width="1*" Binding="{Binding Amount}"/>
+                <DataGridTemplateColumn Header="Aantal" CellTemplate="{StaticResource AantalTemplate}" CellEditingTemplate="{StaticResource EditingAantalTemplate}"/>
             </DataGrid.Columns>
         </DataGrid>
-    </Grid>
+    </ScrollViewer>
 </UserControl>

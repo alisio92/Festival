@@ -6,14 +6,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="740" d:DesignWidth="960">
 
-    <Grid>
         <DataGrid AutoGenerateColumns="False" Grid.Row="1" ItemsSource="{Binding TicketTypeList}" SelectedItem="{Binding SelectedTicketType,UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Width="25" Binding="{Binding ID}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Naam" Width="1*" Binding="{Binding Name}"/>
-                <DataGridTextColumn Header="Prijs" Width="1*" Binding="{Binding Price}"/>
-                <DataGridTextColumn Header="Beschibare Tickets" Width="1*" Binding="{Binding AvailableTickets}"/>
+                <DataGridTemplateColumn Header="ID" CellTemplate="{StaticResource IDTemplate}"/>
+                <DataGridTemplateColumn Header="Naam" CellTemplate="{StaticResource NameTemplate}" CellEditingTemplate="{StaticResource EditingNameTemplate}"/>
+                <DataGridTemplateColumn Header="Prijs" CellTemplate="{StaticResource PrijsTemplate}" CellEditingTemplate="{StaticResource EditingPrijsTemplate}"/>
+                <DataGridTemplateColumn Header="Beschibare Tickets" CellTemplate="{StaticResource BeschibareTicketsTemplate}" CellEditingTemplate="{StaticResource EditingBeschibareTicketsTemplate}"/>
             </DataGrid.Columns>
         </DataGrid>
-    </Grid>
 </UserControl>

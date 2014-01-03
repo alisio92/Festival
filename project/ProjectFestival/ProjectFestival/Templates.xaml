@@ -137,4 +137,114 @@
             </TextBox.Text>
         </TextBox>
     </DataTemplate>
+    <DataTemplate x:Key="PrijsTemplate">
+        <TextBox HorizontalAlignment="Center" Validation.ErrorTemplate="{StaticResource validationTemplate}" Style="{StaticResource textBoxInError}" Width="100">
+            <TextBox.Text>
+                <Binding Path="Price" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <c:Valuta Min="1" Max="10"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+    </DataTemplate>
+    <DataTemplate x:Key="EditingPrijsTemplate">
+        <TextBox HorizontalAlignment="Center" Validation.ErrorTemplate="{StaticResource validationTemplate}" Style="{StaticResource textBoxInError}">
+            <TextBox.Text>
+                <Binding Path="Price" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <c:Valuta Min="1" Max="10"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+    </DataTemplate>
+    <DataTemplate x:Key="BeschibareTicketsTemplate">
+        <TextBox HorizontalAlignment="Center" Validation.ErrorTemplate="{StaticResource validationTemplate}" Style="{StaticResource textBoxInError}" Width="100">
+            <TextBox.Text>
+                <Binding Path="AvailableTickets" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <c:Number Min="1" Max="10"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+    </DataTemplate>
+    <DataTemplate x:Key="EditingBeschibareTicketsTemplate">
+        <TextBox HorizontalAlignment="Center" Validation.ErrorTemplate="{StaticResource validationTemplate}" Style="{StaticResource textBoxInError}">
+            <TextBox.Text>
+                <Binding Path="AvailableTickets" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <c:Number Min="1" Max="10"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+    </DataTemplate>
+    <DataTemplate x:Key="AantalTemplate">
+        <TextBox HorizontalAlignment="Center" Validation.ErrorTemplate="{StaticResource validationTemplate}" Style="{StaticResource textBoxInError}" Width="100">
+            <TextBox.Text>
+                <Binding Path="Amount" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <c:Number Min="1" Max="10"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+    </DataTemplate>
+    <DataTemplate x:Key="EditingAantalTemplate">
+        <TextBox HorizontalAlignment="Center" Validation.ErrorTemplate="{StaticResource validationTemplate}" Style="{StaticResource textBoxInError}">
+            <TextBox.Text>
+                <Binding Path="Amount" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <c:Number Min="1" Max="10"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+    </DataTemplate>
+    <DataTemplate x:Key="TicketHolderTemplate">
+        <TextBox HorizontalAlignment="Center" Validation.ErrorTemplate="{StaticResource validationTemplate}" Style="{StaticResource textBoxInError}" Width="100">
+            <TextBox.Text>
+                <Binding Path="TicketHolder" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <c:Text Min="5" Max="60"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+    </DataTemplate>
+    <DataTemplate x:Key="EditingTicketHolderTemplate">
+        <TextBox HorizontalAlignment="Center" Validation.ErrorTemplate="{StaticResource validationTemplate}" Style="{StaticResource textBoxInError}">
+            <TextBox.Text>
+                <Binding Path="TicketHolder" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <c:Text Min="5" Max="60"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+    </DataTemplate>
+    <DataTemplate x:Key="TicketHolderEmailTemplate">
+        <TextBox HorizontalAlignment="Center" Validation.ErrorTemplate="{StaticResource validationTemplate}" Style="{StaticResource textBoxInError}" Width="100">
+            <TextBox.Text>
+                <Binding Path="TicketHolderEmail" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <c:Number Min="5" Max="60"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+    </DataTemplate>
+    <DataTemplate x:Key="EditingTicketHolderEmailTemplate">
+        <TextBox HorizontalAlignment="Center" Validation.ErrorTemplate="{StaticResource validationTemplate}" Style="{StaticResource textBoxInError}">
+            <TextBox.Text>
+                <Binding Path="TicketHolderEmail" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <c:Email Min="5" Max="60"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+    </DataTemplate>
 </ResourceDictionary>
