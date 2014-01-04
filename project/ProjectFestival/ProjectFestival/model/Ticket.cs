@@ -152,16 +152,17 @@ namespace ProjectFestival.model
             int aantalNu = ticket.Amount;
             int aantalVorig = ticketVorig[index2].Amount;
 
-            if ((ticket.TicketHolder != ticketVorig[index2].TicketHolder) || (ticket.TicketHolderEmail != ticketVorig[index2].TicketHolderEmail) || (ticket.Amount != ticketVorig[index2].Amount) || (ticket.TicketType.Name != ticketVorig[index2].TicketType.Name))
+            if (ticket.TicketType.Name == ticketVorig[index2].TicketType.Name)
             {
                 if (aantalNu > aantalVorig)
                 {
                     if (aantaltickets - (aantalNu - aantalVorig) >= 0)
                     {
-                        return EditTicket(trans, ticket, aantaltickets, index);
+                        return EditTicket(trans, ticket, aantaltickets, index2);
                     }
                     else
                     {
+                        ApplicationVM.MessageTickets();
                         return 0;
                     }
                 }
@@ -169,60 +170,34 @@ namespace ProjectFestival.model
                 {
                     if (aantalNu >= 0)
                     {
-                        return EditTicket(trans, ticket, aantaltickets, index);
+                        return EditTicket(trans, ticket, aantaltickets, index2);
                     }
                     else
                     {
                         return 0;
                     }
-
                 }
                 else
                 {
-                    int idVorig = ticketVorig[ticket.ID - 1].TicketType.ID;
-                    if (idVorig != ticket.TicketType.ID)
-                    {
-                        if (aantaltickets >= aantalNu)
-                        {
-                            int rowsaffected = 0;
-                            rowsaffected += EditTicketType(ticket.TicketType.IDDatabase, -aantalVorig, ticketType[idVorig - 1].AvailableTickets, idVorig);
-                            rowsaffected += EditTicketType(ticket.TicketType.IDDatabase, aantalVorig, aantaltickets, ticket.TicketType.ID);
-                            try
-                            {
-                                trans = Database.BeginTransaction();
-
-                                string sql = "UPDATE Ticket SET TicketHolder=@TicketHolder,TicketHolderEmail=@TicketHolderEmail,TicketType=@TicketType,Amount=@Amount WHERE ID=@ID";
-                                DbParameter par1 = Database.AddParameter("@TicketHolder", ticket.TicketHolder);
-                                DbParameter par2 = Database.AddParameter("@ID", ticket.ID);
-                                DbParameter par3 = Database.AddParameter("@TicketHolderEmail", ticket.TicketHolderEmail);
-                                DbParameter par4 = Database.AddParameter("@TicketType", TicketTypeList[ticket.TicketType.ID - 1].IDDatabase);
-                                DbParameter par5 = Database.AddParameter("@Amount", ticket.Amount);
-
-                                rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5);
-
-                                trans.Commit();
-                                return rowsaffected;
-                            }
-                            catch (Exception)
-                            {
-                                trans.Rollback();
-                                return 0;
-                            }
-                        }
-                    }
+                    return DatabaseConnectieTicket(trans, ticket, 0);
+                }
+            }
+            else
+            {
+                int idVorig = ticketVorig[index2].TicketType.ID-1;
+                if (aantaltickets >= aantalNu)
+                {
+                    int rowsaffected = 0;
+                    rowsaffected += EditTicketType(ticket.TicketType.IDDatabase, -aantalVorig, ticketType[idVorig].AvailableTickets, idVorig);
+                    rowsaffected += EditTicketType(TicketTypeList[ticket.TicketType.ID - 1].IDDatabase, aantalNu, aantaltickets, index);
+                    rowsaffected += DatabaseConnectieTicket(trans, ticket, rowsaffected);
                 }
             }
             return 0;
         }
 
-        public static int EditTicket(DbTransaction trans, Ticket ticket, int aantaltickets, int index)
+        public static int DatabaseConnectieTicket(DbTransaction trans, Ticket ticket, int rowsaffected)
         {
-            ObservableCollection<TicketType> types = new ObservableCollection<TicketType>();
-            types = TicketType.GetTicketTypes();
-            int vorig = tickets[index].Amount;
-
-            EditTicketType(ticket.TicketType.IDDatabase, ticket.Amount - vorig, aantaltickets, ticket.TicketType.ID);
-
             try
             {
                 trans = Database.BeginTransaction();
@@ -234,18 +209,29 @@ namespace ProjectFestival.model
                 DbParameter par4 = Database.AddParameter("@TicketType", TicketTypeList[ticket.TicketType.ID - 1].IDDatabase);
                 DbParameter par5 = Database.AddParameter("@Amount", ticket.Amount);
 
-                int rowsaffected = 0;
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5);
 
                 trans.Commit();
+                tickets = GetTickets();
                 return rowsaffected;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                FileWriter.WriteToFile(e.Message);
                 trans.Rollback();
                 return 0;
             }
+        }
+
+        public static int EditTicket(DbTransaction trans, Ticket ticket, int aantaltickets, int index)
+        {
+            ObservableCollection<TicketType> types = new ObservableCollection<TicketType>();
+            types = TicketType.GetTicketTypes();
+            int vorig = tickets[index].Amount;
+            int rowsaffected = 0;
+
+            rowsaffected += EditTicketType(ticket.TicketType.IDDatabase, ticket.Amount - vorig, aantaltickets, ticket.TicketType.ID);
+            rowsaffected += DatabaseConnectieTicket(trans, ticket, rowsaffected);
+            return rowsaffected;
         }
 
         public static int AddTicket(Ticket ticket)
@@ -282,6 +268,7 @@ namespace ProjectFestival.model
                     rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4);
 
                     trans.Commit();
+                    tickets = GetTickets();
                     return rowsaffected;
                 }
                 catch (Exception e)
@@ -316,6 +303,7 @@ namespace ProjectFestival.model
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2);
 
                 trans.Commit();
+                TicketTypeList = TicketType.GetTicketTypes();
                 return rowsaffected;
             }
             catch (Exception e)

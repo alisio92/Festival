@@ -287,14 +287,7 @@ namespace ProjectFestival.viewmodel
 
             if (CurrentPage.Name == "Genre & Stage")
             {
-                Genre g = new Genre();
-                g.ID = Genre.aantal;
-                Band.GenreList.Add(g);
-                Stage s = new Stage();
-                s.ID = Stage.aantal;
-                LineUp.StageList.Add(s);
-                Genre.aantal++;
-                Stage.aantal++;
+                AddGenreStage();
             }
             if (CurrentPage.Name == "Bands")
             {
@@ -320,6 +313,44 @@ namespace ProjectFestival.viewmodel
                 LineUp.lineUp.Add(l);
                 LineUp.aantal++;
             }
+        }
+
+        private void AddGenreStage()
+        {
+            bool isMessageGenre = false;
+            bool isMessageStage = false;
+            foreach (Genre genre in Genre.genres)
+            {
+                if (genre.Name == null)
+                {
+                    isMessageGenre = true;
+                }
+            }
+            foreach (Stage stage in Stage.stages)
+            {
+                if (stage.Name == null)
+                {
+                    isMessageStage = true;
+                }
+            }
+            if (isMessageGenre && isMessageStage)
+            {
+                MessageInfo();
+            }
+            if (!isMessageGenre)
+            {
+                Genre genre = new Genre();
+                genre.ID = Genre.aantal;
+                Band.GenreList.Add(genre);
+                Genre.aantal++;
+            }
+            if (!isMessageStage)
+            {
+                Stage stage = new Stage();
+                stage.ID = Stage.aantal;
+                LineUp.StageList.Add(stage);
+                Stage.aantal++;
+            }  
         }
 
         private void AddTicket()
@@ -523,43 +554,52 @@ namespace ProjectFestival.viewmodel
             Stage stage = null;
             Genre genre = null;
 
-            if (SelectedItem.GetType() == typeof(Stage))
+            if (SelectedItem != null)
             {
-
-                stage = (Stage)SelectedItem;
-                id = Convert.ToInt32(stage.ID);
-
-                if (id != Stage.aantal)
+                if (SelectedItem.GetType() == typeof(Stage))
                 {
-                    Stage.EditStage(stage);
-                    LineUp.StageList[id - 1] = stage;
+                    stage = (Stage)SelectedItem;
+                    id = Stage.stages.IndexOf(stage);
+                    id = Stage.stages[id].IDDatabase;
+
+                    if (id != 0)
+                    {
+                        Stage.EditStage(stage);
+                    }
+                    else
+                    {
+                        Stage.AddStage(stage);
+                    }
                 }
-                else
+                else if (SelectedItem.GetType() == typeof(Genre))
                 {
-                    Stage.AddStage(stage);
-                    id = Stage.aantal;
-                    stage.ID = id;
-                    LineUp.StageList[id - 1] = new Stage();
-                    LineUp.StageList[id - 1] = stage;
+                    genre = (Genre)SelectedItem;
+                    id = Genre.genres.IndexOf(genre);
+                    id = Genre.genres[id].IDDatabase;
+
+                    if (id != 0)
+                    {
+                        Genre.EditGenre(genre);
+                    }
+                    else
+                    {
+                        Genre.AddGenre(genre);
+                    }
                 }
             }
-            else if (SelectedItem.GetType() == typeof(Genre))
+            else
             {
-                genre = (Genre)SelectedItem;
-                id = Convert.ToInt32(genre.ID);
-
-                if (id != Genre.aantal)
+                DialogResult result = MessageQuestion();
+                if (result == DialogResult.Yes)
                 {
-                    Genre.EditGenre(genre);
-                    Band.GenreList[id - 1] = genre;
-                }
-                else
-                {
-                    Genre.AddGenre(genre);
-                    id = Genre.aantal;
-                    genre.ID = id;
-                    Band.GenreList[id - 1] = new Genre();
-                    Band.GenreList[id - 1] = genre;
+                    foreach (Stage s in Stage.stages)
+                    {
+                        Stage.EditStage(s);
+                    }
+                    foreach (Genre g in Genre.genres)
+                    {
+                        Genre.EditGenre(g);
+                    }
                 }
             }
         }
@@ -641,7 +681,6 @@ namespace ProjectFestival.viewmodel
             {
                 if (SelectedItem.GetType() == typeof(ContactPersonType))
                 {
-
                     contactPersonType = (ContactPersonType)SelectedItem;
                     id = ContactPersonType.contactTypes.IndexOf(contactPersonType);
                     id = ContactPersonType.contactTypes[id].IDDatabase;

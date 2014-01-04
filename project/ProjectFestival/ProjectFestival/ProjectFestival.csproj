@@ -100,6 +100,7 @@
     <Compile Include="errormodel\Text.cs" />
     <Compile Include="errormodel\TextNumber.cs" />
     <Compile Include="errormodel\Valuta.cs" />
+    <Compile Include="errormodel\Website.cs" />
     <Compile Include="model\Band.cs" />
     <Compile Include="model\BandGenre.cs" />
     <Compile Include="model\ContactPerson.cs" />

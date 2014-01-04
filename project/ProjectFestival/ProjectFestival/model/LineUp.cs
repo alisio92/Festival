@@ -398,9 +398,9 @@ namespace ProjectFestival.model
         {
             StreamWriter sw = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + "test.txt");
             //sw.WriteLine("this \"word\" test");
-            lineUp.RemoveAt(1);
-            lineUp.RemoveAt(1);
-            lineUp.RemoveAt(1);
+            //lineUp.RemoveAt(1);
+            //lineUp.RemoveAt(1);
+            //lineUp.RemoveAt(1);
             sw.WriteLine("[ ");
             for (int i = 0; i < lineUp.Count(); i++)
             {

@@ -32,18 +32,25 @@ namespace ProjectFestival.errormodel
             string input = value.ToString();
             if (input.Length > Min && input.Length < Max)
             {
-                if (Regex.IsMatch(input, pattern))
+                try
                 {
-                    result = new ValidationResult(true, null);
+                    if (Regex.IsMatch(input, pattern))
+                    {
+                        result = new ValidationResult(true, null);
+                    }
+                    else
+                    {
+                        result = new ValidationResult(false, "Het veld mag enkel cijfers en een punt bevatten");
+                    }
                 }
-                else
+                catch (Exception)
                 {
-                    result = new ValidationResult(false, "mag enkel cijfers bevatten");
+                    result = new ValidationResult(false, "Het veld mag enkel cijfers en een punt bevatten");
                 }
             }
             else
             {
-                result = new ValidationResult(false, "Moet tss " + Min + " en " + Max + " liggen.");
+                result = new ValidationResult(false, "Het veld Moet tss " + Min + " en " + Max + " liggen.");
             }
             return result;
         }

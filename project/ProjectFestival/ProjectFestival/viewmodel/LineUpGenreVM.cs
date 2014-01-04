@@ -15,6 +15,12 @@ namespace ProjectFestival.viewmodel
             get { return "Genre & Stage"; }
         }
 
+        public LineUpGenreVM()
+        {
+            _genreList = Genre.genres;
+            _stageList = Stage.stages;
+        }
+        
         private ObservableCollection<Genre> _genreList;
         public ObservableCollection<Genre> GenreList
         {
@@ -27,12 +33,6 @@ namespace ProjectFestival.viewmodel
         {
             get { return _stageList; }
             set { _stageList = value; OnPropertyChanged("StageList"); }
-        }
-
-        public LineUpGenreVM()
-        {
-            _genreList = Genre.genres;
-            _stageList = Stage.stages;
         }
 
         private Genre _selectedGenre;

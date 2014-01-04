@@ -19,5 +19,4 @@ namespace ProjectFestival.viewmodel
             }
         }
     }
-
 }

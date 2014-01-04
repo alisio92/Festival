@@ -10,7 +10,7 @@
             <TextBox.Text>
                 <Binding Path="Name" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
-                        <c:Text Min="5" Max="30"/>
+                        <c:Text Min="2" Max="30"/>
                     </Binding.ValidationRules>
                 </Binding>
             </TextBox.Text>
@@ -21,7 +21,7 @@
             <TextBox.Text>
                 <Binding Path="Name" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
-                        <c:Text Min="5" Max="60"/>
+                        <c:Text Min="2" Max="60"/>
                     </Binding.ValidationRules>
                 </Binding>
             </TextBox.Text>
@@ -72,7 +72,7 @@
         </TextBox>
     </DataTemplate>
     <DataTemplate x:Key="EmailTemplate">
-        <TextBox HorizontalAlignment="Center" Validation.ErrorTemplate="{StaticResource validationTemplate}" Style="{StaticResource textBoxInError}" Width="200">
+        <TextBox HorizontalAlignment="Center" Validation.ErrorTemplate="{StaticResource validationTemplate}" Style="{StaticResource textBoxInError}" Width="250">
             <TextBox.Text>
                 <Binding Path="Email" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
@@ -208,7 +208,7 @@
             <TextBox.Text>
                 <Binding Path="TicketHolder" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
-                        <c:Text Min="5" Max="60"/>
+                        <c:Text Min="2" Max="60"/>
                     </Binding.ValidationRules>
                 </Binding>
             </TextBox.Text>
@@ -219,14 +219,14 @@
             <TextBox.Text>
                 <Binding Path="TicketHolder" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
-                        <c:Text Min="5" Max="60"/>
+                        <c:Text Min="2" Max="60"/>
                     </Binding.ValidationRules>
                 </Binding>
             </TextBox.Text>
         </TextBox>
     </DataTemplate>
     <DataTemplate x:Key="TicketHolderEmailTemplate">
-        <TextBox HorizontalAlignment="Center" Validation.ErrorTemplate="{StaticResource validationTemplate}" Style="{StaticResource textBoxInError}" Width="100">
+        <TextBox HorizontalAlignment="Center" Validation.ErrorTemplate="{StaticResource validationTemplate}" Style="{StaticResource textBoxInError}" Width="250">
             <TextBox.Text>
                 <Binding Path="TicketHolderEmail" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
@@ -242,6 +242,50 @@
                 <Binding Path="TicketHolderEmail" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
                         <c:Email Min="5" Max="60"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+    </DataTemplate>
+    <DataTemplate x:Key="FacebookTemplate">
+        <TextBox HorizontalAlignment="Center" Validation.ErrorTemplate="{StaticResource validationTemplate}" Style="{StaticResource textBoxInError}" Width="250">
+            <TextBox.Text>
+                <Binding Path="Facebook" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <c:Website Min="5" Max="60"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+    </DataTemplate>
+    <DataTemplate x:Key="EditingFacebookTemplate">
+        <TextBox HorizontalAlignment="Center" Validation.ErrorTemplate="{StaticResource validationTemplate}" Style="{StaticResource textBoxInError}">
+            <TextBox.Text>
+                <Binding Path="Facebook" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <c:Website Min="5" Max="60"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+    </DataTemplate>
+    <DataTemplate x:Key="TwitterTemplate">
+        <TextBox HorizontalAlignment="Center" Validation.ErrorTemplate="{StaticResource validationTemplate}" Style="{StaticResource textBoxInError}" Width="250">
+            <TextBox.Text>
+                <Binding Path="Twitter" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <c:Website Min="5" Max="60"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+    </DataTemplate>
+    <DataTemplate x:Key="EditingTwitterTemplate">
+        <TextBox HorizontalAlignment="Center" Validation.ErrorTemplate="{StaticResource validationTemplate}" Style="{StaticResource textBoxInError}">
+            <TextBox.Text>
+                <Binding Path="Twitter" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <c:Website Min="5" Max="60"/>
                     </Binding.ValidationRules>
                 </Binding>
             </TextBox.Text>

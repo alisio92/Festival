@@ -8,10 +8,10 @@
     <Grid>
         <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding BandList}" SelectedItem="{Binding SelectedBand,UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Width="25" Binding="{Binding ID}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Naam" Width="1*" Binding="{Binding Name}"/>
-                <DataGridTextColumn Header="Facebook" Width="1*" Binding="{Binding Facebook}"/>
-                <DataGridTextColumn Header="Twitter" Width="1*" Binding="{Binding Twitter}"/>
+                <DataGridTemplateColumn Header="ID" CellTemplate="{StaticResource IDTemplate}"/>
+                <DataGridTemplateColumn Header="Naam" CellTemplate="{StaticResource NameTemplate}" CellEditingTemplate="{StaticResource EditingNameTemplate}"/>
+                <DataGridTemplateColumn Header="Facebook" CellTemplate="{StaticResource FacebookTemplate}" CellEditingTemplate="{StaticResource EditingFacebookTemplate}"/>
+                <DataGridTemplateColumn Header="Twitter" CellTemplate="{StaticResource TwitterTemplate}" CellEditingTemplate="{StaticResource EditingTwitterTemplate}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

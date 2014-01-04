@@ -8,7 +8,7 @@ using System.Windows.Controls;
 
 namespace ProjectFestival.errormodel
 {
-    class Email : ValidationRule
+    class Website : ValidationRule
     {
         private int _min;
         private int _max;
@@ -28,7 +28,7 @@ namespace ProjectFestival.errormodel
         public override ValidationResult Validate(object value, System.Globalization.CultureInfo cultureInfo)
         {
             ValidationResult result = null;
-            string pattern = @"^[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*(\.[A-Za-z]{2,4})$";
+            string pattern = @"^(http|https|ftp)\://[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\-\._\?\,\'/\\\+&amp;%\$#\=~])*$";
             string input = value.ToString();
             if (input.Length > Min && input.Length < Max)
             {
@@ -40,17 +40,17 @@ namespace ProjectFestival.errormodel
                     }
                     else
                     {
-                        result = new ValidationResult(false, "De email moet van deze structuur zijn naam0123@msn.com");
+                        result = new ValidationResult(false, "examples: \n http://www.domain.com \n https://www.domain.com");
                     }
                 }
                 catch (Exception)
                 {
-                    result = new ValidationResult(false, "De email moet van deze structuur zijn naam0123@msn.com");
+                    result = new ValidationResult(false, "examples: \n http://www.domain.com \n https://www.domain.com");
                 }
             }
             else
             {
-                result = new ValidationResult(false, "De email moet tss " + Min + " en " + Max + " liggen.");
+                result = new ValidationResult(false, "Het veld moet tss " + Min + " en " + Max + " liggen.");
             }
             return result;
         }

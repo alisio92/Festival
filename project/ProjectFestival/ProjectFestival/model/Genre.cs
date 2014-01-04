@@ -1,5 +1,6 @@
 ﻿using ProjectFestival.database;
 using ProjectFestival.viewmodel;
+using ProjectFestival.writetofile;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,6 +15,17 @@ namespace ProjectFestival.model
 {
     public class Genre
     {
+        public static int aantal = 1;
+        public static ObservableCollection<Genre> genres = new ObservableCollection<Genre>();
+        public static ObservableCollection<Genre> ogenres = new ObservableCollection<Genre>();
+
+        private int _idDatabase;
+        public int IDDatabase
+        {
+            get { return _idDatabase; }
+            set { _idDatabase = value; }
+        }
+        
         private int _id;
         public int ID
         {
@@ -27,14 +39,9 @@ namespace ProjectFestival.model
             get { return _name; }
             set { _name = value; }
         }
-
-        public static int aantal = 1;
-
-        public static ObservableCollection<Genre> genres = new ObservableCollection<Genre>();
-        public static ObservableCollection<Genre> ogenres = new ObservableCollection<Genre>();
         public static ObservableCollection<Genre> Getgenres()
         {
-            ApplicationVM.Infotxt("Inladen genres", "");
+            aantal = 1;
             try
             {
                 string sql = "SELECT * FROM Genre";
@@ -45,19 +52,10 @@ namespace ProjectFestival.model
                     genres.Add(Create(reader));
                     aantal++;
                 }
-                ApplicationVM.Infotxt("genres ingeladen", "Inladen genres");
             }
-            catch (SqlException)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan database Genre niet vinden", "");
-            }
-            catch (IndexOutOfRangeException)
-            {
-                ApplicationVM.Infotxt("Kolommen database hebben niet de juiste naam", "");
-            }
-            catch (Exception)
-            {
-                ApplicationVM.Infotxt("Kan Genre tabel niet inlezen", "");
+                FileWriter.WriteToFile(e.Message);
             }
             ogenres = genres;
             return genres;
@@ -67,7 +65,8 @@ namespace ProjectFestival.model
         {
             Genre genre = new Genre();
 
-            genre.ID = Convert.ToInt32(record["ID"]);
+            genre.ID = aantal;
+            genre.IDDatabase = Convert.ToInt32(record["ID"]);
             genre.Name = record["Name"].ToString();
 
             return genre;
@@ -75,7 +74,6 @@ namespace ProjectFestival.model
 
         public static int EditGenre(Genre genre)
         {
-            ApplicationVM.Infotxt("Genre aanpassen", "");
             DbTransaction trans = null;
 
             try
@@ -84,18 +82,17 @@ namespace ProjectFestival.model
 
                 string sql = "UPDATE Genre SET Name=@Name WHERE ID=@ID";
                 DbParameter par1 = Database.AddParameter("@Name", genre.Name);
-                DbParameter par2 = Database.AddParameter("@ID", genre.ID);
+                DbParameter par2 = Database.AddParameter("@ID", genre.IDDatabase);
 
                 int rowsaffected = 0;
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("Genre aangepast", "Genre aanpassen");
                 return rowsaffected;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan Genre niet aanpassen", "");
+                FileWriter.WriteToFile(e.Message);
                 trans.Rollback();
                 return 0;
             }
@@ -110,20 +107,18 @@ namespace ProjectFestival.model
             {
                 trans = Database.BeginTransaction();
 
-                string sql = "INSERT INTO Genre VALUES(@ID,@Name)";
+                string sql = "INSERT INTO Genre VALUES(@Name)";
                 DbParameter par1 = Database.AddParameter("@Name", genre.Name);
-                DbParameter par2 = Database.AddParameter("@ID", aantal);
 
                 int rowsaffected = 0;
-                rowsaffected += Database.ModifyData(trans, sql, par1, par2);
+                rowsaffected += Database.ModifyData(trans, sql, par1);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("Genre toegevoegd", "Genre aanpassen");
                 return rowsaffected;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan Genre niet toevoegen", "");
+                FileWriter.WriteToFile(e.Message);
                 trans.Rollback();
                 return 0;
             }
@@ -131,7 +126,6 @@ namespace ProjectFestival.model
 
         public static int DeleteGenre(Genre genre)
         {
-            ApplicationVM.Infotxt("Genre wissen", "");
             DbTransaction trans = null;
 
             try
@@ -139,47 +133,46 @@ namespace ProjectFestival.model
                 trans = Database.BeginTransaction();
 
                 string sql = "DELETE FROM Genre WHERE ID = @ID";
-                DbParameter par1 = Database.AddParameter("@ID", genre.ID);
+                DbParameter par1 = Database.AddParameter("@ID", genre.IDDatabase);
 
                 int rowsaffected = 0;
                 rowsaffected += Database.ModifyData(trans, sql, par1);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("Genre gewist", "Genre wissen");
                 return rowsaffected;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan Genre niet wissen", "");
+                FileWriter.WriteToFile(e.Message);
                 trans.Rollback();
                 return 0;
             }
-        }
-
-        public override string ToString()
-        {
-            return Name;
-        }
+        } 
 
         public static void Zoeken(string parameter)
         {
             parameter = parameter.ToLower();
             genres = new ObservableCollection<Genre>();
 
-            foreach (Genre c in ogenres)
+            foreach (Genre genre in ogenres)
             {
                 if (parameter != "" && parameter != "Zoeken")
                 {
-                    if ((c.Name.ToLower().Contains(parameter)) || (c.ID.ToString().ToLower().Contains(parameter)))
+                    if ((genre.Name.ToLower().Contains(parameter)) || (genre.ID.ToString().ToLower().Contains(parameter)))
                     {
-                        genres.Add(c);
+                        genres.Add(genre);
                     }
                 }
                 else
                 {
-                    genres.Add(c);
+                    genres.Add(genre);
                 }
             }
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

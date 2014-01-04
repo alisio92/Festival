@@ -1,5 +1,6 @@
 ﻿using ProjectFestival.database;
 using ProjectFestival.viewmodel;
+using ProjectFestival.writetofile;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,6 +15,17 @@ namespace ProjectFestival.model
 {
     public class Stage
     {
+        public static int aantal = 1;
+        public static ObservableCollection<Stage> stages = new ObservableCollection<Stage>();
+        public static ObservableCollection<Stage> oStages = new ObservableCollection<Stage>();
+
+        private int _idDatabase;
+        public int IDDatabase
+        {
+            get { return _idDatabase; }
+            set { _idDatabase = value; }
+        }
+        
         private int _id;
         public int ID
         {
@@ -28,14 +40,9 @@ namespace ProjectFestival.model
             set { _name = value; }
         }
 
-        public static int aantal = 1;
-
-        public static ObservableCollection<Stage> stages = new ObservableCollection<Stage>();
-        public static ObservableCollection<Stage> oStages = new ObservableCollection<Stage>();
-
         public static ObservableCollection<Stage> GetStages()
         {
-            ApplicationVM.Infotxt("Inladen Stages", "");
+            aantal = 1;
             try
             {
                 string sql = "SELECT * FROM Stage";
@@ -46,19 +53,10 @@ namespace ProjectFestival.model
                     stages.Add(Create(reader));
                     aantal++;
                 }
-                ApplicationVM.Infotxt("Stages ingeladen", "Inladen Stages");
             }
-            catch (SqlException)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan database Stage niet vinden", "");
-            }
-            catch (IndexOutOfRangeException)
-            {
-                ApplicationVM.Infotxt("Kolommen database hebben niet de juiste naam", "");
-            }
-            catch (Exception)
-            {
-                ApplicationVM.Infotxt("Kan Stage tabel niet inlezen", "");
+                FileWriter.WriteToFile(e.Message);
             }
             oStages = stages;
             return stages;
@@ -68,7 +66,8 @@ namespace ProjectFestival.model
         {
             Stage stage = new Stage();
 
-            stage.ID = Convert.ToInt32(record["ID"]);
+            stage.ID = aantal;
+            stage.IDDatabase = Convert.ToInt32(record["ID"]);
             stage.Name = record["Name"].ToString();
 
             return stage;
@@ -76,7 +75,6 @@ namespace ProjectFestival.model
 
         public static int EditStage(Stage stage)
         {
-            ApplicationVM.Infotxt("Stage aanpassen", "");
             DbTransaction trans = null;
 
             try
@@ -85,18 +83,17 @@ namespace ProjectFestival.model
 
                 string sql = "UPDATE Stage SET Name=@Name WHERE ID=@ID";
                 DbParameter par1 = Database.AddParameter("@Name", stage.Name);
-                DbParameter par2 = Database.AddParameter("@ID", stage.ID);
+                DbParameter par2 = Database.AddParameter("@ID", stage.IDDatabase);
 
                 int rowsaffected = 0;
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("Stage aangepast", "Stage aanpassen");
                 return rowsaffected;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan Stage niet aanpassen", "");
+                FileWriter.WriteToFile(e.Message);
                 trans.Rollback();
                 return 0;
             }
@@ -104,27 +101,24 @@ namespace ProjectFestival.model
 
         public static int AddStage(Stage stage)
         {
-            ApplicationVM.Infotxt("Stage toevoegen", "");
             DbTransaction trans = null;
 
             try
             {
                 trans = Database.BeginTransaction();
 
-                string sql = "INSERT INTO Stage VALUES(@ID,@Name)";
+                string sql = "INSERT INTO Stage VALUES(@Name)";
                 DbParameter par1 = Database.AddParameter("@Name", stage.Name);
-                DbParameter par2 = Database.AddParameter("@ID", aantal);
 
                 int rowsaffected = 0;
-                rowsaffected += Database.ModifyData(trans, sql, par1, par2);
+                rowsaffected += Database.ModifyData(trans, sql, par1);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("Stage toegevoegd", "Stage aanpassen");
                 return rowsaffected;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan Stage niet toevoegen", "");
+                FileWriter.WriteToFile(e.Message);
                 trans.Rollback();
                 return 0;
             }
@@ -132,7 +126,6 @@ namespace ProjectFestival.model
 
         public static int DeleteStage(Stage stage)
         {
-            ApplicationVM.Infotxt("Stage wissen", "");
             DbTransaction trans = null;
 
             try
@@ -140,26 +133,20 @@ namespace ProjectFestival.model
                 trans = Database.BeginTransaction();
 
                 string sql = "DELETE FROM Stage WHERE ID = @ID";
-                DbParameter par1 = Database.AddParameter("@ID", stage.ID);
+                DbParameter par1 = Database.AddParameter("@ID", stage.IDDatabase);
 
                 int rowsaffected = 0;
                 rowsaffected += Database.ModifyData(trans, sql, par1);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("Stage gewist", "Stage wissen");
                 return rowsaffected;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan Stage niet wissen", "");
+                FileWriter.WriteToFile(e.Message);
                 trans.Rollback();
                 return 0;
             }
-        }
-
-        public override string ToString()
-        {
-            return Name;
         }
 
         public static void Zoeken(string parameter)
@@ -167,20 +154,25 @@ namespace ProjectFestival.model
             parameter = parameter.ToLower();
             stages = new ObservableCollection<Stage>();
 
-            foreach (Stage c in oStages)
+            foreach (Stage stage in oStages)
             {
                 if (parameter != "" && parameter != "Zoeken")
                 {
-                    if ((c.Name.ToLower().Contains(parameter)) || (c.ID.ToString().ToLower().Contains(parameter)))
+                    if ((stage.Name.ToLower().Contains(parameter)) || (stage.ID.ToString().ToLower().Contains(parameter)))
                     {
-                        stages.Add(c);
+                        stages.Add(stage);
                     }
                 }
                 else
                 {
-                    stages.Add(c);
+                    stages.Add(stage);
                 }
             }
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

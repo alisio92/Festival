@@ -33,18 +33,25 @@ namespace ProjectFestival.errormodel
             string input = value.ToString();
             if (input.Length > Min && input.Length < Max)
             {
-                if (Regex.IsMatch(input, pattern))
+                try
                 {
-                    result = new ValidationResult(true, null);
+                    if (Regex.IsMatch(input, pattern))
+                    {
+                        result = new ValidationResult(true, null);
+                    }
+                    else
+                    {
+                        result = new ValidationResult(false, "Het veld mag enkel letters en cijfers bevatten");
+                    }
                 }
-                else
+                catch (Exception)
                 {
-                    result = new ValidationResult(false, "De naam mag enkel letters en cijfers bevatten");
+                    result = new ValidationResult(false, "Het veld mag enkel letters en cijfers bevatten");
                 }
             }
             else
             {
-                result = new ValidationResult(false, "De naam moet tss " + Min + " en " + Max + " liggen.");
+                result = new ValidationResult(false, "Het veld moet tss " + Min + " en " + Max + " liggen.");
             }
             return result;
         }

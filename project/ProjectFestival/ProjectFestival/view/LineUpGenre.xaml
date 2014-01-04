@@ -19,14 +19,14 @@
         <TextBlock Text="Stages" Grid.Column="1" Style="{StaticResource Header}"/>
         <DataGrid AutoGenerateColumns="False" Grid.Row="1" ItemsSource="{Binding GenreList}" SelectedItem="{Binding SelectedGenre}" CanUserAddRows="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Width="25" Binding="{Binding ID}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Naam" Width="1*" Binding="{Binding Name}"/>
+                <DataGridTemplateColumn Header="ID" CellTemplate="{StaticResource IDTemplate}"/>
+                <DataGridTemplateColumn Header="Naam" CellTemplate="{StaticResource NameTemplate}" CellEditingTemplate="{StaticResource EditingNameTemplate}"/>
             </DataGrid.Columns>
         </DataGrid>
         <DataGrid AutoGenerateColumns="False" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding StageList}" SelectedItem="{Binding SelectedStage}" CanUserAddRows="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Width="25" Binding="{Binding ID}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Naam" Width="1*" Binding="{Binding Name}"/>
+                <DataGridTemplateColumn Header="ID" CellTemplate="{StaticResource IDTemplate}"/>
+                <DataGridTemplateColumn Header="Naam" CellTemplate="{StaticResource NameTemplate}" CellEditingTemplate="{StaticResource EditingNameTemplate}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
