@@ -291,18 +291,11 @@ namespace ProjectFestival.viewmodel
             }
             if (CurrentPage.Name == "Bands")
             {
-                Band b = new Band();
-                b.ID = Band.aantal;
-                Band.bands.Add(b);
-                Band.aantal++;
+                AddBand();
             }
             if (CurrentPage.Name == "Info Bands")
             {
-                BandGenre g2 = new BandGenre();
-                g2.GenreBand = new Genre();
-                g2.ID = BandGenre.aantal;
-                BandGenre.bandGenre.Add(g2);
-                BandGenre.aantal++;
+                AddInfoBand();
             }
             if (CurrentPage.Name == "Line-Up")
             {
@@ -315,10 +308,63 @@ namespace ProjectFestival.viewmodel
             }
         }
 
+        private void AddInfoBand()
+        {
+            bool isMessage = false;
+            foreach (Band band in Band.bands)
+            {
+                if (band.GenreListBand[band.GenreListBand.Count-1].Name == null)
+                {
+                    isMessage = true;
+                }
+            }
+            if (isMessage)
+            {
+                MessageInfo();
+            }
+            else
+            {
+                BandGenre bandGenre = new BandGenre();
+                bandGenre.GenreBand = new Genre();
+                bandGenre.ID = BandGenre.aantal;
+                BandGenre.bandGenre.Add(bandGenre);
+                BandGenre.aantal++;
+            }
+        }
+
+        private void AddBand()
+        {
+            bool isMessage = false;
+            foreach (Band band in Band.bands)
+            {
+                if (band.Name == null || band.Facebook == null || band.Twitter == null)
+                {
+                    isMessage = true;
+                }
+            }
+            if (isMessage)
+            {
+                MessageInfo();
+            }
+            else
+            {
+                Band b = new Band();
+                b.ID = Band.aantal;
+                b.GenreListBand = new ObservableCollection<Genre>();
+                Genre g = new Genre();
+                g.ID = Genre.aantal;
+                b.GenreListBand.Add(g);
+                Band.bands.Add(b);
+                Band.aantal++;
+                BandGenre.aantal++;
+            }
+        }
+
         private void AddGenreStage()
         {
             bool isMessageGenre = false;
             bool isMessageStage = false;
+            bool isMessageFestival = false;
             foreach (Genre genre in Genre.genres)
             {
                 if (genre.Name == null)
@@ -333,7 +379,14 @@ namespace ProjectFestival.viewmodel
                     isMessageStage = true;
                 }
             }
-            if (isMessageGenre && isMessageStage)
+            foreach (Festival festival in Festival.festivals)
+            {
+                if (festival.StartDate == null || festival.EndDate == null)
+                {
+                    isMessageFestival = true;
+                }
+            }
+            if (isMessageGenre && isMessageStage && isMessageFestival)
             {
                 MessageInfo();
             }
@@ -350,7 +403,18 @@ namespace ProjectFestival.viewmodel
                 stage.ID = Stage.aantal;
                 LineUp.StageList.Add(stage);
                 Stage.aantal++;
-            }  
+            }
+            if (!isMessageFestival)
+            {
+                Festival festval = new Festival();
+                festval.ID = Stage.aantal;
+                festval.StartDate = new DateTime();
+                festval.StartDate = DateTime.Today;
+                festval.EndDate = new DateTime();
+                festval.EndDate = DateTime.Today;
+                Festival.festivals.Add(festval);
+                Festival.aantal++;
+            } 
         }
 
         private void AddTicket()
@@ -358,7 +422,7 @@ namespace ProjectFestival.viewmodel
             bool isMessage = false;
             foreach (Ticket ticket in Ticket.tickets)
             {
-                if (ticket.TicketHolder == null || ticket.TicketHolderEmail == null || ticket.TicketType.Name == null || ticket.Amount== null)
+                if (ticket.TicketHolder == null || ticket.TicketHolderEmail == null || ticket.TicketType.Name == null || ticket.Amount== 0)
                 {
                     isMessage = true;
                 }
@@ -382,7 +446,7 @@ namespace ProjectFestival.viewmodel
             bool isMessage = false;
             foreach (TicketType tType in TicketType.ticketTypes)
             {
-                if (tType.Name == null || tType.Price == null || tType.AvailableTickets == null)
+                if (tType.Name == null || tType.Price == 0 || tType.AvailableTickets == 0)
                 {
                     isMessage = true;
                 }
@@ -502,7 +566,14 @@ namespace ProjectFestival.viewmodel
 
         private void BandsSaveItem()
         {
-            CurrentPage = new LineUpInfoVM();
+            if(SelectedItem!=null)
+            {
+                CurrentPage = new LineUpInfoVM();
+            }
+            else
+            {
+                MessageBox.Show("Je moet een item selecteren.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private void LineUpSaveItem()
@@ -531,20 +602,30 @@ namespace ProjectFestival.viewmodel
         private void InfoBandSaveItem()
         {
             Band band = (Band)SelectedItem;
-            int id = Convert.ToInt32(band.ID);
-
-            if (id != Band.aantal)
+            if (band != null)
             {
-                Band.EditBand(band);
-                Band.bands[id - 1] = band;
+                int id = Band.bands.IndexOf(band);
+                id = Band.bands[id].IDDatabase;
+
+                if (id != 0)
+                {
+                    Band.EditBand(band);
+                }
+                else
+                {
+                    Band.AddBand(band);
+                }
             }
             else
             {
-                Band.AddBand(band);
-                id = Band.aantal;
-                band.ID = id;
-                Band.bands[id - 1] = new Band();
-                Band.bands[id - 1] = band;
+                DialogResult result = MessageQuestion();
+                if (result == DialogResult.Yes)
+                {
+                    foreach (Band b in Band.bands)
+                    {
+                        Band.EditBand(b);
+                    }
+                }
             }
         }
 
@@ -553,6 +634,7 @@ namespace ProjectFestival.viewmodel
             int id = 0;
             Stage stage = null;
             Genre genre = null;
+            Festival festival = null;
 
             if (SelectedItem != null)
             {
@@ -586,6 +668,21 @@ namespace ProjectFestival.viewmodel
                         Genre.AddGenre(genre);
                     }
                 }
+                else if(SelectedItem.GetType() == typeof(Festival))
+                {
+                    festival = (Festival)SelectedItem;
+                    id = Festival.festivals.IndexOf(festival);
+                    id = Festival.festivals[id].IDDatabase;
+
+                    if (id != 0)
+                    {
+                        Festival.EditFestival(festival);
+                    }
+                    else
+                    {
+                        Festival.AddFestival(festival);
+                    }
+                }
             }
             else
             {
@@ -599,6 +696,10 @@ namespace ProjectFestival.viewmodel
                     foreach (Genre g in Genre.genres)
                     {
                         Genre.EditGenre(g);
+                    }
+                    foreach (Festival f in Festival.festivals)
+                    {
+                        Festival.EditFestival(f);
                     }
                 }
             }
@@ -823,6 +924,12 @@ namespace ProjectFestival.viewmodel
                 Genre genre = (Genre)SelectedItem;
                 Genre.DeleteGenre(genre);
                 Band.GenreList.Remove(genre);
+            }
+            else if (SelectedItem.GetType() == typeof(Festival))
+            {
+                Festival festival = (Festival)SelectedItem;
+                Festival.DeleteFestival(festival);
+                Festival.festivals.Remove(festival);
             }
         }
 

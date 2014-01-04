@@ -70,7 +70,7 @@ namespace ProjectFestival.viewmodel
             StagesList = Stage.stages;
             LineUpList = LineUp.lineUp;
             BandsList = LineUp.BandList;
-            DateList = Festival.festival;
+            DateList = Festival.festivals;
         }
     }
 }

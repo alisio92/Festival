@@ -20,18 +20,17 @@ namespace ProjectFestival.viewmodel
             get { return "Info Bands"; }
         }
 
+        public LineUpInfoVM()
+        {
+            BandList = BandGenre.GetBandgenres(SelectedBand.GenreListBand);
+            _genreList = BandGenre.GenreList;
+        }
+        
         private ObservableCollection<Genre> _genreList;
         public ObservableCollection<Genre> GenreList
         {
             get { return _genreList; }
             set { _genreList = value; OnPropertyChanged("GenreList"); }
-        }
-
-        private static Band _selectedBand;
-        public static Band SelectedBand
-        {
-            get { return _selectedBand; }
-            set { _selectedBand = value; }
         }
 
         private ObservableCollection<BandGenre> _bandList;
@@ -40,7 +39,33 @@ namespace ProjectFestival.viewmodel
             get { return _bandList; }
             set { _bandList = value; OnPropertyChanged("BandList"); }
         }
+        
+        private static Band _selectedBand;
+        public static Band SelectedBand
+        {
+            get { return _selectedBand; }
+            set { _selectedBand = value; }
+        }
 
+        private BandGenre _selectedGenre;
+        public BandGenre SelectedGenre
+        {
+            get { return _selectedGenre; }
+            set
+            {
+                _selectedGenre = value;
+                OnPropertyChanged("SelectedGenre");
+                if (SelectedGenre.GenreBand.Name=="")
+                {
+                    Genre g = new Genre();
+                    g = SelectedGenre.GenreBand;
+                    SelectedBand.GenreListBand.Add(g);
+                }
+                ApplicationVM.SelectedItem = SelectedBand;
+                ApplicationVM.BandGenre = SelectedGenre;
+            }
+        }
+        
         public ICommand AddImageCommand
         {
             get
@@ -94,25 +119,6 @@ namespace ProjectFestival.viewmodel
             SelectedBand.Picture = null;
         }
 
-        private BandGenre _selectedGenre;
-        public BandGenre SelectedGenre
-        {
-            get { return _selectedGenre; }
-            set
-            {
-                _selectedGenre = value;
-                OnPropertyChanged("SelectedGenre");
-                if (BandGenre.aantal == SelectedGenre.ID)
-                {
-                    Genre g = new Genre();
-                    g = SelectedGenre.GenreBand;
-                    SelectedBand.GenreListBand.Add(g);
-                }
-                ApplicationVM.SelectedItem = SelectedBand;
-                ApplicationVM.BandGenre = SelectedGenre;
-            }
-        }
-
         private void AddImage(DragEventArgs e)
         {
             var data = e.Data as DataObject;
@@ -131,12 +137,6 @@ namespace ProjectFestival.viewmodel
             fs.Read(data, 0, (int)fs.Length);
             fs.Close();
             return data;
-        }
-
-        public LineUpInfoVM()
-        {
-            BandList = BandGenre.GetBandgenres(SelectedBand.GenreListBand);
-            _genreList = BandGenre.GenreList;
         }
     }
 }

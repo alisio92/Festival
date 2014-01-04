@@ -1,5 +1,6 @@
 ﻿using ProjectFestival.database;
 using ProjectFestival.viewmodel;
+using ProjectFestival.writetofile;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,6 +15,17 @@ namespace ProjectFestival.model
 {
     public class Festival
     {
+        public static int aantal = 1;
+        public static ObservableCollection<Festival> festivals = new ObservableCollection<Festival>();
+        public static ObservableCollection<Festival> oFestivals = new ObservableCollection<Festival>();
+
+        private int _idDatabase;
+        public int IDDatabase
+        {
+            get { return _idDatabase; }
+            set { _idDatabase = value; }
+        }
+        
         private int _id;
         public int ID
         {
@@ -34,14 +46,9 @@ namespace ProjectFestival.model
             get { return _endDate; }
             set { _endDate = value; }
         }
-
-        public static int aantal = 1;
-
-        public static ObservableCollection<Festival> festival = new ObservableCollection<Festival>();
-        public static ObservableCollection<Festival> oFestival = new ObservableCollection<Festival>();
         public static ObservableCollection<Festival> GetFestival()
         {
-            ApplicationVM.Infotxt("Inladen festival", "");
+            aantal = 1;
             try
             {
                 string sql = "SELECT * FROM Festival";
@@ -49,32 +56,24 @@ namespace ProjectFestival.model
 
                 while (reader.Read())
                 {
-                    festival.Add(Create(reader));
+                    festivals.Add(Create(reader));
                     aantal++;
                 }
-                ApplicationVM.Infotxt("festival ingeladen", "Inladen festival");
             }
-            catch (SqlException)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan database festival niet vinden", "");
+                FileWriter.WriteToFile(e.Message);
             }
-            catch (IndexOutOfRangeException)
-            {
-                ApplicationVM.Infotxt("Kolommen database hebben niet de juiste naam", "");
-            }
-            catch (Exception)
-            {
-                ApplicationVM.Infotxt("Kan festival tabel niet inlezen", "");
-            }
-            oFestival = festival;
-            return festival;
+            oFestivals = festivals;
+            return festivals;
         }
 
         private static Festival Create(IDataRecord record)
         {
             Festival festival = new Festival();
 
-            festival.ID = Convert.ToInt32(record["ID"]);
+            festival.ID = aantal;
+            festival.IDDatabase = Convert.ToInt32(record["ID"]);
             festival.StartDate = (DateTime)record["StartDate"];
             festival.EndDate = (DateTime)record["EndDate"];
             return festival;
@@ -82,7 +81,6 @@ namespace ProjectFestival.model
 
         public static int EditFestival(Festival festival)
         {
-            ApplicationVM.Infotxt("Festival aanpassen", "");
             DbTransaction trans = null;
 
             try
@@ -92,18 +90,17 @@ namespace ProjectFestival.model
                 string sql = "UPDATE Festival SET StartDate=@StartDate,EndDate=@EndDate WHERE ID=@ID";
                 DbParameter par1 = Database.AddParameter("@StartDate", festival.StartDate);
                 DbParameter par2 = Database.AddParameter("@EndDate", festival.EndDate);
-                DbParameter par3 = Database.AddParameter("@ID", festival.ID);
+                DbParameter par3 = Database.AddParameter("@ID", festival.IDDatabase);
 
                 int rowsaffected = 0;
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2,par3);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("Festival aangepast", "Festival aanpassen");
                 return rowsaffected;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan Festival niet aanpassen", "");
+                FileWriter.WriteToFile(e.Message);
                 trans.Rollback();
                 return 0;
             }
@@ -111,28 +108,25 @@ namespace ProjectFestival.model
 
         public static int AddFestival(Festival festival)
         {
-            ApplicationVM.Infotxt("Festival toevoegen", "");
             DbTransaction trans = null;
 
             try
             {
                 trans = Database.BeginTransaction();
 
-                string sql = "INSERT INTO Festival VALUES(@ID,@StartDate,@EndDate)";
+                string sql = "INSERT INTO Festival VALUES(@StartDate,@EndDate)";
                 DbParameter par1 = Database.AddParameter("@StartDate", festival.StartDate);
                 DbParameter par2 = Database.AddParameter("@EndDate", festival.EndDate);
-                DbParameter par3 = Database.AddParameter("@ID", aantal);
 
                 int rowsaffected = 0;
-                rowsaffected += Database.ModifyData(trans, sql, par1, par2,par3);
+                rowsaffected += Database.ModifyData(trans, sql, par1, par2);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("Genre toegevoegd", "Genre aanpassen");
                 return rowsaffected;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan Genre niet toevoegen", "");
+                FileWriter.WriteToFile(e.Message);
                 trans.Rollback();
                 return 0;
             }
@@ -140,7 +134,6 @@ namespace ProjectFestival.model
 
         public static int DeleteFestival(Festival festival)
         {
-            ApplicationVM.Infotxt("Genre wissen", "");
             DbTransaction trans = null;
 
             try
@@ -148,27 +141,46 @@ namespace ProjectFestival.model
                 trans = Database.BeginTransaction();
 
                 string sql = "DELETE FROM Festival WHERE ID = @ID";
-                DbParameter par1 = Database.AddParameter("@ID", festival.ID);
+                DbParameter par1 = Database.AddParameter("@ID", festival.IDDatabase);
 
                 int rowsaffected = 0;
                 rowsaffected += Database.ModifyData(trans, sql, par1);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("Genre gewist", "Genre wissen");
                 return rowsaffected;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan Genre niet wissen", "");
+                FileWriter.WriteToFile(e.Message);
                 trans.Rollback();
                 return 0;
             }
         }
 
+        public static void Zoeken(string parameter)
+        {
+            parameter = parameter.ToLower();
+            festivals = new ObservableCollection<Festival>();
+
+            foreach (Festival festival in oFestivals)
+            {
+                if (parameter != "" && parameter != "Zoeken")
+                {
+                    if ((festival.StartDate.Year.ToString().Contains(parameter)) || (festival.ID.ToString().ToLower().Contains(parameter)) || (festival.StartDate.Month.ToString().Contains(parameter)) || (festival.StartDate.Day.ToString().Contains(parameter)))
+                    {
+                        festivals.Add(festival);
+                    }
+                }
+                else
+                {
+                    festivals.Add(festival);
+                }
+            }
+        }
+        
         public override string ToString()
         {
             return StartDate + " - " + EndDate;
         }
-
     }
 }

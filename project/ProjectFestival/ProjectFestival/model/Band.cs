@@ -1,5 +1,6 @@
 ﻿using ProjectFestival.database;
 using ProjectFestival.viewmodel;
+using ProjectFestival.writetofile;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,6 +15,19 @@ namespace ProjectFestival.model
 {
     public class Band
     {
+
+        public static int aantal = 1;
+        public static int aantalgenres = 1;
+        public static ObservableCollection<Band> bands = new ObservableCollection<Band>();
+        public static ObservableCollection<Band> oBands = new ObservableCollection<Band>();
+
+        private int _idDatabase;
+        public int IDDatabase
+        {
+            get { return _idDatabase; }
+            set { _idDatabase = value; }
+        }
+        
         private int _id;
         public int ID
         {
@@ -70,15 +84,9 @@ namespace ProjectFestival.model
             set { _genreListBand = value; }
         }
 
-        public static int aantal = 1;
-        public static int aantalgenres = 1;
-
-        public static ObservableCollection<Band> bands = new ObservableCollection<Band>();
-        public static ObservableCollection<Band> oBands = new ObservableCollection<Band>();
-
         public static ObservableCollection<Band> GetBands()
         {
-            ApplicationVM.Infotxt("Inladen Band", "");
+            aantal = 1;
             GenreList = Genre.Getgenres();
             BandGenre.GenreList = GenreList;
 
@@ -92,19 +100,10 @@ namespace ProjectFestival.model
                     bands.Add(Create(reader));
                     aantal++;
                 }
-                ApplicationVM.Infotxt("Bands ingeladen", "Inladen Bands");
             }
-            catch (SqlException)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan database Band niet vinden", "");
-            }
-            catch (IndexOutOfRangeException)
-            {
-                ApplicationVM.Infotxt("Kolommen database hebben niet de juiste naam", "");
-            }
-            catch (Exception)
-            {
-                ApplicationVM.Infotxt("Kan Band tabel niet inlezen", "");
+                FileWriter.WriteToFile(e.Message);
             }
             oBands = bands;
             return bands;
@@ -113,7 +112,8 @@ namespace ProjectFestival.model
         private static Band Create(IDataRecord record)
         {
             Band band = new Band();
-            band.ID = Convert.ToInt32(record["ID"]);
+            band.ID = aantal;
+            band.IDDatabase = Convert.ToInt32(record["ID"]);
             band.Name = record["Name"].ToString();
 
             if (!DBNull.Value.Equals(record["Picture"]))
@@ -146,7 +146,6 @@ namespace ProjectFestival.model
 
         public static int EditBand(Band band)
         {
-            ApplicationVM.Infotxt("Band aanpassen", "");
             DbTransaction trans = null;
 
             string genres = "";
@@ -162,7 +161,7 @@ namespace ProjectFestival.model
 
                 string sql = "UPDATE Band SET Name=@Name,Picture=@Picture,Description=@Description,Twitter=@Twitter,Facebook=@Facebook,Genre=@Genre WHERE ID=@ID";
                 DbParameter par1 = Database.AddParameter("@Name", band.Name);
-                DbParameter par2 = Database.AddParameter("@ID", band.ID);
+                DbParameter par2 = Database.AddParameter("@ID", band.IDDatabase);
                 DbParameter par3 = Database.AddParameter("@Picture", band.Picture);
                 DbParameter par4 = Database.AddParameter("@Description", band.Description);
                 DbParameter par5 = Database.AddParameter("@Twitter", band.Twitter);
@@ -173,12 +172,11 @@ namespace ProjectFestival.model
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5, par6, par7);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("Band aangepast", "Band aanpassen");
                 return rowsaffected;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan Band niet aanpassen", "");
+                FileWriter.WriteToFile(e.Message);
                 trans.Rollback();
                 return 0;
             }
@@ -186,7 +184,6 @@ namespace ProjectFestival.model
 
         public static int AddBand(Band band)
         {
-            ApplicationVM.Infotxt("Band toevoegen", "");
             DbTransaction trans = null;
 
             string genres = "";
@@ -200,38 +197,30 @@ namespace ProjectFestival.model
             {
                 trans = Database.BeginTransaction();
 
-                string sql = "INSERT INTO Band VALUES(@ID,@Name,@Picture,@Description,@Twitter,@Facebook,@Genre)";
+                string sql = "INSERT INTO Band VALUES(@Name,@Picture,@Description,@Twitter,@Facebook,@Genre)";
                 DbParameter par1 = Database.AddParameter("@Name", band.Name);
-                DbParameter par3 = Database.AddParameter("@Picture", band.Picture);
-                DbParameter par4 = Database.AddParameter("@Description", band.Description);
-                DbParameter par5 = Database.AddParameter("@Twitter", band.Twitter);
-                DbParameter par6 = Database.AddParameter("@Facebook", band.Facebook);
-                DbParameter par7 = Database.AddParameter("@Genre", genres);
-                DbParameter par2 = Database.AddParameter("@ID", aantal);
+                DbParameter par2 = Database.AddParameter("@Picture", band.Picture);
+                DbParameter par3 = Database.AddParameter("@Description", band.Description);
+                DbParameter par4 = Database.AddParameter("@Twitter", band.Twitter);
+                DbParameter par5 = Database.AddParameter("@Facebook", band.Facebook);
+                DbParameter par6 = Database.AddParameter("@Genre", genres);
 
                 int rowsaffected = 0;
-                rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5, par6, par7);
+                rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5, par6);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("Band toegevoegd", "Band aanpassen");
                 return rowsaffected;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan Band niet toevoegen", "");
+                FileWriter.WriteToFile(e.Message);
                 trans.Rollback();
                 return 0;
             }
         }
 
-        public override string ToString()
-        {
-            return Name;
-        }
-
         public static int DeleteBand(Band band)
         {
-            ApplicationVM.Infotxt("Band wissen", "");
             DbTransaction trans = null;
 
             try
@@ -239,18 +228,17 @@ namespace ProjectFestival.model
                 trans = Database.BeginTransaction();
 
                 string sql = "DELETE FROM Band WHERE ID = @ID";
-                DbParameter par1 = Database.AddParameter("@ID", band.ID);
+                DbParameter par1 = Database.AddParameter("@ID", band.IDDatabase);
 
                 int rowsaffected = 0;
                 rowsaffected += Database.ModifyData(trans, sql, par1);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("Band gewist", "Band wissen");
                 return rowsaffected;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan Band niet wissen", "");
+                FileWriter.WriteToFile(e.Message);
                 trans.Rollback();
                 return 0;
             }
@@ -261,30 +249,35 @@ namespace ProjectFestival.model
             parameter = parameter.ToLower();
             bands = new ObservableCollection<Band>();
 
-            foreach (Band c in oBands)
+            foreach (Band band in oBands)
             {
                 if (parameter != "" && parameter != "Zoeken")
                 {
-                    if ((c.Name.ToLower().Contains(parameter)) || (c.ID.ToString().ToLower().Contains(parameter)) || (c.Facebook.ToString().ToLower().Contains(parameter)) || (c.Twitter.ToString().ToLower().Contains(parameter)))
+                    if ((band.Name.ToLower().Contains(parameter)) || (band.ID.ToString().ToLower().Contains(parameter)) || (band.Facebook.ToString().ToLower().Contains(parameter)) || (band.Twitter.ToString().ToLower().Contains(parameter)))
                     {
-                        bands.Add(c);
+                        bands.Add(band);
                     }
-                    foreach (Genre g in c.GenreListBand)
+                    foreach (Genre genre in band.GenreListBand)
                     {
-                        if (g.Name.ToLower().Contains(parameter))
+                        if (genre.Name.ToLower().Contains(parameter))
                         {
-                            if (!bands.Contains(c))
+                            if (!bands.Contains(band))
                             {
-                                bands.Add(c);
+                                bands.Add(band);
                             }
                         }
                     }
                 }
                 else
                 {
-                    bands.Add(c);
+                    bands.Add(band);
                 }
             }
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

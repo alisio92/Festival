@@ -19,6 +19,7 @@ namespace ProjectFestival.viewmodel
         {
             _genreList = Genre.genres;
             _stageList = Stage.stages;
+            _festivalList = Festival.festivals;
         }
         
         private ObservableCollection<Genre> _genreList;
@@ -35,6 +36,13 @@ namespace ProjectFestival.viewmodel
             set { _stageList = value; OnPropertyChanged("StageList"); }
         }
 
+        private ObservableCollection<Festival> _festivalList;
+        public ObservableCollection<Festival> FestivalList
+        {
+            get { return _festivalList; }
+            set { _festivalList = value; OnPropertyChanged("FestivalList"); }
+        }
+        
         private Genre _selectedGenre;
         public Genre SelectedGenre
         {
@@ -47,6 +55,13 @@ namespace ProjectFestival.viewmodel
         {
             get { return _selectedStage; }
             set { _selectedStage = value; OnPropertyChanged("SelectedStage"); ApplicationVM.SelectedItem = SelectedStage; }
+        }
+
+        private Festival _selectedFestival;
+        public Festival SelectedFestival
+        {
+            get { return _selectedFestival; }
+            set { _selectedFestival = value; OnPropertyChanged("SelectedFestival"); ApplicationVM.SelectedItem = SelectedFestival; }
         }
     }
 }

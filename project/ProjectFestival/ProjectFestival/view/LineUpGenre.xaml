@@ -6,28 +6,50 @@
              mc:Ignorable="d" 
              d:DesignHeight="740" d:DesignWidth="960">
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="25"/>
-            <RowDefinition Height="1*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
-        </Grid.ColumnDefinitions>
-        <TextBlock Text="Genre" Style="{StaticResource Header}"/>
-        <TextBlock Text="Stages" Grid.Column="1" Style="{StaticResource Header}"/>
-        <DataGrid AutoGenerateColumns="False" Grid.Row="1" ItemsSource="{Binding GenreList}" SelectedItem="{Binding SelectedGenre}" CanUserAddRows="False">
-            <DataGrid.Columns>
-                <DataGridTemplateColumn Header="ID" CellTemplate="{StaticResource IDTemplate}"/>
-                <DataGridTemplateColumn Header="Naam" CellTemplate="{StaticResource NameTemplate}" CellEditingTemplate="{StaticResource EditingNameTemplate}"/>
-            </DataGrid.Columns>
-        </DataGrid>
-        <DataGrid AutoGenerateColumns="False" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding StageList}" SelectedItem="{Binding SelectedStage}" CanUserAddRows="False">
-            <DataGrid.Columns>
-                <DataGridTemplateColumn Header="ID" CellTemplate="{StaticResource IDTemplate}"/>
-                <DataGridTemplateColumn Header="Naam" CellTemplate="{StaticResource NameTemplate}" CellEditingTemplate="{StaticResource EditingNameTemplate}"/>
-            </DataGrid.Columns>
-        </DataGrid>
-    </Grid>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Genre" Style="{StaticResource Header}"/>
+            <TextBlock Text="Stages" Grid.Column="1" Style="{StaticResource Header}"/>
+            <DataGrid AutoGenerateColumns="False" Grid.Row="1" ItemsSource="{Binding GenreList}" SelectedItem="{Binding SelectedGenre}" CanUserAddRows="False">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="ID" CellTemplate="{StaticResource IDTemplate}"/>
+                    <DataGridTemplateColumn Header="Naam" CellTemplate="{StaticResource NameTemplate}" CellEditingTemplate="{StaticResource EditingNameTemplate}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <DataGrid AutoGenerateColumns="False" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding StageList}" SelectedItem="{Binding SelectedStage}" CanUserAddRows="False">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="ID" CellTemplate="{StaticResource IDTemplate}"/>
+                    <DataGridTemplateColumn Header="Naam" CellTemplate="{StaticResource NameTemplate}" CellEditingTemplate="{StaticResource EditingNameTemplate}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <DataGrid AutoGenerateColumns="False" Grid.Row="1" Grid.Column="2" ItemsSource="{Binding FestivalList}" SelectedItem="{Binding SelectedFestival,UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="False">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="ID" CellTemplate="{StaticResource IDTemplate}"/>
+                    <DataGridTemplateColumn Width="200" Header="StartDate">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <DatePicker SelectedDate="{Binding StartDate,UpdateSourceTrigger=PropertyChanged}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Width="200" Header="EndDate"> 
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <DatePicker SelectedDate="{Binding EndDate,UpdateSourceTrigger=PropertyChanged}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </ScrollViewer>
 </UserControl>

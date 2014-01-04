@@ -9,12 +9,8 @@ namespace ProjectFestival.model
 {
     public class BandGenre
     {
-        private static ObservableCollection<Genre> _genreList;
-        public static ObservableCollection<Genre> GenreList
-        {
-            get { return _genreList; }
-            set { _genreList = value; }
-        }
+        public static int aantal = 1;
+        public static ObservableCollection<BandGenre> bandGenre;
 
         private int _ID;
         public int ID
@@ -23,16 +19,19 @@ namespace ProjectFestival.model
             set { _ID = value; }
         }
 
+        private static ObservableCollection<Genre> _genreList;
+        public static ObservableCollection<Genre> GenreList
+        {
+            get { return _genreList; }
+            set { _genreList = value; }
+        }
+
         private Genre _genreBand;
         public Genre GenreBand
         {
             get { return _genreBand; }
             set { _genreBand = value; }
         }
-
-        public static int aantal = 1;
-
-        public static ObservableCollection<BandGenre> bandGenre;
 
         public static ObservableCollection<BandGenre> GetBandgenres(ObservableCollection<Genre> genreListBand)
         {
