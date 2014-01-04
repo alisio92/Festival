@@ -19,12 +19,6 @@
     <Style TargetType="StackPanel" x:Key="Vertical">
         <Setter Property="Orientation" Value="Vertical"/>
     </Style>
-    <Style TargetType="TextBlock" x:Key="Info">
-        <Setter Property="Width" Value="Auto"/>
-        <Setter Property="TextWrapping" Value="Wrap"/>
-        <Setter Property="Padding" Value="5,0,0,0"/>
-        <Setter Property="Foreground" Value="White"/>
-    </Style>
     <Style TargetType="ScrollViewer">
         <Setter Property="Margin" Value="10"/>
     </Style>

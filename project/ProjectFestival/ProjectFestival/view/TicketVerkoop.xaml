@@ -10,7 +10,7 @@
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="ID" CellTemplate="{StaticResource IDTemplate}"/>
                 <DataGridTemplateColumn Header="Naam" CellTemplate="{StaticResource NameTemplate}" CellEditingTemplate="{StaticResource EditingNameTemplate}"/>
-                <DataGridTemplateColumn Header="Prijs" CellTemplate="{StaticResource PrijsTemplate}" CellEditingTemplate="{StaticResource EditingPrijsTemplate}"/>
+                <DataGridTemplateColumn Header="Prijs (€)" CellTemplate="{StaticResource PrijsTemplate}" CellEditingTemplate="{StaticResource EditingPrijsTemplate}"/>
                 <DataGridTemplateColumn Header="Beschibare Tickets" CellTemplate="{StaticResource BeschibareTicketsTemplate}" CellEditingTemplate="{StaticResource EditingBeschibareTicketsTemplate}"/>
             </DataGrid.Columns>
         </DataGrid>

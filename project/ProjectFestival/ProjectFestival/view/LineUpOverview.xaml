@@ -32,8 +32,8 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="From" CellTemplate="{StaticResource FromTemplate}" CellEditingTemplate="{StaticResource EditingFromTemplate}"/>
-                <DataGridTemplateColumn Header="Until" CellTemplate="{StaticResource UntilTemplate}" CellEditingTemplate="{StaticResource EditingUntilTemplate}"/>
+                <DataGridTemplateColumn Header="Van" CellTemplate="{StaticResource FromTemplate}" CellEditingTemplate="{StaticResource EditingFromTemplate}"/>
+                <DataGridTemplateColumn Header="Tot" CellTemplate="{StaticResource UntilTemplate}" CellEditingTemplate="{StaticResource EditingUntilTemplate}"/>
             </DataGrid.Columns>
         </DataGrid>
     </ScrollViewer>

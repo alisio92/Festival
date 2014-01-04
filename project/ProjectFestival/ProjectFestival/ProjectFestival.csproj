@@ -93,11 +93,15 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="converter\BytesToImageConverter.cs" />
+    <Compile Include="converter\DateToYearMonthDayConverter.cs" />
+    <Compile Include="converter\TimeToFromTime.cs" />
+    <Compile Include="converter\TimeToUntilTime.cs" />
     <Compile Include="database\DBConnection.cs" />
     <Compile Include="errormodel\Email.cs" />
     <Compile Include="errormodel\Number.cs" />
     <Compile Include="errormodel\Text.cs" />
     <Compile Include="errormodel\TextNumber.cs" />
+    <Compile Include="errormodel\Twitter.cs" />
     <Compile Include="errormodel\Uur.cs" />
     <Compile Include="errormodel\Valuta.cs" />
     <Compile Include="errormodel\Website.cs" />

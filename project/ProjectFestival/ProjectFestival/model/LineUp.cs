@@ -436,6 +436,19 @@ namespace ProjectFestival.model
             }
             sLineUp = temp2;
         }
+
+        public static ObservableCollection<LineUp> SortOnDate(DateTime date)
+        {
+            ObservableCollection<LineUp> dLineUp = new ObservableCollection<LineUp>();
+            foreach(LineUp lineup in sLineUp)
+            {
+                if(lineup.Date == date)
+                {
+                    dLineUp.Add(lineup);
+                }
+            }
+            return dLineUp;
+        }
         
         public static void Zoeken(string parameter)
         {

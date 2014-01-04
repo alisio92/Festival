@@ -316,7 +316,7 @@ namespace ProjectFestival.viewmodel
             bool isMessage = false;
             foreach (Band band in Band.bands)
             {
-                if (band.GenreListBand[band.GenreListBand.Count-1].Name == null)
+                if (band.GenreListBand[band.GenreListBand.Count - 1].Name == null)
                 {
                     isMessage = true;
                 }
@@ -417,7 +417,7 @@ namespace ProjectFestival.viewmodel
                 festval.EndDate = DateTime.Today;
                 Festival.festivals.Add(festval);
                 Festival.aantal++;
-            } 
+            }
         }
 
         private void AddTicket()
@@ -425,7 +425,7 @@ namespace ProjectFestival.viewmodel
             bool isMessage = false;
             foreach (Ticket ticket in Ticket.tickets)
             {
-                if (ticket.TicketHolder == null || ticket.TicketHolderEmail == null || ticket.TicketType.Name == null || ticket.Amount== 0)
+                if (ticket.TicketHolder == null || ticket.TicketHolderEmail == null || ticket.TicketType.Name == null || ticket.Amount == 0)
                 {
                     isMessage = true;
                 }
@@ -565,11 +565,19 @@ namespace ProjectFestival.viewmodel
             {
                 BandsSaveItem();
             }
+            if (CurrentPage.Name == "TimeLine")
+            {
+                if (SelectedItem!=null)
+                {
+                    TimeLineVM.newDate = (DateTime)SelectedItem;
+                    CurrentPage = new TimeLineVM();
+                }
+            }
         }
 
         private void BandsSaveItem()
         {
-            if(SelectedItem!=null)
+            if (SelectedItem != null)
             {
                 CurrentPage = new LineUpInfoVM();
             }
@@ -582,18 +590,34 @@ namespace ProjectFestival.viewmodel
         private void LineUpSaveItem()
         {
             LineUp lineUp = (LineUp)SelectedItem;
+
             if (lineUp != null)
             {
-                int id = LineUp.lineUp.IndexOf(lineUp);
-                id = LineUp.lineUp[id].IDDatabase;
+                String[] from = lineUp.From.Split(new Char[] { ':' });
+                String[] until = lineUp.Until.Split(new Char[] { ':' });
+                int uurUntil = Convert.ToInt32(until[0]);
+                int uurFrom = Convert.ToInt32(from[0]);
+                double minutenUntil = Convert.ToDouble(until[1]);
+                double minutenFrom = Convert.ToDouble(from[1]);
+                double uur = (uurUntil + minutenUntil / 60) - (uurFrom + minutenFrom / 60);
 
-                if (id != 0)
+                if (uur >= 0.50)
                 {
-                    LineUp.EditLineUp(lineUp);
+                    int id = LineUp.lineUp.IndexOf(lineUp);
+                    id = LineUp.lineUp[id].IDDatabase;
+
+                    if (id != 0)
+                    {
+                        LineUp.EditLineUp(lineUp);
+                    }
+                    else
+                    {
+                        LineUp.AddLineUp(lineUp);
+                    }
                 }
                 else
                 {
-                    LineUp.AddLineUp(lineUp);
+                    MessageBox.Show("Het verschil tss einduur en beginuur kan niet minder dan 30 min zijn.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             else
@@ -678,7 +702,7 @@ namespace ProjectFestival.viewmodel
                         Genre.AddGenre(genre);
                     }
                 }
-                else if(SelectedItem.GetType() == typeof(Festival))
+                else if (SelectedItem.GetType() == typeof(Festival))
                 {
                     festival = (Festival)SelectedItem;
                     id = Festival.festivals.IndexOf(festival);

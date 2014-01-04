@@ -274,7 +274,7 @@
             <TextBox.Text>
                 <Binding Path="Twitter" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
-                        <c:Website Min="5" Max="60"/>
+                        <c:Twitter Min="5" Max="20"/>
                     </Binding.ValidationRules>
                 </Binding>
             </TextBox.Text>
@@ -285,7 +285,7 @@
             <TextBox.Text>
                 <Binding Path="Twitter" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
-                        <c:Website Min="5" Max="60"/>
+                        <c:Twitter Min="5" Max="20"/>
                     </Binding.ValidationRules>
                 </Binding>
             </TextBox.Text>
