@@ -17,11 +17,27 @@ using ProjectFestival.viewmodel;
 using System.Data.SqlClient;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
+using ProjectFestival.writetofile;
 
 namespace ProjectFestival.model
 {
     public class LineUp
     {
+        public static int vorigeWidth;
+        public static int Height = 0;
+        public static int aantal = 1;
+        public static int aantal2 = 1;
+        public static ObservableCollection<LineUp> lineUp = new ObservableCollection<LineUp>();
+        public static ObservableCollection<LineUp> sLineUp = new ObservableCollection<LineUp>();
+        public static ObservableCollection<LineUp> oLineUp = new ObservableCollection<LineUp>();
+
+        private int _idDatabase;
+        public int IDDatabase
+        {
+            get { return _idDatabase; }
+            set { _idDatabase = value; }
+        }
+        
         private int _id;
         public int ID
         {
@@ -92,28 +108,19 @@ namespace ProjectFestival.model
             set { _bandList = value; }
         }
 
-        private static ObservableCollection<Festival> _dateList;
-        public static ObservableCollection<Festival> DateList
+        private static ObservableCollection<Datum> _dateList;
+        public static ObservableCollection<Datum> DateList
         {
             get { return _dateList; }
             set { _dateList = value; }
         }
 
-        public static int vorigeWidth;
-        public static int Height = 0;
-        public static int aantal = 1;
-        public static int aantal2 = 1;
-
-        public static ObservableCollection<LineUp> lineUp = new ObservableCollection<LineUp>();
-        public static ObservableCollection<LineUp> sLineUp = new ObservableCollection<LineUp>();
-        public static ObservableCollection<LineUp> oLineUp = new ObservableCollection<LineUp>();
-
         public static ObservableCollection<LineUp> GetLineUp()
         {
-            ApplicationVM.Infotxt("Inladen LineUp", "");
+            aantal = 1;
             StageList = Stage.GetStages();
             BandList = Band.GetBands();
-            DateList = Festival.GetFestival();
+            DateList = Datum.GetDates();
 
             try
             {
@@ -125,83 +132,55 @@ namespace ProjectFestival.model
                     lineUp.Add(Create(reader));
                     aantal++;
                 }
-                ApplicationVM.Infotxt("LineUp ingeladen", "Inladen LineUp");
             }
-            catch (SqlException)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan database LineUp niet vinden", "");
+                FileWriter.WriteToFile(e.Message);
             }
-            catch (IndexOutOfRangeException)
-            {
-                ApplicationVM.Infotxt("Kolommen database hebben niet de juiste naam", "");
-            }
-            catch (Exception)
-            {
-                ApplicationVM.Infotxt("Kan LineUp tabel niet inlezen", "");
-            }
-            oLineUp = lineUp;
-
             SortList();
+            oLineUp = lineUp;
 
             return lineUp;
         }
 
-        private static void SortList()
-        {
-            ObservableCollection<LineUp> temp1 = new ObservableCollection<LineUp>();
-
-            foreach (LineUp l in lineUp)
-            {
-                temp1.Add(l);
-            }
-            ObservableCollection<LineUp> temp2 = new ObservableCollection<LineUp>();
-            int ruimte = 0;
-            //sLineUp.Add(lineUp[0]);
-
-            int id = 1;
-            while (temp1.Count() > 0)
-            {
-                bool isToegevoegd = false;
-                for (int i = 0; i < temp1.Count(); i++)
-                {
-                    if (temp1[i].Stage.ID == id)
-                    {
-                        temp1[i].Margin = GetMargin(temp1[i], GetFrom(temp1[i]), GetUntil(temp1[i]), temp1[i].Stage.ID - ruimte);
-                        ruimte = temp1[i].Stage.ID;
-                        temp2.Add(temp1[i]);
-                        temp1.RemoveAt(i);
-                        isToegevoegd = true;
-                        aantal2++;
-                    }
-                }
-                if (!isToegevoegd)
-                {
-                    id++;
-                }
-            }
-            sLineUp = temp2;
-        }
-
-
         private static LineUp Create(IDataRecord record)
         {
             LineUp lineUp = new LineUp();
-            lineUp.ID = Convert.ToInt32(record["ID"]);
-            lineUp.Date = Convert.ToDateTime(record["Date"]);
+            lineUp.ID = aantal;
+            lineUp.IDDatabase = Convert.ToInt32(record["ID"]);
+            lineUp.Date = (DateTime)record["Date"];
             lineUp.From = record["StartTime"].ToString();
             lineUp.Until = record["EndTime"].ToString();
-            lineUp.Band = new Band()
+            foreach (Band band in BandList)
             {
-                ID = (int)record["Band"],
-                Name = BandList[(int)record["Band"] - 1].Name
-            };
-            lineUp.Stage = new Stage()
+                if (band.IDDatabase == (int)record["Band"])
+                {
+                    lineUp.Band = new Band()
+                    {
+                        IDDatabase = band.IDDatabase,
+                        ID = band.ID,
+                        Name = band.Name,
+                        Description = band.Description,
+                        Facebook = band.Facebook,
+                        Twitter = band.Twitter,
+                        Picture = band.Picture,
+                        GenreListBand = band.GenreListBand
+                    };
+                }
+            }
+            foreach (Stage stage in StageList)
             {
-                ID = (int)record["Stage"],
-                Name = StageList[(int)record["Stage"] - 1].Name
-            };
+                if (stage.IDDatabase == (int)record["Stage"])
+                {
+                    lineUp.Stage = new Stage()
+                    {
+                        IDDatabase = stage.IDDatabase,
+                        ID = stage.ID,
+                        Name = stage.Name
+                    };
+                }
+            }
             lineUp.Width = GetWidth(lineUp, GetFrom(lineUp), GetUntil(lineUp));
-            //lineUp.Margin = GetMargin(lineUp, GetFrom(lineUp), GetUntil(lineUp));
 
             return lineUp;
         }
@@ -235,14 +214,7 @@ namespace ProjectFestival.model
         public static string GetMargin(LineUp lineUp, string[] from, string[] until, int ruimte)
         {
             int top = 0;
-            //top = ((lineUp.Stage.ID - 1) * 60) - Height - ((aantal - 1) * 8); //((lineUp.Stage.ID - 1) * 60)
-            top = ((ruimte - 1) * 60);// -((aantal2 - 1) * 8);
-            //int height = ((lineUp.Stage.ID) * 60);
-            //if (height > Height)
-            //{
-            //    Height = height+60;
-            //}
-            //Height = height;
+            top = ((ruimte - 1) * 60);
             int uur = Convert.ToInt32(from[0]);
             double minuut = Convert.ToDouble(from[1]) / 60;
             double left = (uur * 200) + (minuut * 200);
@@ -251,31 +223,28 @@ namespace ProjectFestival.model
 
         public static int AddLineUp(LineUp lineUp)
         {
-            ApplicationVM.Infotxt("LineUp toevoegen", "");
             DbTransaction trans = null;
 
             try
             {
                 trans = Database.BeginTransaction();
 
-                string sql = "INSERT INTO LineUp VALUES(@ID,@Date,@StartTime,@EndTime,@Stage,@Band)";
-                DbParameter par1 = Database.AddParameter("@ID", lineUp.ID);
-                DbParameter par2 = Database.AddParameter("@Date", DateTime.Today);
-                DbParameter par3 = Database.AddParameter("@StartTime", lineUp.From);
-                DbParameter par4 = Database.AddParameter("@EndTime", lineUp.Until);
-                DbParameter par5 = Database.AddParameter("@Stage", lineUp.Stage.ID);
-                DbParameter par6 = Database.AddParameter("@Band", lineUp.Band.ID);
+                string sql = "INSERT INTO LineUp VALUES(@Date,@StartTime,@EndTime,@Stage,@Band)";
+                DbParameter par1 = Database.AddParameter("@Date", lineUp.Date);
+                DbParameter par2 = Database.AddParameter("@StartTime", lineUp.From);
+                DbParameter par3 = Database.AddParameter("@EndTime", lineUp.Until);
+                DbParameter par4 = Database.AddParameter("@Stage", StageList[lineUp.Stage.ID - 1].IDDatabase);
+                DbParameter par5 = Database.AddParameter("@Band", BandList[lineUp.Band.ID - 1].IDDatabase);
 
                 int rowsaffected = 0;
-                rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5, par6);
+                rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("LineUp toegevoegd", "LineUp aanpassen");
                 return rowsaffected;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan LineUp niet toevoegen", "");
+                FileWriter.WriteToFile(e.Message);
                 trans.Rollback();
                 return 0;
             }
@@ -283,7 +252,6 @@ namespace ProjectFestival.model
 
         public static int EditLineUp(LineUp lineUp)
         {
-            ApplicationVM.Infotxt("LineUp aanpassen", "");
             DbTransaction trans = null;
 
             try
@@ -291,23 +259,22 @@ namespace ProjectFestival.model
                 trans = Database.BeginTransaction();
 
                 string sql = "UPDATE LineUp SET Date=@Date,StartTime=@StartTime,EndTime=@EndTime,Stage=@Stage,Band=@Band WHERE ID=@ID";
-                DbParameter par1 = Database.AddParameter("@ID", lineUp.ID);
-                DbParameter par2 = Database.AddParameter("@Date", DateTime.Today);
+                DbParameter par1 = Database.AddParameter("@ID", lineUp.IDDatabase);
+                DbParameter par2 = Database.AddParameter("@Date", lineUp.Date);
                 DbParameter par3 = Database.AddParameter("@StartTime", lineUp.From);
                 DbParameter par4 = Database.AddParameter("@EndTime", lineUp.Until);
-                DbParameter par5 = Database.AddParameter("@Stage", lineUp.Stage.ID);
-                DbParameter par6 = Database.AddParameter("@Band", lineUp.Band.ID);
+                DbParameter par5 = Database.AddParameter("@Stage", StageList[lineUp.Stage.ID - 1].IDDatabase);
+                DbParameter par6 = Database.AddParameter("@Band", BandList[lineUp.Band.ID - 1].IDDatabase);
 
                 int rowsaffected = 0;
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5, par6);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("LineUp aangepast", "LineUp aanpassen");
                 return rowsaffected;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan LineUp niet aanpassen", "");
+                FileWriter.WriteToFile(e.Message);
                 trans.Rollback();
                 return 0;
             }
@@ -315,7 +282,6 @@ namespace ProjectFestival.model
 
         public static int DeleteLineUp(LineUp lineUp)
         {
-            ApplicationVM.Infotxt("LineUp wissen", "");
             DbTransaction trans = null;
 
             try
@@ -323,18 +289,17 @@ namespace ProjectFestival.model
                 trans = Database.BeginTransaction();
 
                 string sql = "DELETE FROM LineUp WHERE ID = @ID";
-                DbParameter par1 = Database.AddParameter("@ID", lineUp.ID);
+                DbParameter par1 = Database.AddParameter("@ID", lineUp.IDDatabase);
 
                 int rowsaffected = 0;
                 rowsaffected += Database.ModifyData(trans, sql, par1);
 
                 trans.Commit();
-                ApplicationVM.Infotxt("LineUp gewist", "LineUp wissen");
                 return rowsaffected;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ApplicationVM.Infotxt("Kan LineUp niet wissen", "");
+                FileWriter.WriteToFile(e.Message);
                 trans.Rollback();
                 return 0;
             }
@@ -436,30 +401,66 @@ namespace ProjectFestival.model
             }
         }
 
+        private static void SortList()
+        {
+            ObservableCollection<LineUp> temp1 = new ObservableCollection<LineUp>();
+
+            foreach (LineUp l in lineUp)
+            {
+                temp1.Add(l);
+            }
+            ObservableCollection<LineUp> temp2 = new ObservableCollection<LineUp>();
+            int ruimte = 0;
+            //sLineUp.Add(lineUp[0]);
+
+            int id = 1;
+            while (temp1.Count() > 0)
+            {
+                bool isToegevoegd = false;
+                for (int i = 0; i < temp1.Count(); i++)
+                {
+                    if (temp1[i].Stage.ID == id)
+                    {
+                        temp1[i].Margin = GetMargin(temp1[i], GetFrom(temp1[i]), GetUntil(temp1[i]), temp1[i].Stage.ID - ruimte);
+                        ruimte = temp1[i].Stage.ID;
+                        temp2.Add(temp1[i]);
+                        temp1.RemoveAt(i);
+                        isToegevoegd = true;
+                        aantal2++;
+                    }
+                }
+                if (!isToegevoegd)
+                {
+                    id++;
+                }
+            }
+            sLineUp = temp2;
+        }
+        
         public static void Zoeken(string parameter)
         {
             parameter = parameter.ToLower();
             lineUp = new ObservableCollection<LineUp>();
 
-            foreach (LineUp c in oLineUp)
+            foreach (LineUp lineup in oLineUp)
             {
                 if (parameter != "" && parameter != "Zoeken")
                 {
-                    if ((c.Band.Name.ToLower().Contains(parameter)) || (c.ID.ToString().ToLower().Contains(parameter)) || (c.From.ToLower().Contains(parameter)) || (c.Until.ToLower().Contains(parameter)) || (c.Stage.Name.ToLower().Contains(parameter)))
+                    if ((lineup.Band.Name.ToLower().Contains(parameter)) || (lineup.ID.ToString().ToLower().Contains(parameter)) || (lineup.From.ToLower().Contains(parameter)) || (lineup.Until.ToLower().Contains(parameter)) || (lineup.Stage.Name.ToLower().Contains(parameter)) || (lineup.Date.ToString().ToLower().Contains(parameter)))
                     {
-                        lineUp.Add(c);
+                        lineUp.Add(lineup);
                     }
                 }
                 else
                 {
-                    lineUp.Add(c);
+                    lineUp.Add(lineup);
                 }
             }
         }
 
         public override string ToString()
         {
-            return Band.Name + " " + From + " " + Until;
+            return Band.Name + " " + From + " " + Until + " " + Date;
         }
     }
 }

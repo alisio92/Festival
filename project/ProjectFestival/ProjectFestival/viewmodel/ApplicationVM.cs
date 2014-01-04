@@ -22,19 +22,7 @@ namespace ProjectFestival.viewmodel
 
             CurrentPage = PagesMainNav[0];
             subNav();
-            LineUp.JsonWegschrijven();
-        }
-
-        public static void Infotxt(string infoNew, string infoOld)
-        {
-            if (infoOld == "")
-            {
-                Info += infoNew + "\n";
-            }
-            else
-            {
-                Info = Info.Replace(infoOld, infoNew);
-            }
+            //LineUp.JsonWegschrijven();
         }
 
         private String _search = "Zoeken";
@@ -48,12 +36,6 @@ namespace ProjectFestival.viewmodel
             }
         }
 
-        private static String _info;
-        public static String Info
-        {
-            get { return _info; }
-            set { _info = value; }
-        }
         private void subNav()
         {
             PagesSubNav.Clear();
@@ -284,7 +266,6 @@ namespace ProjectFestival.viewmodel
             {
                 AddTicketType();
             }
-
             if (CurrentPage.Name == "Genre & Stage")
             {
                 AddGenreStage();
@@ -299,11 +280,33 @@ namespace ProjectFestival.viewmodel
             }
             if (CurrentPage.Name == "Line-Up")
             {
-                LineUp l = new LineUp();
-                l.Band = new Band();
-                l.Stage = new Stage();
-                l.ID = LineUp.aantal;
-                LineUp.lineUp.Add(l);
+                AddLineUp();
+            }
+        }
+
+        private void AddLineUp()
+        {
+            bool isMessage = false;
+            foreach (LineUp lineUp in LineUp.lineUp)
+            {
+                if (lineUp.Band.Name == null || lineUp.Stage.Name == null || lineUp.From == null || lineUp.Until == null || lineUp.Date == null)
+                {
+                    isMessage = true;
+                }
+            }
+            if (isMessage)
+            {
+                MessageInfo();
+            }
+            else
+            {
+                LineUp lineUp = new LineUp();
+                lineUp.Band = new Band();
+                lineUp.Stage = new Stage();
+                lineUp.Date = new DateTime();
+                lineUp.Date = DateTime.Today;
+                lineUp.ID = LineUp.aantal;
+                LineUp.lineUp.Add(lineUp);
                 LineUp.aantal++;
             }
         }
@@ -579,23 +582,30 @@ namespace ProjectFestival.viewmodel
         private void LineUpSaveItem()
         {
             LineUp lineUp = (LineUp)SelectedItem;
-            int id = 0;
-            for (int i = 0; i < LineUp.lineUp.Count(); i++)
+            if (lineUp != null)
             {
-                if ((LineUp.lineUp[i].Band == lineUp.Band) && (LineUp.lineUp[i].Stage == lineUp.Stage))
-                {
-                    id = i;
-                }
-            }
-            id = LineUp.lineUp[id].ID;
+                int id = LineUp.lineUp.IndexOf(lineUp);
+                id = LineUp.lineUp[id].IDDatabase;
 
-            if (id != LineUp.aantal - 1)
-            {
-                LineUp.EditLineUp(lineUp);
+                if (id != 0)
+                {
+                    LineUp.EditLineUp(lineUp);
+                }
+                else
+                {
+                    LineUp.AddLineUp(lineUp);
+                }
             }
             else
             {
-                LineUp.AddLineUp(lineUp);
+                DialogResult result = MessageQuestion();
+                if (result == DialogResult.Yes)
+                {
+                    foreach (LineUp lineup in LineUp.lineUp)
+                    {
+                        LineUp.EditLineUp(lineup);
+                    }
+                }
             }
         }
 

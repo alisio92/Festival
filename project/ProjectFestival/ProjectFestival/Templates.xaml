@@ -291,4 +291,48 @@
             </TextBox.Text>
         </TextBox>
     </DataTemplate>
+    <DataTemplate x:Key="FromTemplate">
+        <TextBox HorizontalAlignment="Center" Validation.ErrorTemplate="{StaticResource validationTemplate}" Style="{StaticResource textBoxInError}" Width="100">
+            <TextBox.Text>
+                <Binding Path="From" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <c:Uur Min="3" Max="6"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+    </DataTemplate>
+    <DataTemplate x:Key="EditingFromTemplate">
+        <TextBox HorizontalAlignment="Center" Validation.ErrorTemplate="{StaticResource validationTemplate}" Style="{StaticResource textBoxInError}">
+            <TextBox.Text>
+                <Binding Path="From" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <c:Uur Min="3" Max="6"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+    </DataTemplate>
+    <DataTemplate x:Key="UntilTemplate">
+        <TextBox HorizontalAlignment="Center" Validation.ErrorTemplate="{StaticResource validationTemplate}" Style="{StaticResource textBoxInError}" Width="100">
+            <TextBox.Text>
+                <Binding Path="Until" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <c:Uur Min="3" Max="6"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+    </DataTemplate>
+    <DataTemplate x:Key="EditingUntilTemplate">
+        <TextBox HorizontalAlignment="Center" Validation.ErrorTemplate="{StaticResource validationTemplate}" Style="{StaticResource textBoxInError}">
+            <TextBox.Text>
+                <Binding Path="Until" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <c:Uur Min="3" Max="6"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+    </DataTemplate>
 </ResourceDictionary>

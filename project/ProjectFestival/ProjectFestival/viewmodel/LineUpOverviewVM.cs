@@ -13,13 +13,25 @@ namespace ProjectFestival.viewmodel
 {
     class LineUpOverviewVM : ObservableObject, IPage
     {
+        private static Boolean isRunning = false;
         public string Name 
         {
             get { return "Line-Up"; }
         }
 
-        private static Boolean isRunning = false;
-
+        public LineUpOverviewVM()
+        {
+            if (!isRunning)
+            {
+                isRunning = true;
+                LineUpList = LineUp.GetLineUp();
+            }
+            StagesList = Stage.stages;
+            LineUpList = LineUp.lineUp;
+            BandsList = LineUp.BandList;
+            DateList = Datum.dates;
+        }
+        
         private ObservableCollection<LineUp> _lineUpList;
         public ObservableCollection<LineUp> LineUpList
         {
@@ -41,8 +53,8 @@ namespace ProjectFestival.viewmodel
             set { _bandList = value; OnPropertyChanged("BandsList"); }
         }
 
-        private ObservableCollection<Festival> _dateList;
-        public ObservableCollection<Festival> DateList
+        private ObservableCollection<Datum> _dateList;
+        public ObservableCollection<Datum> DateList
         {
             get { return _dateList; }
             set { _dateList = value; OnPropertyChanged("DateList"); }
@@ -52,25 +64,7 @@ namespace ProjectFestival.viewmodel
         public LineUp SelectedLineUp
         {
             get { return _selectedLineUp; }
-            set 
-            {
-                _selectedLineUp = value;
-                OnPropertyChanged("SelectedLineUp");
-                ApplicationVM.SelectedItem = SelectedLineUp;
-            }
-        }
-
-        public LineUpOverviewVM()
-        {
-            if (!isRunning)
-            {
-                isRunning = true;
-                LineUpList = LineUp.GetLineUp();
-            }
-            StagesList = Stage.stages;
-            LineUpList = LineUp.lineUp;
-            BandsList = LineUp.BandList;
-            DateList = Festival.festivals;
+            set { _selectedLineUp = value; OnPropertyChanged("SelectedLineUp"); ApplicationVM.SelectedItem = SelectedLineUp; }
         }
     }
 }

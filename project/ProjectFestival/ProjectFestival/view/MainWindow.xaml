@@ -5,7 +5,7 @@
         xmlns:v="clr-namespace:ProjectFestival.view"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:cmd="http://www.galasoft.ch/mvvmlight"
-        Title="Festival" Height="800" Width="960" MinWidth="770" MinHeight="620">
+        Title="Festival" Height="800" Width="960" MinWidth="770" MinHeight="620" WindowState="Maximized">
     
     <Window.DataContext>
         <vm:ApplicationVM/>

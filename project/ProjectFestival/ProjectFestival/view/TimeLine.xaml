@@ -11,7 +11,6 @@
              d:DesignHeight="740" d:DesignWidth="960">
 
     <UserControl.Resources>
-        <converter:DateToYearMonthDayConverter x:Key="Date"/>
         <ItemsPanelTemplate x:Key="ItemsPanel">
             <WrapPanel/>
         </ItemsPanelTemplate>
@@ -22,7 +21,7 @@
         </DataTemplate>
         <DataTemplate x:Key="scTemplateStages">
             <StackPanel>
-                <TextBlock Text="{Binding Name}" Width="100" Height="55" Margin="20,10,10,0" />
+                <TextBlock Text="{Binding Name}" Width="150" Height="55" Margin="20,10,10,0" />
             </StackPanel>
         </DataTemplate>
     </UserControl.Resources>
@@ -32,7 +31,7 @@
             <ImageBrush ImageSource="C:\Users\alisio\Desktop\howest\2NMCT\Business Applications\oefeningen\ProjectFestival\ProjectFestival\images\zwartevilt.png"/>
         </Grid.Background>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="150"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         <ItemsControl ItemsSource="{Binding StagesList}" ItemsPanel="{StaticResource ItemsPanel}" ItemTemplate="{StaticResource scTemplateStages}" Grid.Row="0" Margin="0,28,0,0" Foreground="White" Padding="0,28,0,0"/>
@@ -52,7 +51,7 @@
                                     <RowDefinition Height="20"/>
                                     <RowDefinition Height="20"/>
                                 </Grid.RowDefinitions>
-                                <TextBlock Text="{Binding Date,Converter={StaticResource Date}}" Grid.Row="0"/>
+                                <TextBlock Text="{Binding Date}" Grid.Row="0"/>
                                 <TextBlock Text="{Binding Band.Name}" TextAlignment="Center" Grid.Row="1"/>
                                 <Grid Grid.Row="2">
                                     <Grid.ColumnDefinitions>

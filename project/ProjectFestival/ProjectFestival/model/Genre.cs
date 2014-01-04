@@ -100,7 +100,6 @@ namespace ProjectFestival.model
 
         public static int AddGenre(Genre genre)
         {
-            ApplicationVM.Infotxt("Genre toevoegen", "");
             DbTransaction trans = null;
 
             try

@@ -93,12 +93,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="converter\BytesToImageConverter.cs" />
-    <Compile Include="converter\DateToYearMonthDayConverter.cs" />
     <Compile Include="database\DBConnection.cs" />
     <Compile Include="errormodel\Email.cs" />
     <Compile Include="errormodel\Number.cs" />
     <Compile Include="errormodel\Text.cs" />
     <Compile Include="errormodel\TextNumber.cs" />
+    <Compile Include="errormodel\Uur.cs" />
     <Compile Include="errormodel\Valuta.cs" />
     <Compile Include="errormodel\Website.cs" />
     <Compile Include="model\Band.cs" />
@@ -107,6 +107,7 @@
     <Compile Include="model\ContactPersonTitle.cs" />
     <Compile Include="model\ContactPersonType.cs" />
     <Compile Include="database\Database.cs" />
+    <Compile Include="model\Datum.cs" />
     <Compile Include="model\Festival.cs" />
     <Compile Include="model\Genre.cs" />
     <Compile Include="model\LineUp.cs" />

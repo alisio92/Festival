@@ -3,38 +3,38 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:converter="clr-namespace:ProjectFestival.converter"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-        <Grid Grid.Row="1" Grid.Column="1">
-            <DataGrid AutoGenerateColumns="False" Grid.Row="1" ItemsSource="{Binding LineUpList}" SelectedItem="{Binding SelectedLineUp,UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="False">
-                <DataGrid.Columns>
-                    <DataGridTemplateColumn Width="1*" Header="Stage">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <ComboBox ItemsSource="{Binding StageList}" DisplayMemberPath="Name" SelectedItem="{Binding Stage.Name,UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="ID" SelectedValue="{Binding Stage.ID,UpdateSourceTrigger=PropertyChanged}"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Width="1*" Header="Band">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <ComboBox ItemsSource="{Binding BandList}"  DisplayMemberPath="Name" SelectedItem="{Binding Band.Name,UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="ID" SelectedValue="{Binding Band.ID,UpdateSourceTrigger=PropertyChanged}"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <!--<DataGridTemplateColumn Width="1*" Header="Datum">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <ComboBox ItemsSource="{Binding DateList}" SelectedItem="{Binding Date,UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="ID" SelectedValue="{Binding ID,UpdateSourceTrigger=PropertyChanged}"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>-->
-                    <DataGridTextColumn Header="From" Width="1*" Binding="{Binding From}"/>
-                    <DataGridTextColumn Header="Until" Width="1*" Binding="{Binding Until}"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        </Grid>
 
-    </Grid>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding LineUpList}" SelectedItem="{Binding SelectedLineUp,UpdateSourceTrigger=PropertyChanged}" CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="ID" CellTemplate="{StaticResource IDTemplate}"/>
+                <DataGridTemplateColumn Width="200" Header="Stage">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding StageList}" DisplayMemberPath="Name" SelectedItem="{Binding Stage.Name,UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="ID" SelectedValue="{Binding Stage.ID,UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="200" Header="Band">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding BandList}"  DisplayMemberPath="Name" SelectedItem="{Binding Band.Name,UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="ID" SelectedValue="{Binding Band.ID,UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="200" Header="Datum">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <DatePicker SelectedDate="{Binding Date,UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="From" CellTemplate="{StaticResource FromTemplate}" CellEditingTemplate="{StaticResource EditingFromTemplate}"/>
+                <DataGridTemplateColumn Header="Until" CellTemplate="{StaticResource UntilTemplate}" CellEditingTemplate="{StaticResource EditingUntilTemplate}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </ScrollViewer>
 </UserControl>
