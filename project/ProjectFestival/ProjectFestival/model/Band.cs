@@ -172,6 +172,7 @@ namespace ProjectFestival.model
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5, par6, par7);
 
                 trans.Commit();
+                FileWriter.JsonWegschrijven();
                 return rowsaffected;
             }
             catch (Exception e)
@@ -209,6 +210,7 @@ namespace ProjectFestival.model
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2, par3, par4, par5, par6);
 
                 trans.Commit();
+                FileWriter.JsonWegschrijven();
                 return rowsaffected;
             }
             catch (Exception e)

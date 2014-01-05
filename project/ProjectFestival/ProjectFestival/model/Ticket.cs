@@ -213,6 +213,7 @@ namespace ProjectFestival.model
 
                 trans.Commit();
                 tickets = GetTickets();
+                FileWriter.PrintTicket(ticket);
                 return rowsaffected;
             }
             catch (Exception)
@@ -269,6 +270,7 @@ namespace ProjectFestival.model
 
                     trans.Commit();
                     tickets = GetTickets();
+                    FileWriter.PrintTicket(ticket);
                     return rowsaffected;
                 }
                 catch (Exception e)
@@ -372,39 +374,6 @@ namespace ProjectFestival.model
                 {
                     tickets.Add(ticket);
                 }
-            }
-        }
-
-        public static void PrintTickets()
-        {
-            foreach (Ticket ssc in tickets)
-            {
-                string filename = "testttttt.docx";
-                File.Copy("template.docx", filename, true);
-                WordprocessingDocument newdoc = WordprocessingDocument.Open(filename, true);
-                IDictionary<String, BookmarkStart> bookmarks = new Dictionary<String, BookmarkStart>();
-                foreach (BookmarkStart bms in newdoc.MainDocumentPart.RootElement.Descendants<BookmarkStart>())
-                {
-                    bookmarks[bms.Name] = bms;
-                }
-
-                double prijs = ssc.TicketType.Price * ssc.Amount;
-
-                bookmarks["Date"].Parent.InsertAfter<Run>(new Run(new Text(DateTime.Today.ToString())), bookmarks["Date"]);
-                bookmarks["Name"].Parent.InsertAfter<Run>(new Run(new Text(ssc.TicketHolder)), bookmarks["Name"]);
-                bookmarks["Type"].Parent.InsertAfter<Run>(new Run(new Text(ssc.TicketType.Name)), bookmarks["Type"]);
-                bookmarks["Amount"].Parent.InsertAfter<Run>(new Run(new Text(ssc.Amount.ToString())), bookmarks["Amount"]);
-                bookmarks["Price"].Parent.InsertAfter<Run>(new Run(new Text(ssc.TicketType.Price.ToString())), bookmarks["Price"]);
-                bookmarks["Total"].Parent.InsertAfter<Run>(new Run(new Text(prijs.ToString())), bookmarks["Total"]);
-                Run run = new Run(new Text("111000111"));
-                RunProperties prop = new RunProperties();
-                RunFonts font = new RunFonts() { Ascii = "Free 3 of 9 Extended", HighAnsi = "Free 3 of 9 Extended" };
-                FontSize size = new FontSize() { Val = "96" };
-                prop.Append(font);
-                prop.Append(size);
-                run.PrependChild<RunProperties>(prop);
-                bookmarks["Barcode"].Parent.InsertAfter<Run>(run, bookmarks["Barcode"]);
-                newdoc.Close();
             }
         }
 

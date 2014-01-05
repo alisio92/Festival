@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using ProjectFestival.model;
+using ProjectFestival.writetofile;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,7 +23,6 @@ namespace ProjectFestival.viewmodel
 
             CurrentPage = PagesMainNav[0];
             subNav();
-            //LineUp.JsonWegschrijven();
         }
 
         private String _search = "Zoeken";
@@ -441,6 +441,7 @@ namespace ProjectFestival.viewmodel
                 t.ID = Ticket.aantal;
                 Ticket.tickets.Add(t);
                 Ticket.aantal++;
+                CurrentPage = new TicketOverviewVM();
             }
         }
 
@@ -924,11 +925,22 @@ namespace ProjectFestival.viewmodel
                 {
                     GenreDeleteItem();
                 }
+                if (CurrentPage.Name == "Line-Up")
+                {
+                    LineUpDeleteItem();
+                }
             }
             else
             {
                 MessageDelete();
             }
+        }
+
+        private void LineUpDeleteItem()
+        {
+            LineUp lineUp = (LineUp)SelectedItem;
+            LineUp.DeleteLineUp(lineUp);
+            LineUp.lineUp.Remove(lineUp);
         }
 
         private void GenreDeleteItem()
@@ -979,6 +991,7 @@ namespace ProjectFestival.viewmodel
             Ticket ticket = (Ticket)SelectedItem;
             Ticket.DeleteTicket(ticket);
             Ticket.tickets.Remove(ticket);
+            CurrentPage = new TicketOverviewVM();
         }
 
         private void PersoneelDeleteItem()

@@ -18,6 +18,7 @@ using System.Data.SqlClient;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
 using ProjectFestival.writetofile;
+using System.Windows.Forms;
 
 namespace ProjectFestival.model
 {
@@ -303,60 +304,6 @@ namespace ProjectFestival.model
                 trans.Rollback();
                 return 0;
             }
-        }
-
-        public static void PrintTicket()
-        {
-
-            foreach (LineUp ssc in lineUp)
-            {
-                string filename = "testttttt.docx";
-                File.Copy("template.docx", filename, true);
-                WordprocessingDocument newdoc = WordprocessingDocument.Open(filename, true);
-                IDictionary<String, BookmarkStart> bookmarks = new Dictionary<String, BookmarkStart>();
-                foreach (BookmarkStart bms in newdoc.MainDocumentPart.RootElement.Descendants<BookmarkStart>())
-                {
-                    bookmarks[bms.Name] = bms;
-                }
-                bookmarks["Name"].Parent.InsertAfter<Run>(new Run(new Text()), bookmarks["Name"]);
-                bookmarks["Group"].Parent.InsertAfter<Run>(new Run(new Text(ssc.From)), bookmarks["Group"]);
-                bookmarks["Total"].Parent.InsertAfter<Run>(new Run(new Text(ssc.Until.ToString())),
-                bookmarks["Total"]);
-                newdoc.Close();
-            }
-
-
-            //WordprocessingDocument wordDocument = WordprocessingDocument.Create(AppDomain.CurrentDomain.BaseDirectory + "test2.doc", WordprocessingDocumentType.Document);
-            //IDictionary<String, BookmarkStart> bookmarks = new Dictionary<String, BookmarkStart>();
-
-            //foreach (BookmarkStart bms in wordDocument.MainDocumentPart.RootElement.Descendants<BookmarkStart>())
-            //{
-            //    bookmarks[bms.Name] = bms;
-            //}
-            //MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
-
-            //mainPart.Document = new Document();
-
-            //foreach (LineUp l in lineUp)
-            //{
-            //    Body body = mainPart.Document.AppendChild(new Body());
-            //    Paragraph para = body.AppendChild(new Paragraph());
-            //    Run run = para.AppendChild(new Run());
-            //    run.AppendChild(new Text(l.ID + " " + l.Band.Name + " " + l.Stage.Name + " " + l.Date + " " + l.From + " " + l.Until));
-            //    RunProperties prop = new RunProperties();
-            //    RunFonts font = new RunFonts() { Ascii = "Free 3 of 9 Extended", HighAnsi = "Free 3 of 9 Extended" };
-            //    FontSize size = new FontSize() { Val = "96" };
-            //    prop.Append(font);
-            //    prop.Append(size);
-            //    run.PrependChild<RunProperties>(prop);
-            //    bookmarks["code"].Parent.InsertAfter<Run>(run, bookmarks["code"]);
-            //}
-
-            ////Run running = new Run(new Text("lolollolllo"));
-
-
-
-            //wordDocument.Close();
         }
 
         public static void JsonWegschrijven()

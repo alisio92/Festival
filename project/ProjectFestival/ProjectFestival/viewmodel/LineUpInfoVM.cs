@@ -55,7 +55,7 @@ namespace ProjectFestival.viewmodel
             {
                 _selectedGenre = value;
                 OnPropertyChanged("SelectedGenre");
-                if (SelectedGenre.GenreBand.Name=="")
+                if (SelectedGenre.GenreBand.Name==null)
                 {
                     Genre g = new Genre();
                     g = SelectedGenre.GenreBand;

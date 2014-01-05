@@ -164,7 +164,7 @@
             <TextBox.Text>
                 <Binding Path="AvailableTickets" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
-                        <c:Number Min="1" Max="10"/>
+                        <c:Number Min="0" Max="10"/>
                     </Binding.ValidationRules>
                 </Binding>
             </TextBox.Text>
@@ -175,7 +175,7 @@
             <TextBox.Text>
                 <Binding Path="AvailableTickets" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
-                        <c:Number Min="1" Max="10"/>
+                        <c:Number Min="0" Max="10"/>
                     </Binding.ValidationRules>
                 </Binding>
             </TextBox.Text>
@@ -186,7 +186,7 @@
             <TextBox.Text>
                 <Binding Path="Amount" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
-                        <c:Number Min="1" Max="10"/>
+                        <c:Number Min="0" Max="10"/>
                     </Binding.ValidationRules>
                 </Binding>
             </TextBox.Text>
@@ -197,7 +197,7 @@
             <TextBox.Text>
                 <Binding Path="Amount" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
-                        <c:Number Min="1" Max="10"/>
+                        <c:Number Min="0" Max="10"/>
                     </Binding.ValidationRules>
                 </Binding>
             </TextBox.Text>
