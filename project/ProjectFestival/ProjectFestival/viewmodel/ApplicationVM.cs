@@ -23,6 +23,7 @@ namespace ProjectFestival.viewmodel
 
             CurrentPage = PagesMainNav[0];
             subNav();
+            FileWriter.JsonWegschrijven();
         }
 
         private String _search = "Zoeken";

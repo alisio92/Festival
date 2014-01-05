@@ -41,6 +41,7 @@ namespace ProjectFestival.model
         }
         public static ObservableCollection<Genre> Getgenres()
         {
+            genres = new ObservableCollection<Genre>();
             aantal = 1;
             try
             {
@@ -75,6 +76,7 @@ namespace ProjectFestival.model
         public static int EditGenre(Genre genre)
         {
             DbTransaction trans = null;
+            ObservableCollection<Genre> genresOld = Getgenres();
 
             try
             {
@@ -88,6 +90,8 @@ namespace ProjectFestival.model
                 rowsaffected += Database.ModifyData(trans, sql, par1, par2);
 
                 trans.Commit();
+
+                //FileWriter.EditMap(genresOld[genre.ID-1].Name,genre.Name);
                 return rowsaffected;
             }
             catch (Exception e)
@@ -113,6 +117,7 @@ namespace ProjectFestival.model
                 rowsaffected += Database.ModifyData(trans, sql, par1);
 
                 trans.Commit();
+                FileWriter.MakeMap(genre.Name);
                 return rowsaffected;
             }
             catch (Exception e)

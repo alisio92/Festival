@@ -3,11 +3,14 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using ProjectFestival.model;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Media.Imaging;
 
 namespace ProjectFestival.writetofile
 {
@@ -102,18 +105,24 @@ namespace ProjectFestival.writetofile
             string path = AppDomain.CurrentDomain.BaseDirectory;
             path = path.Replace("\\ProjectFestival\\bin\\Debug\\", "\\Festival\\Data\\");
             StreamWriter sw = new StreamWriter(path + "Festival.txt");
+            int key = 1000;
             sw.WriteLine("[ ");
 
-            for (int i = 0; i < Band.bands.Count();i++)
+            for (int i = 0; i < Band.bands.Count(); i++)
             {
+                int aantal = 0;
                 foreach (Genre g in Band.bands[i].GenreListBand)
                 {
+                    int value = key + aantal;
+                    ImageWegschrijven(g.Name+"\\" + Band.bands[i].Name + ".jpg",Band.bands[i].Picture);
                     sw.WriteLine("{ ");
                     sw.WriteLine("\"backgroundImage\" : \"images/" + g.Name + "/" + Band.bands[i].Name + ".jpg\",");
                     sw.WriteLine("\"discription\" : \"" + Band.bands[i].Description + "\",");
-                    sw.WriteLine("\"group\" : { \"backgroundImage\" : \"images/" + g.Name + "/" + g.Name + "_group_detail.jpg\",");
+                    //sw.WriteLine("\"group\" : { \"backgroundImage\" : \"images/" + g.Name + "/" + g.Name + "_group_detail.jpg\",");
+                    sw.WriteLine("\"group\" : { \"backgroundImage\" : \"images/Chinese/chinese_group_detail.png\",");
                     sw.WriteLine("\"description\" : \"" + Band.bands[i].Description + "\",");
-                    sw.WriteLine("\"groupImage\" : \"images/" + g.Name + "/" + g.Name + "_group.jpg\",");
+                    //sw.WriteLine("\"groupImage\" : \"images/" + g.Name + "/" + g.Name + "_group.jpg\",");
+                    sw.WriteLine("\"groupImage\" : \"images/Chinese/chinese_group_detail.png\",");
                     sw.WriteLine("\"key\" : \"" + g.Name + "\",");
                     sw.WriteLine("\"shortTitle\" : \"" + g.Name + "\",");
                     sw.WriteLine("\"title\" : \"" + g.Name + "\"");
@@ -128,6 +137,7 @@ namespace ProjectFestival.writetofile
                         }
                     }
                     sw.WriteLine("],");
+                    sw.WriteLine("\"key\" : " + value + ",");
                     sw.WriteLine("\"facebook\" : \"" + Band.bands[i].Facebook + "\",");
                     sw.WriteLine("\"twitter\" : \"" + Band.bands[i].Twitter + "\",");
                     sw.WriteLine("\"shortTitle\" : \"" + Band.bands[i].Name + "\",");
@@ -142,10 +152,55 @@ namespace ProjectFestival.writetofile
                     {
                         sw.WriteLine("},");
                     }
+                    aantal++;
                 }
+                key += 1000;
             }
             sw.WriteLine("]");
             sw.Close();
+        }
+
+        private static void ImageWegschrijven(string pathSource, Byte[] bytes)
+        {
+            string path = AppDomain.CurrentDomain.BaseDirectory;
+            path = path.Replace("\\ProjectFestival\\bin\\Debug\\", "\\Festival\\Images\\");
+            if (bytes != null && bytes.Length != 0)
+            {
+                Image imageOutput = Image.FromStream(new MemoryStream(bytes));
+                imageOutput.Save(path + pathSource, ImageFormat.Jpeg);
+            }
+        }
+
+        public static void MakeMap(string name)
+        {
+            string path = AppDomain.CurrentDomain.BaseDirectory;
+            path = path.Replace("\\ProjectFestival\\bin\\Debug\\", "\\Festival\\Images\\");
+            try
+            {
+                if (Directory.Exists(path + name))
+                {
+                    return;
+                }
+
+                DirectoryInfo di = Directory.CreateDirectory(path + name);
+            }
+            catch (Exception e)
+            {
+                WriteToFile(e.Message);
+            }
+        }
+        public static void EditMap(string oldName, string name)
+        {
+            string path = AppDomain.CurrentDomain.BaseDirectory;
+            path = path.Replace("\\ProjectFestival\\bin\\Debug\\", "\\Festival\\Images\\");
+            try
+            {
+                File.Move(path + oldName, path + name);
+            }
+            catch (Exception e)
+            {
+
+            }
         }
     }
 }

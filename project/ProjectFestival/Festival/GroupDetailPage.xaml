@@ -42,7 +42,7 @@
             AutomationProperties.Name="Items In Group"
             TabIndex="1"
             Grid.RowSpan="2"
-            Padding="120,126,120,50"
+            Padding="120,126,120,50"          
             ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
             ItemTemplate="{StaticResource Standard500x130ItemTemplate}"
             SelectionMode="None"

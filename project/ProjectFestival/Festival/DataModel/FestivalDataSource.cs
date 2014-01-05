@@ -9,13 +9,15 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
 using System.Net.Http;
 using Windows.Data.Json;
 using Windows.ApplicationModel;
 using Windows.Storage.Streams;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Imaging;
+using System.IO;
 
 // The data model defined by this file serves as a representative example of a strongly-typed
 // model that supports notification when members are added, removed, or modified.  The property
@@ -41,6 +43,13 @@ namespace Festival.Data
             this._title = title;
             this._shortTitle = shortTitle;
             this._imagePath = imagePath;
+        }
+
+        private Image _test;
+        public Image Test
+        {
+            get { return this._test; }
+            set { this.SetProperty(ref this._test, value); }
         }
 
         private string _uniqueId = string.Empty;
@@ -382,6 +391,9 @@ namespace Festival.Data
                             recipe.SetImage(val.GetString());
                             break;
                         case "tileImage":
+                           // string d = Windows.Storage.ApplicationData.Current.LocalFolder.Path;
+                           // Uri _baseUri = new Uri("ms-appx:///Festival/project/ProjectFestival/Festival/bin/Debug/Images/Pop/After Romeo.jpg");//"C:\\Users\\alisio\\Documents\\GitHub\\Festival\\project\\ProjectFestival\\Festival\\bin\\Debug\\Images\\Pop\\After Romeo.jpg"
+                           //recipe.Test.Source = new BitmapImage(_baseUri);
                             recipe.SetTileImage(val.GetString());
                             break;
                         case "group":

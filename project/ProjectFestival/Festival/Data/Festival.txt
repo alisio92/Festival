@@ -2,9 +2,9 @@
 { 
 "backgroundImage" : "images/Pop/After Romeo.jpg",
 "discription" : "After Romeo (formerly Varsity Fanclub) is a pop boy band. The group is from Los Angeles, California. Members include Drew Ryan Scott, Jayk Purdy, T.C. Carter, Blake English and Devin Fox.",
-"group" : { "backgroundImage" : "images/Pop/Pop_group_detail.jpg",
+"group" : { "backgroundImage" : "images/Chinese/chinese_group_detail.png",
 "description" : "After Romeo (formerly Varsity Fanclub) is a pop boy band. The group is from Los Angeles, California. Members include Drew Ryan Scott, Jayk Purdy, T.C. Carter, Blake English and Devin Fox.",
-"groupImage" : "images/Pop/Pop_group.jpg",
+"groupImage" : "images/Chinese/chinese_group_detail.png",
 "key" : "Pop",
 "shortTitle" : "Pop",
 "title" : "Pop"
@@ -12,6 +12,7 @@
 "genres" : [ 
 "Pop"
 ],
+"key" : 1000,
 "facebook" : "http://AfterRomeo.com",
 "twitter" : "@AfterRomeo",
 "shortTitle" : "After Romeo",
@@ -21,9 +22,9 @@
 { 
 "backgroundImage" : "images/Pop/The Beatles.jpg",
 "discription" : "The Beatles is een voormalige popgroep uit de Engelse stad Liverpool. De bezetting bestond uit John Lennon, Paul McCartney, George Harrison en Ringo Starr. De groep was actief van 1960 tot 1970 en wordt nu nog steeds beschouwd als de meest invloedrijke band uit de geschiedenis van de popmuziek. Al vrij snel na hun doorbraak kregen de leden van The Beatles te maken met hysterische reacties van voornamelijk jonge tienermeisjes, die tijdens concerten de muziek met hun gegil overstemden. Voor dit gedrag raakte de term Beatlemania in zwang. Tijdens hun carrière verrichtten ze pionierswerk in de geluidsstudio, waarvoor ze in brede kring lof oogstten. Onder hun invloed groeide de popmuziek uit van een op Amerikaanse rhythm and blues gebaseerd genre tot een veel breder georienteerde muzieksoort.",
-"group" : { "backgroundImage" : "images/Pop/Pop_group_detail.jpg",
+"group" : { "backgroundImage" : "images/Chinese/chinese_group_detail.png",
 "description" : "The Beatles is een voormalige popgroep uit de Engelse stad Liverpool. De bezetting bestond uit John Lennon, Paul McCartney, George Harrison en Ringo Starr. De groep was actief van 1960 tot 1970 en wordt nu nog steeds beschouwd als de meest invloedrijke band uit de geschiedenis van de popmuziek. Al vrij snel na hun doorbraak kregen de leden van The Beatles te maken met hysterische reacties van voornamelijk jonge tienermeisjes, die tijdens concerten de muziek met hun gegil overstemden. Voor dit gedrag raakte de term Beatlemania in zwang. Tijdens hun carrière verrichtten ze pionierswerk in de geluidsstudio, waarvoor ze in brede kring lof oogstten. Onder hun invloed groeide de popmuziek uit van een op Amerikaanse rhythm and blues gebaseerd genre tot een veel breder georienteerde muzieksoort.",
-"groupImage" : "images/Pop/Pop_group.jpg",
+"groupImage" : "images/Chinese/chinese_group_detail.png",
 "key" : "Pop",
 "shortTitle" : "Pop",
 "title" : "Pop"
@@ -33,6 +34,7 @@
 ,
 "Rock"
 ],
+"key" : 2000,
 "facebook" : "http://TheBeatles.com",
 "twitter" : "@TheBeatles",
 "shortTitle" : "The Beatles",
@@ -42,9 +44,9 @@
 { 
 "backgroundImage" : "images/Rock/The Beatles.jpg",
 "discription" : "The Beatles is een voormalige popgroep uit de Engelse stad Liverpool. De bezetting bestond uit John Lennon, Paul McCartney, George Harrison en Ringo Starr. De groep was actief van 1960 tot 1970 en wordt nu nog steeds beschouwd als de meest invloedrijke band uit de geschiedenis van de popmuziek. Al vrij snel na hun doorbraak kregen de leden van The Beatles te maken met hysterische reacties van voornamelijk jonge tienermeisjes, die tijdens concerten de muziek met hun gegil overstemden. Voor dit gedrag raakte de term Beatlemania in zwang. Tijdens hun carrière verrichtten ze pionierswerk in de geluidsstudio, waarvoor ze in brede kring lof oogstten. Onder hun invloed groeide de popmuziek uit van een op Amerikaanse rhythm and blues gebaseerd genre tot een veel breder georienteerde muzieksoort.",
-"group" : { "backgroundImage" : "images/Rock/Rock_group_detail.jpg",
+"group" : { "backgroundImage" : "images/Chinese/chinese_group_detail.png",
 "description" : "The Beatles is een voormalige popgroep uit de Engelse stad Liverpool. De bezetting bestond uit John Lennon, Paul McCartney, George Harrison en Ringo Starr. De groep was actief van 1960 tot 1970 en wordt nu nog steeds beschouwd als de meest invloedrijke band uit de geschiedenis van de popmuziek. Al vrij snel na hun doorbraak kregen de leden van The Beatles te maken met hysterische reacties van voornamelijk jonge tienermeisjes, die tijdens concerten de muziek met hun gegil overstemden. Voor dit gedrag raakte de term Beatlemania in zwang. Tijdens hun carrière verrichtten ze pionierswerk in de geluidsstudio, waarvoor ze in brede kring lof oogstten. Onder hun invloed groeide de popmuziek uit van een op Amerikaanse rhythm and blues gebaseerd genre tot een veel breder georienteerde muzieksoort.",
-"groupImage" : "images/Rock/Rock_group.jpg",
+"groupImage" : "images/Chinese/chinese_group_detail.png",
 "key" : "Rock",
 "shortTitle" : "Rock",
 "title" : "Rock"
@@ -54,6 +56,7 @@
 ,
 "Rock"
 ],
+"key" : 2001,
 "facebook" : "http://TheBeatles.com",
 "twitter" : "@TheBeatles",
 "shortTitle" : "The Beatles",
@@ -63,9 +66,9 @@
 { 
 "backgroundImage" : "images/Techno/Infusion.jpg",
 "discription" : "Infusion is an Australian electronica band from Wollongong who are known for their energetic live performances and long résumé of remixes. Founding members Jamie Stevens and Manuel Sharrad met in Wollongong, where they both went to high school. Though third member Frank Xavier also hails from Wollongong, the other two did not meet him until they had relocated to Sydney some time later. Manuel Sharrad is Infusion's vocalist. The band then signed on with local music identity Nathaniel Makaveli as their manager who then would shop them around to a long list of labels before signing with Thunk.",
-"group" : { "backgroundImage" : "images/Techno/Techno_group_detail.jpg",
+"group" : { "backgroundImage" : "images/Chinese/chinese_group_detail.png",
 "description" : "Infusion is an Australian electronica band from Wollongong who are known for their energetic live performances and long résumé of remixes. Founding members Jamie Stevens and Manuel Sharrad met in Wollongong, where they both went to high school. Though third member Frank Xavier also hails from Wollongong, the other two did not meet him until they had relocated to Sydney some time later. Manuel Sharrad is Infusion's vocalist. The band then signed on with local music identity Nathaniel Makaveli as their manager who then would shop them around to a long list of labels before signing with Thunk.",
-"groupImage" : "images/Techno/Techno_group.jpg",
+"groupImage" : "images/Chinese/chinese_group_detail.png",
 "key" : "Techno",
 "shortTitle" : "Techno",
 "title" : "Techno"
@@ -73,6 +76,7 @@
 "genres" : [ 
 "Techno"
 ],
+"key" : 3000,
 "facebook" : "http://Infusion.com",
 "twitter" : "@Infusion",
 "shortTitle" : "Infusion",
